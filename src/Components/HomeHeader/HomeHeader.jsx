@@ -8,29 +8,30 @@ import {CgProfile} from "react-icons/cg";
 
 const HomeHeader = () => {
     return (
-        <div className='bg-white border-gray-200 px-3 w-full lg:px-6 py-1'>
-            <div className='flex flex-row items-center justify-between mx-auto max-w-screen-xl'>
-                <div className='flex items-center space-x-3'>
+        <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
+            <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
+                <div className='flex items-center space-x-2'>
                     <div>
-                        <IoAppsSharp className='text-xl cursor-pointer'/>
+                        <IoAppsSharp className='text-4xl cursor-pointer hover:bg-gray-200 rounded-md p-2'/>
                     </div>
 
-                    <img className='w-20 h-6 cursor-pointer'
+                    <img className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2'
                          src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
                          alt=""/>
 
-                    <div className='flex space-x-3 h-7'>
+                    <div className='flex space-x-4'>
                         <Dropdown title='Workspaces'/>
                         <Dropdown title='Recent'/>
-                        <Dropdown title='More'/>
+                        <Dropdown title='Starred'/>
+                        <Dropdown title='Templates'/>
                     </div>
 
                     <div>
-                        <MdAddBox className='text-4xl cursor-pointer' color='#5393FA'/>
+                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' color='#2435FA'/>
                     </div>
                 </div>
 
-                <div className='flex items-center space-x-2'>
+                <div className='flex items-center space-x-3'>
                     <div>
                         <form className="max-w-sm px-1">
                             <div className="relative">
@@ -51,8 +52,8 @@ const HomeHeader = () => {
                                 <input
                                     type="text"
                                     placeholder="Search"
-                                    className="w-full h-9 py-3 pl-10 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50
-                                focus:bg-white focus:border-blue-400 focus:border-2"
+                                    className="w-48 h-9 py-3 pl-10 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50
+                                focus:bg-white focus:border-blue-400 focus:border-2 focus:w-96"
                                 />
                             </div>
                         </form>
