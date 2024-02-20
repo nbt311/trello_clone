@@ -87,19 +87,15 @@ const Login = () => {
                             )}
                         </Formik>
                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Don’t have an account yet? <a href="#"
-                                                      className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign
-                        up</a>
+                        Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                     </p>
                 </div>
             </div>
             <div className="w-[20%] absolute bottom-0 left-0">
-                <img
-                    src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-left.4f52d13c.svg"/>
+                <img src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-left.4f52d13c.svg"/>
             </div>
             <div className="w-[20%] absolute bottom-0 right-0">
-                <img
-                    src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-right.3ee60d6f.svg"/>
+                <img src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-right.3ee60d6f.svg"/>
             </div>
         </section>
     )
