@@ -3,16 +3,16 @@ import {BsTrello} from "react-icons/bs";
 import {HiTemplate} from "react-icons/hi";
 import {BiPulse} from "react-icons/bi";
 
-const SidebarConfig = [
+const ManageTabConfig = [
     {
-        title: 'Boards', icon: <BsTrello />
+        title: 'Profile and visibility'
     },
     {
-        title: 'Templates', icon: <HiTemplate />
+        title: 'Email'
     },
     {
-        title: 'Home', icon: <BiPulse />
+        title: 'Security'
     }
 ]
 
-export default SidebarConfig;
+export default ManageTabConfig;

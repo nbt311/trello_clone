@@ -4,25 +4,16 @@ import Dropdown from "./Dropdown";
 import {MdAddBox} from "react-icons/md";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
-import {CgProfile} from "react-icons/cg";
 import {
     Avatar,
     Menu,
     MenuButton,
-    MenuCommand,
     MenuDivider,
     MenuGroup,
     MenuItem,
-    MenuList,
-    MenuOptionGroup
+    MenuList
 } from "@chakra-ui/react";
-import * as PropTypes from "prop-types";
 
-function MenuIte(props) {
-    return null;
-}
-
-MenuIte.propTypes = {children: PropTypes.node};
 const HomeHeader = () => {
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
@@ -97,8 +88,6 @@ const HomeHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                {/*<CgProfile className='text-2xl cursor-pointer hover:bg-gray-200 rounded-full'*/}
-                                {/*           color='gray'/>*/}
                                 <Avatar size='sm' name='Username' src=''/>
                             </MenuButton>
 

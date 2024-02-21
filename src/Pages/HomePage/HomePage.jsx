@@ -1,6 +1,6 @@
 import React from 'react';
-import HomeHeader from "../Components/HomeHeader/HomeHeader";
-import Sidebar from "../Components/SideBar/Sidebar";
+import HomeHeader from "../../Components/HomeHeader/HomeHeader";
+import Sidebar from "../../Components/SideBar/Sidebar";
 
 const HomePage = () => {
     return (

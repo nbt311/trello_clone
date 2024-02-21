@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Routes} from "react-router-dom";
-import HomePage from "../Pages/HomePage";
-import Sidebar from "../Components/SideBar/Sidebar";
+import HomePage from "../Pages/HomePage/HomePage";
+import ManagePage from "../Pages/ManagePage/ManagePage";
 
 const Router = () => {
     return (
@@ -9,6 +9,7 @@ const Router = () => {
             <div>
                 <Routes>
                     <Route path='/' element={<HomePage/>}/>
+                    <Route path='/manage-profile/*' element={<ManagePage/>}/>
                 </Routes>
             </div>
         </div>
