@@ -1,6 +1,7 @@
 import React from 'react';
 import SidebarConfig from "./SidebarConfig";
 import WorkspaceDropdown from "./WorkspaceDropdown";
+import {Avatar} from "@chakra-ui/react";
 
 const Sidebar = () => {
     return (

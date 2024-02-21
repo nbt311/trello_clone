@@ -5,7 +5,24 @@ import {MdAddBox} from "react-icons/md";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {CgProfile} from "react-icons/cg";
+import {
+    Avatar,
+    Menu,
+    MenuButton,
+    MenuCommand,
+    MenuDivider,
+    MenuGroup,
+    MenuItem,
+    MenuList,
+    MenuOptionGroup
+} from "@chakra-ui/react";
+import * as PropTypes from "prop-types";
 
+function MenuIte(props) {
+    return null;
+}
+
+MenuIte.propTypes = {children: PropTypes.node};
 const HomeHeader = () => {
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
@@ -31,7 +48,7 @@ const HomeHeader = () => {
                     </div>
                 </div>
 
-                <div className='flex items-center space-x-3'>
+                <div className='flex items-center space-x-2'>
                     <div>
                         <form className="max-w-sm px-1">
                             <div className="relative">
@@ -60,15 +77,68 @@ const HomeHeader = () => {
                     </div>
 
                     <div>
-                        <TbBellRinging2 className='text-2xl cursor-pointer' color='gray'/>
+                        <TbBellRinging2 className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
+                                        color='gray'/>
                     </div>
 
                     <div>
-                        <FaRegQuestionCircle className='text-2xl cursor-pointer' color='gray'/>
+                        <FaRegQuestionCircle className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
+                                             color='gray'/>
                     </div>
 
+
+
                     <div>
-                        <CgProfile className='text-2xl cursor-pointer' color='gray'/>
+                        <Menu>
+                            <MenuButton
+                                px={1}
+                                py={1}
+                                transition='all 0.2s'
+                                borderRadius='full'
+                                _hover={{bg: 'gray.200'}}
+                            >
+                                {/*<CgProfile className='text-2xl cursor-pointer hover:bg-gray-200 rounded-full'*/}
+                                {/*           color='gray'/>*/}
+                                <Avatar size='sm' name='Username' src=''/>
+                            </MenuButton>
+
+                            <MenuList className='mt-1.5'>
+                                <MenuGroup className='font-medium' title='Account'>
+                                    <MenuItem>
+                                        <Avatar size='sm' name='Username' src=''/>
+                                        <div className='ml-2'>
+                                            <p className='text-base font-medium'>Username</p>
+                                            <p className='text-sm'>username@gmail.com</p>
+                                        </div>
+                                    </MenuItem>
+                                    <MenuItem>Switch accounts</MenuItem>
+                                    <MenuItem>Manage account</MenuItem>
+                                </MenuGroup>
+
+                                <MenuDivider/>
+
+                                <MenuGroup title='Trello'>
+                                    <MenuItem>Profile and visibility</MenuItem>
+                                    <MenuItem>Activity</MenuItem>
+                                    <MenuItem>Cards</MenuItem>
+                                    <MenuItem>Settings</MenuItem>
+                                    <MenuItem>Theme</MenuItem>
+                                </MenuGroup>
+
+                                <MenuDivider/>
+
+                                <MenuGroup>
+                                    <MenuItem>Help</MenuItem>
+                                    <MenuItem>Shortcuts</MenuItem>
+                                </MenuGroup>
+
+                                <MenuDivider/>
+
+                                <MenuGroup>
+                                    <MenuItem>Log out</MenuItem>
+                                </MenuGroup>
+                            </MenuList>
+                        </Menu>
                     </div>
                 </div>
             </div>
