@@ -13,6 +13,8 @@ import {
     MenuItem,
     MenuList
 } from "@chakra-ui/react";
+import {Link} from "react-router-dom";
+import {RiShareBoxLine} from "react-icons/ri";
 
 const HomeHeader = () => {
     return (
@@ -101,7 +103,18 @@ const HomeHeader = () => {
                                         </div>
                                     </MenuItem>
                                     <MenuItem>Switch accounts</MenuItem>
-                                    <MenuItem>Manage account</MenuItem>
+                                    <MenuItem>
+                                        <Link to='/manage-profile/profile-and-visibility'>
+                                            <div className='flex flex-row items-center justify-between'>
+                                                <div>
+                                                    Manage account
+                                                </div>
+                                                <div className='text-right ml-14'>
+                                                    <RiShareBoxLine className='text-base'/>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </MenuItem>
                                 </MenuGroup>
 
                                 <MenuDivider/>

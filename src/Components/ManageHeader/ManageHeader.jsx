@@ -69,13 +69,13 @@ const ManageHeader = () => {
                             </MenuButton>
 
                             <MenuList className='my-1.5'>
-                                    <MenuItem background={'ghostwhite'}>
-                                        <Avatar size='lg' name='Username' src=''/>
-                                        <div className='ml-2'>
-                                            <p className='text-lg font-bold'>Username</p>
-                                            <p className='text-base font-medium'>username@gmail.com</p>
-                                        </div>
-                                    </MenuItem>
+                                <MenuItem background={'ghostwhite'}>
+                                    <Avatar size='lg' name='Username' src=''/>
+                                    <div className='ml-2'>
+                                        <p className='text-lg font-bold'>Username</p>
+                                        <p className='text-base font-medium'>username@gmail.com</p>
+                                    </div>
+                                </MenuItem>
 
                                 <div >
                                     <MenuItem>
