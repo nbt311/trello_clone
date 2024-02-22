@@ -4,6 +4,7 @@ import HomePage from "../Pages/HomePage/HomePage";
 import ManagePage from "../Pages/ManagePage/ManagePage";
 import Login from "../Pages/LoginPage/Login";
 import Logout from "../Pages/LogoutPage/Logout";
+import Signup from "../Pages/SignUpPage/Signup";
 
 const Router = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -20,6 +21,7 @@ const Router = () => {
                     <Route path='/' element={<HomePage/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>
+                    <Route path='signup' element={<Signup/>}/>
                 </Routes>
             </div>
         </div>
