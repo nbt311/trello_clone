@@ -35,6 +35,11 @@ const Login = () => {
     function handleSubmit() {
         axios.post('http://localhost:8080/api/auth/signin', form)
             .then(response => {
+                if (response.data.assessToken) {
+                    console.log(response.data)
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                    navigate('/')
+                }
                 toast({
                     title: 'Login Successful',
                     description: 'You have successfully logged in.',
@@ -42,7 +47,7 @@ const Login = () => {
                     duration: 3000,
                     isClosable: true,
                 });
-                navigate('/')
+
             })
             .catch(error => {
                 toast({
