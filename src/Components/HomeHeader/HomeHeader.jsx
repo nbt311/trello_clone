@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
+import AuthService from "../../Service/auth.service";
 
 const HomeHeader = () => {
     const [user, setUser] = useState({});
@@ -23,7 +24,7 @@ const HomeHeader = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
-
+    // const currentUser = AuthService.getCurrentUser();
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
@@ -98,7 +99,7 @@ const HomeHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                <Avatar size='sm' name='Username' src=''/>
+                                <Avatar size='sm' name={user.username} src=''/>
                             </MenuButton>
 
                             <MenuList className='mt-1.5'>
@@ -145,7 +146,13 @@ const HomeHeader = () => {
                                 <MenuDivider/>
 
                                 <MenuGroup>
-                                    <MenuItem>Log out</MenuItem>
+                                    <MenuItem>
+                                        <Link to='/logout'>
+                                            <div>
+                                                <p>Log Out</p>
+                                            </div>
+                                    </Link>
+                                    </MenuItem>
                                 </MenuGroup>
                             </MenuList>
                         </Menu>
