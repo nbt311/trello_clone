@@ -2,15 +2,12 @@ import React from 'react';
 import {Avatar} from "@chakra-ui/react";
 import {IoIosCamera, IoIosInformationCircle} from "react-icons/io";
 import {IoEarth} from "react-icons/io5";
-import './ProfilePage.css'
-import {AiFillHeart} from "react-icons/ai";
-import {FaComment, FaPhotoVideo} from "react-icons/fa";
 import {MdInsertPhoto} from "react-icons/md";
 
 const ProfilePage = () => {
     return (
         <div>
-            <div>
+            <div className='mt-10'>
                 <h1 className='text-2xl font-bold'>Profile and visibility</h1>
             </div>
 

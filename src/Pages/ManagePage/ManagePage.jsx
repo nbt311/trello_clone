@@ -1,7 +1,8 @@
 import React from 'react';
 import ManageHeader from "../../Components/ManageHeader/ManageHeader";
 import {Route, Routes} from "react-router-dom";
-import ProfilePage from "./ProfilePage";
+import ProfilePage from "../../Components/ManageBody/ProfilePage";
+import SecurityPage from "../../Components/ManageBody/SecurityPage";
 
 const ManagePage = () => {
     return (
@@ -16,6 +17,12 @@ const ManagePage = () => {
                         <Route path='/profile-and-visibility' element={
                             <div className='pl-0 text-left'>
                                 <ProfilePage/>
+                            </div>
+                        }/>
+
+                        <Route path='/security' element={
+                            <div className='pl-0 text-left'>
+                                <SecurityPage/>
                             </div>
                         }/>
                     </Routes>

@@ -25,9 +25,10 @@ const HomeHeader = () => {
                         <IoAppsSharp className='text-4xl cursor-pointer hover:bg-gray-200 rounded-md p-2'/>
                     </div>
 
-                    <img className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2'
-                         src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
-                         alt=""/>
+                    <Link className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2' to='/'>
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
+                             alt=""/>
+                    </Link>
 
                     <div className='flex space-x-4'>
                         <Dropdown title='Workspaces'/>
