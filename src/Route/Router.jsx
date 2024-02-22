@@ -21,7 +21,7 @@ const Router = () => {
                     <Route path='/' element={<HomePage/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>
-                    <Route path='signup' element={<Signup/>}/>
+                    <Route path='/signup' element={<Signup/>}/>
                 </Routes>
             </div>
         </div>
