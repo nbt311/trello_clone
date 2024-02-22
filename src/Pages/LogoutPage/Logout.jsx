@@ -1,6 +1,26 @@
-import React from 'react';
-import {Avatar} from "@chakra-ui/react";
+import React, {useEffect, useState} from 'react';
+import {Avatar, useToast} from "@chakra-ui/react";
+import AuthService from "../../Service/auth.service";
+import {useNavigate} from "react-router-dom";
 const Logout = () => {
+    const [user, setUser] = useState({});
+    const toast = useToast();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
+    const handleLogout = () => {
+        AuthService.logout();
+        toast({
+            title: 'Logout Successfuly',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+        });
+        navigate("/login");
+    }
     return (
         <div>
             <section className="relative bg-gray-100 dark:bg-gray-800 h-screen">
@@ -14,14 +34,14 @@ const Logout = () => {
                             Sign out of account Atlassian
                         </h1>
                         <div className="flex items-center justify-center">
-                            <Avatar size='lg' name='Username' src=''/>
+                            <Avatar size='lg' name={user.username} src=''/>
                             <div className='ml-2'>
-                                <p className='text-base font-medium'>Username</p>
-                                <p className='text-sm'>username@gmail.com</p>
+                                <p className='text-base font-medium'>{user.username}</p>
+                                <p className='text-sm'>{user.email}</p>
                             </div>
                         </div>
                         <div className="pt-3">
-                            <button type="submit"
+                            <button onClick={handleLogout} type="submit"
                                     className="w-[90%] justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Log Out
                             </button>
                         </div>

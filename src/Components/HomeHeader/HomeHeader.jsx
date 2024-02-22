@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {IoAppsSharp} from "react-icons/io5";
 import Dropdown from "./Dropdown";
 import {MdAddBox} from "react-icons/md";
@@ -15,8 +15,16 @@ import {
 } from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
+import AuthService from "../../Service/auth.service";
 
 const HomeHeader = () => {
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
+    // const currentUser = AuthService.getCurrentUser();
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
@@ -91,16 +99,16 @@ const HomeHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                <Avatar size='sm' name='Username' src=''/>
+                                <Avatar size='sm' name={user.username} src=''/>
                             </MenuButton>
 
                             <MenuList className='mt-1.5'>
                                 <MenuGroup className='font-medium' title='Account'>
                                     <MenuItem>
-                                        <Avatar size='sm' name='Username' src=''/>
+                                        <Avatar size='sm' name={user.username} src=''/>
                                         <div className='ml-2'>
-                                            <p className='text-base font-medium'>Username</p>
-                                            <p className='text-sm'>username@gmail.com</p>
+                                            <p className='text-base font-medium'>{user.username}</p>
+                                            <p className='text-sm'>{user.email}</p>
                                         </div>
                                     </MenuItem>
                                     <MenuItem>Switch accounts</MenuItem>
@@ -138,7 +146,13 @@ const HomeHeader = () => {
                                 <MenuDivider/>
 
                                 <MenuGroup>
-                                    <MenuItem>Log out</MenuItem>
+                                    <MenuItem>
+                                        <Link to='/logout'>
+                                            <div>
+                                                <p>Log Out</p>
+                                            </div>
+                                    </Link>
+                                    </MenuItem>
                                 </MenuGroup>
                             </MenuList>
                         </Menu>

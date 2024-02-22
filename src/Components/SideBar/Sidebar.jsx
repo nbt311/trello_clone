@@ -8,7 +8,7 @@ const Sidebar = () => {
         <div className='flex flex-col items-start'>
             <div className='mt-4'>
                 {SidebarConfig.map((item) => (
-                    <div className='flex flex-row ml-2 my-3 text-lg space-x-4 cursor-pointer items-center font-medium hover:bg-gray-200 rounded-md p-2 w-64'>
+                    <div key={item.title} className='flex flex-row ml-2 my-3 text-lg space-x-4 cursor-pointer items-center font-medium hover:bg-gray-200 rounded-md p-2 w-64'>
                         {item.icon}
                         <p>{item.title}</p>
                     </div>
