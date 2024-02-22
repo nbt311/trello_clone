@@ -18,7 +18,7 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<InviteFriendWorkspace/>}/>
+                    <Route path='/' element={<CreateWorkspace/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                 </Routes>
             </div>
