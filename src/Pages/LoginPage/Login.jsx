@@ -3,7 +3,7 @@ import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {Formik} from "formik";
 import axios from "axios";
 import {useToast} from '@chakra-ui/react'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -116,7 +116,10 @@ const Login = () => {
                             )}
                         </Formik>
                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                        Don’t have an account yet?
+                        <Link to="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                            Sign up
+                        </Link>
                     </p>
                 </div>
             </div>
