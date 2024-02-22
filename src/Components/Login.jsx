@@ -1,15 +1,16 @@
 import React, {useState} from 'react';
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {Formik} from "formik";
+import axios from "axios";
+import {useToast} from '@chakra-ui/react'
 
 const Login = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
-
+    const [form, setForm] = useState({});
+    const toast = useToast()
     const PasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    const [form, setForm] = useState({});
-
     function handleChange(event) {
         setForm({
             ...form,
@@ -29,8 +30,28 @@ const Login = () => {
     }
 
     function handleSubmit() {
-        alert("Login in successfully!!!");
+        axios.post('http://localhost:8080/api/auth/signin', form)
+            .then(response => {
+                toast({
+                    title: 'Login Successful',
+                    description: 'You have successfully logged in.',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            })
+            .catch(error => {
+                toast({
+                    title: 'Login Failed',
+                    description: 'Please check your credentials and try again.',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            });
     }
+
+
 
     return (
         <section className="relative bg-gray-100 dark:bg-gray-800 h-screen">
@@ -54,7 +75,7 @@ const Login = () => {
                                         errors.email ? "custom-input-error" : ""
                                     }`}>
                                         <label htmlFor="email"
-                                               className="text-sm font-medium text-gray-900 dark:text-white block text-left ml-6 ">Your email or username</label>
+                                               className="text-sm font-medium text-gray-900 dark:text-white block text-left ml-6 ">Your email</label>
                                         <input type="text" name="email" id="email" value={form.email || ""}
                                                onChange={handleChange}
                                                className="hover:bg-gray-200 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600  w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -79,7 +100,8 @@ const Login = () => {
                                         <p className="text-red-500">{errors.password}</p>
                                     </div>
                                     <div className="pt-3">
-                                        <button type="submit"
+                                        <button
+                                            type="submit"
                                                 className="w-[90%] justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Continue
                                         </button>
                                     </div>
