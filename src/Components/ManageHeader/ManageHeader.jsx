@@ -6,12 +6,12 @@ import {
     Menu,
     MenuButton,
     MenuItem,
-    MenuList
+    MenuList, Tab, TabIndicator, TabList, Tabs
 } from "@chakra-ui/react";
 import ManageTabConfig from "./ManageTabConfig";
 import {FaUserGroup} from "react-icons/fa6";
 import {FiLogOut} from "react-icons/fi";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const ManageHeader = () => {
     const [activeTab, setActiveTab] = useState('');
@@ -36,16 +36,34 @@ const ManageHeader = () => {
                         <IoAppsSharp className='text-4xl cursor-pointer hover:bg-gray-200 rounded-md p-2'/>
                     </div>
 
-                    <img className='w-[12%] cursor-pointer hover:bg-gray-200 rounded-md p-2'
-                         src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
-                         alt=""/>
+                    <Link className='w-[12%] cursor-pointer hover:bg-gray-200 rounded-md p-2' to='/'>
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
+                            alt=""/>
+                    </Link>
 
                     <div className='flex space-x-3'>
-                        {ManageTabConfig.map((item) => (
-                            <div onClick={() => HandleTabClick(item.title)} className='flex text-base font-medium cursor-pointer'>
-                                {item.title}
-                            </div>
-                        ))}
+                        <Tabs variant='unstyled'>
+                            <TabList>
+                                {ManageTabConfig.map((item) => (
+                                    <Tab _selected={{
+                                        color: "blue",
+                                    }} onClick={() => HandleTabClick(item.title)}
+                                         className='flex text-base font-semibold cursor-pointer'>
+                                        <div>
+                                            {item.title}
+                                        </div>
+                                    </Tab>
+                                ))}
+                            </TabList>
+
+                            <TabIndicator
+                                mt="15px"
+                                height="3px"
+                                bg="blue"
+                                borderRadius="1px"
+                            />
+                        </Tabs>
                     </div>
                 </div>
 
@@ -53,7 +71,6 @@ const ManageHeader = () => {
                     <div>
                         <FaQuestionCircle className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'/>
                     </div>
-
 
 
                     <div>
@@ -69,15 +86,15 @@ const ManageHeader = () => {
                             </MenuButton>
 
                             <MenuList className='my-1.5'>
-                                    <MenuItem background={'ghostwhite'}>
-                                        <Avatar size='lg' name='Username' src=''/>
-                                        <div className='ml-2'>
-                                            <p className='text-lg font-bold'>Username</p>
-                                            <p className='text-base font-medium'>username@gmail.com</p>
-                                        </div>
-                                    </MenuItem>
+                                <MenuItem background={'ghostwhite'}>
+                                    <Avatar size='lg' name='Username' src=''/>
+                                    <div className='ml-2'>
+                                        <p className='text-lg font-bold'>Username</p>
+                                        <p className='text-base font-medium'>username@gmail.com</p>
+                                    </div>
+                                </MenuItem>
 
-                                <div >
+                                <div>
                                     <MenuItem>
                                         <FaUserGroup className='text-base'/>
                                         <span className='ml-2 text-base font-medium'>Switch accounts</span>
