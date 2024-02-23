@@ -15,14 +15,14 @@ const Login = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    function handleChange(event) {
+    const handleChange = (event)  => {
         setForm({
             ...form,
             [event.target.name]: event.target.value
         });
     }
 
-    function handleValidate() {
+    const handleValidate = () => {
         const errors = {};
         if (!form.email) {
             errors.email = "Please check and re-enter";
