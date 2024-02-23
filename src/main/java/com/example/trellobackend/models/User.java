@@ -41,6 +41,7 @@ public class User {
     private String organization;
     private String location;
     private String localTime;
+    private String avatarUrl;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -50,5 +51,12 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String username, String email, String password, String avatarUrl) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.avatarUrl = avatarUrl;
     }
 }

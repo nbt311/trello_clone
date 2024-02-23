@@ -20,18 +20,21 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    private String avatarUrl;
+
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
+    public UserDetailsImpl(Long id, String username, String email, String password, String avatarUrl,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.avatarUrl = avatarUrl;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -44,6 +47,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getAvatarUrl(),
                 authorities);
     }
 
@@ -58,6 +62,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
     @Override
