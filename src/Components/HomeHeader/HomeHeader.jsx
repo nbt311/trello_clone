@@ -18,7 +18,6 @@ import {RiShareBoxLine} from "react-icons/ri";
 import AuthService from "../../Service/auth.service";
 
 
-
 const HomeHeader = () => {
     const [user, setUser] = useState({});
 
@@ -36,42 +35,47 @@ const HomeHeader = () => {
                     </div>
 
                     <Link className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2' to='/'>
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
-                             alt=""/>
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
+                            alt=""/>
                     </Link>
 
                     <div className='flex space-x-4'>
-                            <Menu>
-                                <MenuButton px={4}
-                                            py={2}
-                                            _hover={{ bg: 'gray.200'}}>
-                                    <Dropdown title='Workspace'/>
-                                </MenuButton>
-                                <MenuList>
-                                    <p className="text-sm flex ml-3">Current Workspace</p>
-                                    <MenuItem>
-                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
-                                        <div className='ml-2'>
-                                            <p className='text-base font-medium'>{user.username}</p>
+                        <Menu>
+                            <MenuButton px={4}
+                                        py={2}
+                                        _hover={{bg: 'gray.200'}}>
+                                <Dropdown title='Workspace'/>
+                            </MenuButton>
+                            <MenuList>
+                                <p className="text-sm flex ml-3">Current Workspace</p>
+                                <MenuItem>
+                                    <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                    <div className='ml-2'>
+                                        <p className='text-base font-medium'>{user.username}</p>
+                                    </div>
+                                </MenuItem>
+                                <MenuDivider/>
+                                <p className="text-sm flex ml-3">Your Workspaces</p>
+                                <MenuItem>
+                                    <Link to='/manage-profile/profile-and-visibility'>
+                                        <div className='flex'>
+                                            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>
                                         </div>
-                                    </MenuItem>
-                                    <MenuDivider/>
-                                    <p className="text-sm flex ml-3">Your Workspaces</p>
-                                    <MenuItem>
-                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
-                                        <div className='ml-2'>
-                                            <p className='text-base font-medium'>{user.username}</p>
+                                    </Link>
+                                </MenuItem>
+                                <p className="text-sm flex ml-3">Guest Workspaces</p>
+                                <MenuItem>
+                                    <Link to='/manage-profile/profile-and-visibility'>
+                                        <div className='flex'>
+                                            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>
                                         </div>
-                                    </MenuItem>
-                                    <p className="text-sm flex ml-3">Guest Workspaces</p>
-                                    <MenuItem>
-                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
-                                        <div className='ml-2'>
-                                            <p className='text-base font-medium'>{user.username}</p>
-                                        </div>
-                                    </MenuItem>
-                                </MenuList>
-                            </Menu>
+                                    </Link>
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
 
 
                         <Dropdown title='Recent'/>
@@ -121,7 +125,6 @@ const HomeHeader = () => {
                         <FaRegQuestionCircle className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
                                              color='gray'/>
                     </div>
-
 
 
                     <div>
@@ -185,7 +188,7 @@ const HomeHeader = () => {
                                             <div>
                                                 <p>Log Out</p>
                                             </div>
-                                    </Link>
+                                        </Link>
                                     </MenuItem>
                                 </MenuGroup>
                             </MenuList>
