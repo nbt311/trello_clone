@@ -5,6 +5,7 @@ import ManagePage from "../Pages/ManagePage/ManagePage";
 import Login from "../Pages/LoginPage/Login";
 import Logout from "../Pages/LogoutPage/Logout";
 import Signup from "../Pages/SignUpPage/Signup";
+import FirebaseImageUpload from "../FirebaseImageUpload/FirebaseImageUpload";
 
 const Router = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -22,6 +23,7 @@ const Router = () => {
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>
                     <Route path='/signup' element={<Signup/>}/>
+                    <Route path='/upload' element={<FirebaseImageUpload/>}/>
                 </Routes>
             </div>
         </div>

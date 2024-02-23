@@ -99,13 +99,13 @@ const HomeHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                <Avatar size='sm' name={user.username} src=''/>
+                                <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                             </MenuButton>
 
                             <MenuList className='mt-1.5'>
                                 <MenuGroup className='font-medium' title='Account'>
                                     <MenuItem>
-                                        <Avatar size='sm' name={user.username} src=''/>
+                                        <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                                         <div className='ml-2'>
                                             <p className='text-base font-medium'>{user.username}</p>
                                             <p className='text-sm'>{user.email}</p>
