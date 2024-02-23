@@ -11,8 +11,6 @@ const Router = () => {
 
 
     return (
-        <div>
-            <div>
                 <Routes>
                     <Route
                         path='/login'
@@ -23,8 +21,6 @@ const Router = () => {
                     <Route path='/logout' element={<Logout/>}/>
                     <Route path='/signup' element={<Signup/>}/>
                 </Routes>
-            </div>
-        </div>
     );
 };
 

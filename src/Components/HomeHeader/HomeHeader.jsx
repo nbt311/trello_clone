@@ -24,7 +24,7 @@ const HomeHeader = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
-    // const currentUser = AuthService.getCurrentUser();
+
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
