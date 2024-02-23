@@ -7,20 +7,23 @@ import {
     ModalContent,
     ModalOverlay, Select, Textarea, useDisclosure
 } from "@chakra-ui/react";
+import axios from "axios";
 const CreateWorkspace = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [workspaceName, setWorkspaceName] = useState("");
     const [workspaceType, setWorkspaceType] = useState("");
+    const [workspaceDescription, setWorkspaceDescription] = useState("");
 
     const isButtonDisabled = !workspaceName || !workspaceType;
 
     const handleContinue = () => {
-        if (!workspaceName || !workspaceType) {
-            console.error("Please fill in all fields.");
-        }
-        // axios.post("/api/create-workspace", {
+        // if (!workspaceName || !workspaceType) {
+        //     console.error("Please fill in all fields.");
+        // }
+        // axios.post("http://localhost:8080/api/test/workspaces", {
         //     name: workspaceName,
         //     type: workspaceType,
+        //     description: workspaceDescription
         // })
         //     .then(response => {
         //     })
@@ -60,7 +63,8 @@ const CreateWorkspace = () => {
                                     </div>
                                     <div className="w-[80%]">
                                         <p className="text-sm font-bold font-sans">Workspace description </p>
-                                        <Textarea placeholder='Our team organizes everything here.' />
+                                        <Textarea value={workspaceDescription}
+                                                  onChange={(e) => setWorkspaceDescription(e.target.value)} placeholder='Our team organizes everything here.' />
                                         <p className="text-xs font-sans">Get your members on board with a few words about your Workspace.</p>
                                     </div>
                                     <div><Button onClick={handleContinue} isDisabled={isButtonDisabled} className="w-[80%]" colorScheme='blue' >Continue</Button></div>

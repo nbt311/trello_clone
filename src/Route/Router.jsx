@@ -6,7 +6,6 @@ import Login from "../Pages/LoginPage/Login";
 import CreateWorkspace from "../Components/WorkspaceModal/CreateWorkspace";
 import InviteFriendWorkspace from "../Components/WorkspaceModal/InviteFriendWorkspace";
 import InvitePopup from "../Components/WorkspaceModal/InvitePopup";
-import TestDemo from "../Components/WorkspaceModal/TestDemo";
 import InvitePopupTwo from "../Components/WorkspaceModal/InvitePopupTwo";
 
 
@@ -22,7 +21,7 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<InvitePopupTwo/>}/>
+                    <Route path='/' element={<CreateWorkspace/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                 </Routes>
             </div>
