@@ -11,26 +11,31 @@ const Login = () => {
     const toast = useToast();
     const navigate = useNavigate();
 
+    const REGEX = {
+        email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    };
     const PasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    function handleChange(event) {
+
+    const handleChange = (event)  => {
         setForm({
             ...form,
             [event.target.name]: event.target.value
         });
     }
 
-    function handleValidate() {
+    const handleValidate = () => {
         const errors = {};
         if (!form.email) {
             errors.email = "Please check and re-enter";
+        } else if (!REGEX.email.test(form.email)) {
+            errors.email = "Invalid email address";
+        }if (!form.password) {
+                errors.password = "Please check and re-enter";
+            }
+            return errors;
         }
-        if (!form.password) {
-            errors.password = "Please check and re-enter";
-        }
-        return errors;
-    }
 
     function handleSubmit() {
         axios.post('http://localhost:8080/api/auth/signin', form)
@@ -109,7 +114,7 @@ const Login = () => {
                                     <div className="pt-3">
                                         <button
                                             type="submit"
-                                                className="w-[90%] justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Continue
+                                            className="w-[90%] justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Continue
                                         </button>
                                     </div>
                                 </form>
@@ -130,7 +135,7 @@ const Login = () => {
                 <img src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-right.3ee60d6f.svg"/>
             </div>
         </section>
-    )
+    );
 };
 
 export default Login;

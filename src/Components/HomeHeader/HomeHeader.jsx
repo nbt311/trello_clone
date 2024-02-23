@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {IoAppsSharp} from "react-icons/io5";
 import Dropdown from "./Dropdown";
-import {MdAddBox} from "react-icons/md";
+import {MdAddBox, MdKeyboardArrowDown} from "react-icons/md";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
@@ -16,6 +16,8 @@ import {
 import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
 import AuthService from "../../Service/auth.service";
+
+
 
 const HomeHeader = () => {
     const [user, setUser] = useState({});
@@ -39,7 +41,39 @@ const HomeHeader = () => {
                     </Link>
 
                     <div className='flex space-x-4'>
-                        <Dropdown title='Workspaces'/>
+                            <Menu>
+                                <MenuButton px={4}
+                                            py={2}
+                                            _hover={{ bg: 'gray.200'}}>
+                                    <Dropdown title='Workspace'/>
+                                </MenuButton>
+                                <MenuList>
+                                    <p className="text-sm flex ml-3">Current Workspace</p>
+                                    <MenuItem>
+                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                        <div className='ml-2'>
+                                            <p className='text-base font-medium'>{user.username}</p>
+                                        </div>
+                                    </MenuItem>
+                                    <MenuDivider/>
+                                    <p className="text-sm flex ml-3">Your Workspaces</p>
+                                    <MenuItem>
+                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                        <div className='ml-2'>
+                                            <p className='text-base font-medium'>{user.username}</p>
+                                        </div>
+                                    </MenuItem>
+                                    <p className="text-sm flex ml-3">Guest Workspaces</p>
+                                    <MenuItem>
+                                        <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                        <div className='ml-2'>
+                                            <p className='text-base font-medium'>{user.username}</p>
+                                        </div>
+                                    </MenuItem>
+                                </MenuList>
+                            </Menu>
+
+
                         <Dropdown title='Recent'/>
                         <Dropdown title='Starred'/>
                         <Dropdown title='Templates'/>
