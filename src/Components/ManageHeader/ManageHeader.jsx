@@ -17,7 +17,6 @@ const ManageHeader = ({user, setUser}) => {
     const [activeTab, setActiveTab] = useState('');
     const navigate = useNavigate();
 
-
     const HandleTabClick = (title) => {
         setActiveTab(title)
         if (title === "Profile and visibility") {

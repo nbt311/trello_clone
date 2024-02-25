@@ -20,8 +20,6 @@ const Router = () => {
     }, [isLoggedIn]);
 
     return (
-        <div>
-            <div>
                 <Routes>
                     <Route
                         path='/login'
@@ -33,8 +31,6 @@ const Router = () => {
                     <Route path='/signup' element={<Signup/>}/>
                     {/*<Route path='/upload' element={<FirebaseImageUpload/>}/>*/}
                 </Routes>
-            </div>
-        </div>
     );
 };
 
