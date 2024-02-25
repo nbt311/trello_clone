@@ -1,14 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ManageHeader from "../../Components/ManageHeader/ManageHeader";
 import {Route, Routes} from "react-router-dom";
 import ProfilePage from "../../Components/ManageBody/ProfilePage";
 import SecurityPage from "../../Components/ManageBody/SecurityPage";
 
 const ManagePage = () => {
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
+    
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <ManageHeader/>
+                <ManageHeader user={user} setUser={setUser}/>
             </div>
 
             <div className='mt-3 w-full justify-center items-center'>
@@ -16,7 +23,7 @@ const ManagePage = () => {
                     <Routes>
                         <Route path='/profile-and-visibility' element={
                             <div className='pl-0 text-left'>
-                                <ProfilePage/>
+                                <ProfilePage user={user} setUser={setUser}/>
                             </div>
                         }/>
 

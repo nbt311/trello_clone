@@ -71,76 +71,92 @@ const Signup = () => {
 
     return (
         <div>
-            <section className="relative bg-gray-100 dark:bg-gray-800 h-screen">
+            <section className="relative bg-gray-100 h-screen">
                 <div className="flex flex-col items-center justify-center h-screen">
-                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md
-                    xl:p-0 dark:bg-gray-800 dark:border-gray-700 space-y-10">
-                        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md
+                    xl:p-0 space-y-8">
+                        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
                             <img className="mx-auto h-10 w-auto"
                                  src="https://upload.wikimedia.org/wikipedia/en/8/8c/Trello_logo.svg" alt="Not loaded"/>
                             <h3 className="mt-2 text-center text-2xl leading-9 tracking-tight
                                 text-gray-900">Sign up to continue</h3>
                         </div>
-                        <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
+
+                        <div className="pb-3 sm:mx-auto sm:w-full sm:max-w-sm">
                             <Formik initialValues={form} validate={handleValidate} onSubmit={handleSubmit}>
                                 {({errors, handleSubmit}) => (
                                     <form onSubmit={handleSubmit}>
-                                        <div className={`custom-input ${
-                                            errors.email ? "custom-input-error" : ""
-                                        }`}>
-                                            <label htmlFor="email" className="text-sm font-medium text-gray-900
-                                                    dark:text-white block text-left ml-6 ">Email address</label>
-                                            <input type="email" id="email" name="email" placeholder="Enter email"
-                                                   value={form.email || ""} onChange={handleChange}
-                                                   className="hover:bg-gray-200 bg-gray-50 border border-gray-300
+                                        <div className='space-y-5'>
+                                            <div className={`custom-input ${
+                                                errors.email ? "custom-input-error" : ""
+                                            }`}>
+                                                <label htmlFor="email" className="text-sm font-medium text-gray-900
+                                            block text-left ml-6 mb-2">
+                                                    Email address
+                                                </label>
+
+                                                <input type="email" id="email" name="email" placeholder="Enter email"
+                                                       value={form.email || ""} onChange={handleChange}
+                                                       className="hover:bg-gray-200 bg-gray-50 border border-gray-300
                                                    text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
-                                                   w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                                                   dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                                            <p className="text-sm text-red-500">{errors.email}</p>
-                                        </div>
-                                        <div className={`custom-input ${
-                                            errors.username ? "custom-input-error" : ""
-                                        }`}>
-                                            <label htmlFor="username" className="text-sm font-medium text-gray-900
-                                                    dark:text-white block text-left ml-6 ">Username</label>
-                                            <input type="username" id="username" name="username"
-                                                   placeholder="Enter username"
-                                                   value={form.username || ""} onChange={handleChange}
-                                                   className="hover:bg-gray-200 bg-gray-50 border border-gray-300
+                                                   w-[90%] p-2.5"/>
+
+                                                <p className="text-sm text-red-500">{errors.email}</p>
+                                            </div>
+
+                                            <div className={`custom-input ${
+                                                errors.username ? "custom-input-error" : ""
+                                            }`}>
+                                                <label htmlFor="username" className="text-sm font-medium text-gray-900
+                                            block text-left ml-6 mb-2">
+                                                    Username
+                                                </label>
+
+                                                <input type="username" id="username" name="username"
+                                                       placeholder="Enter username"
+                                                       value={form.username || ""} onChange={handleChange}
+                                                       className="hover:bg-gray-200 bg-gray-50 border border-gray-300
                                                    text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
-                                                   w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                                                   dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                                            <p className="text-sm text-red-500">{errors.username}</p>
-                                        </div>
-                                        {/*<div className={`custom-input ${*/}
-                                        {/*    errors.name ? "custom-input-error" : ""*/}
-                                        {/*}`}>*/}
-                                        {/*    <label htmlFor="name" className="text-sm font-medium text-gray-900*/}
-                                        {/*            dark:text-white block text-left ml-6 ">Full name</label>*/}
-                                        {/*    <input type="name" id="name" name="name"*/}
-                                        {/*           placeholder="Enter full name"*/}
-                                        {/*           value={form.name || ""} onChange={handleChange}*/}
-                                        {/*           className="hover:bg-gray-200 bg-gray-50 border border-gray-300*/}
-                                        {/*           text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600*/}
-                                        {/*           w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400*/}
-                                        {/*           dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>*/}
-                                        {/*    <p className="text-sm text-red-500">{errors.name}</p>*/}
-                                        {/*</div>*/}
-                                        <div className={`custom-input ${
-                                            errors.password ? "custom-input-error" : ""
-                                        }`}>
-                                            <label htmlFor="password" className="text-sm font-medium text-gray-900
-                                                    dark:text-white block text-left ml-6 ">Password</label>
-                                            <input type="password" id="password" name="password"
-                                                   placeholder="Enter password"
-                                                   value={form.password || ""} onChange={handleChange}
-                                                   className="hover:bg-gray-200 bg-gray-50 border border-gray-300
+                                                   w-[90%] p-2.5"/>
+
+                                                <p className="text-sm text-red-500">{errors.username}</p>
+                                            </div>
+
+                                            {/*<div className={`custom-input ${*/}
+                                            {/*    errors.name ? "custom-input-error" : ""*/}
+                                            {/*}`}>*/}
+                                            {/*    <label htmlFor="name" className="text-sm font-medium text-gray-900*/}
+                                            {/*            dark:text-white block text-left ml-6 ">Full name</label>*/}
+                                            {/*    <input type="name" id="name" name="name"*/}
+                                            {/*           placeholder="Enter full name"*/}
+                                            {/*           value={form.name || ""} onChange={handleChange}*/}
+                                            {/*           className="hover:bg-gray-200 bg-gray-50 border border-gray-300*/}
+                                            {/*           text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600*/}
+                                            {/*           w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400*/}
+                                            {/*           dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>*/}
+                                            {/*    <p className="text-sm text-red-500">{errors.name}</p>*/}
+                                            {/*</div>*/}
+
+                                            <div className={`custom-input ${
+                                                errors.password ? "custom-input-error" : ""
+                                            }`}>
+                                                <label htmlFor="password" className="text-sm font-medium text-gray-900
+                                            block text-left ml-6 mb-2">
+                                                    Password
+                                                </label>
+
+                                                <input type="password" id="password" name="password"
+                                                       placeholder="Enter password"
+                                                       value={form.password || ""} onChange={handleChange}
+                                                       className="hover:bg-gray-200 bg-gray-50 border border-gray-300
                                                    text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
-                                                   w-[90%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                                                   dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                                            <p className="text-sm text-red-500">{errors.password}</p>
+                                                   w-[90%] p-2.5"/>
+
+                                                <p className="text-sm text-red-500">{errors.password}</p>
+                                            </div>
                                         </div>
-                                        <div className="text-sm font-light text-gray-500 dark:text-gray-400 mt-5 mb-3 ">
+
+                                        <div className="text-sm font-light text-gray-500 mt-5 mb-3 ">
                                             <Link to="/login" className="font-medium text-primary-600 hover:underline hover:text-blue-500">
                                                 Are you already have an account? Sign in
                                             </Link>
@@ -150,7 +166,8 @@ const Signup = () => {
                                             <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600
                                             px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500
                                             focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-                                            focus-visible:outline-indigo-600 mb-5">Continue
+                                            focus-visible:outline-indigo-600 mb-5">
+                                                Continue
                                             </button>
                                         </div>
                                     </form>
