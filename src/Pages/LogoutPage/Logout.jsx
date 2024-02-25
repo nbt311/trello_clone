@@ -19,7 +19,8 @@ const Logout = ({isLoggedIn, setLoggedIn}) => {
             duration: 3000,
             isClosable: true,
         });
-        setLoggedIn(false)
+        // setLoggedIn(false)
+        navigate('/login')
     }
     return (
         <div>

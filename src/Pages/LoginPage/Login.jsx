@@ -46,7 +46,8 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
                     duration: 3000,
                     isClosable: true,
                 });
-                setLoggedIn(true)
+                // setLoggedIn(true)
+                navigate('/')
             })
             .catch(error => {
                 toast({

@@ -8,15 +8,12 @@ import {
     ModalOverlay, useDisclosure
 } from "@chakra-ui/react";
 
-const InviteFriendWorkspace = () => {
-    const {isOpen, onOpen, onClose} = useDisclosure()
+const InviteFriendWorkspace = ({isOpen, onOpen, onClose}) => {
+    // const {isOpen, onOpen, onClose} = useDisclosure()
     const [workspaceEmail, setWorkspaceEmail] = useState("")
     const isButtonDisabled = !workspaceEmail;
 
     const handleContinue = () => {
-        if (!workspaceEmail) {
-            console.error("Please fill in all fields.");
-        }
         // axios.post("/api/create-workspace", {
         //     name: workspaceEmail
         // })
@@ -25,10 +22,10 @@ const InviteFriendWorkspace = () => {
         //     .catch(error => {
         //         console.error("Error creating workspace:", error);
         //     });
+        onClose(setWorkspaceEmail(null));
     };
     return (
         <div>
-            <Button onClick={onOpen}>Trigger modal</Button>
 
             <Modal size={"6xl"} onClose={onClose} isOpen={isOpen} isCentered>
                 <ModalOverlay/>

@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Button, ButtonGroup, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay} from "@chakra-ui/react";
-import {FaPhotoVideo} from "react-icons/fa";
-import {GrEmoji} from "react-icons/gr";
-import {GoLocation} from "react-icons/go";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import {imageDb} from "../../FirebaseImageUpload/Config";
 import {v4} from "uuid";

@@ -17,13 +17,17 @@ import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
 import AuthService from "../../Service/auth.service";
 
-const HomeHeader = () => {
+const HomeHeader = ({onOpen, onClose}) => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
+
+    const handleCreate = () => {
+        onOpen()
+    }
 
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
@@ -46,7 +50,7 @@ const HomeHeader = () => {
                     </div>
 
                     <div>
-                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' color='#2435FA'/>
+                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' onClick={handleCreate} color='#2435FA'/>
                     </div>
                 </div>
 

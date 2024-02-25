@@ -8,33 +8,32 @@ import {
     ModalOverlay, Select, Textarea, useDisclosure
 } from "@chakra-ui/react";
 import axios from "axios";
-const CreateWorkspace = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+import InviteFriendWorkspace from "./InviteFriendWorkspace";
+const CreateWorkspaceModal = ({isOpen, onOpen, onClose}) => {
     const [workspaceName, setWorkspaceName] = useState("");
     const [workspaceType, setWorkspaceType] = useState("");
     const [workspaceDescription, setWorkspaceDescription] = useState("");
-
     const isButtonDisabled = !workspaceName || !workspaceType;
 
+    const secondModalDisclosure = useDisclosure()
+
     const handleContinue = () => {
-        // if (!workspaceName || !workspaceType) {
-        //     console.error("Please fill in all fields.");
-        // }
-        // axios.post("http://localhost:8080/api/test/workspaces", {
-        //     name: workspaceName,
-        //     type: workspaceType,
-        //     description: workspaceDescription
-        // })
-        //     .then(response => {
-        //     })
-        //     .catch(error => {
-        //         console.error("Error creating workspace:", error);
-        //     });
+        axios.post("http://localhost:8080/api/test/workspaces", {
+            name: workspaceName,
+            type: workspaceType,
+            description: workspaceDescription
+        })
+            .then(response => {
+            })
+            .catch(error => {
+                console.error("Error creating workspace:", error);
+            });
+        secondModalDisclosure.onOpen();
+        onClose(setWorkspaceName(null), setWorkspaceType(null), setWorkspaceDescription(null));
     };
+
     return (
             <>
-                <Button onClick={onOpen}>Trigger modal</Button>
-
                 <Modal size={"6xl"} onClose={onClose} isOpen={isOpen} isCentered>
                     <ModalOverlay />
                     <ModalContent>
@@ -77,8 +76,9 @@ const CreateWorkspace = () => {
                         </ModalBody>
                     </ModalContent>
                 </Modal>
+                <InviteFriendWorkspace isOpen={secondModalDisclosure.isOpen} onOpen={secondModalDisclosure.onOpen} onClose={secondModalDisclosure.onClose}/>
             </>
         )
 };
 
-export default CreateWorkspace;
+export default CreateWorkspaceModal;
