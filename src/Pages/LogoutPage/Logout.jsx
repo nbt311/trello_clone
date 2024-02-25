@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Avatar, useToast} from "@chakra-ui/react";
 import AuthService from "../../Service/auth.service";
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 const Logout = () => {
     const [user, setUser] = useState({});
     const toast = useToast();
@@ -11,15 +12,21 @@ const Logout = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
-    const handleLogout = () => {
-        AuthService.logout();
-        toast({
-            title: 'Logout Successfuly',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });
-        navigate("/login");
+    const handleLogout = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/logout');
+            AuthService.logout();
+            toast({
+                title: 'Logout Successfuly',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+            navigate("/login");
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+
     }
     return (
         <div>
