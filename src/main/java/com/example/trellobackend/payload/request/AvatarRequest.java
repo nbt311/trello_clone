@@ -1,13 +1,23 @@
 package com.example.trellobackend.payload.request;
 
-import jakarta.validation.constraints.NotBlank;
-
-public class LoginRequest {
-    @NotBlank
+public class AvatarRequest {
+    private String image;
     private String email;
-
-    @NotBlank
     private String password;
+
+    public AvatarRequest(String image, String email, String password) {
+        this.image = image;
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getEmail() {
         return email;

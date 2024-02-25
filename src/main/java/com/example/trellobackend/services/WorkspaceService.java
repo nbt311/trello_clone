@@ -1,13 +1,12 @@
 package com.example.trellobackend.services;
 
-import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.WorkSpace;
-import com.example.trellobackend.payload.request.WorkspaceRequest;
+import com.example.trellobackend.models.Workspace;
+
+import java.util.Optional;
 
 public interface WorkspaceService {
-    WorkSpace createWorkspace(WorkspaceRequest workspaceRequest, User creator);
-
-    void inviteUserToWorkspace(User inviter, User invitedUser, WorkSpace workspace);
-
-
+    Iterable<Workspace> findAll();
+    Optional<Workspace> findById(Long id);
+    Workspace save(Workspace workspace);
+    void delete(Long id);
 }
