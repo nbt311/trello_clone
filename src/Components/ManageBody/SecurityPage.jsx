@@ -22,7 +22,7 @@ const SecurityPage = () => {
     const handleCurrentClick = () => setShowCurrent(!showCurrent)
     const handleNewClick = () => setShowNew(!showNew)
     const handlePasswordChange = () => {
-        axios.post("http://localhost:8080/api/user/security", { email: user.email,
+        axios.post("http://localhost:8080/api/users/security", { email: user.email,
             currentPassword,
            newPassword,
         })
