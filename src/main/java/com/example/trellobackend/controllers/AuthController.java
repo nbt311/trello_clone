@@ -11,14 +11,18 @@ import com.example.trellobackend.repositories.RoleRepository;
 import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.security.jwt.JwtUtils;
 import com.example.trellobackend.security.service.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -113,5 +117,11 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request , HttpServletResponse response){
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request,response, SecurityContextHolder.getContext().getAuthentication());
+        return ResponseEntity.ok("Logout successful");
     }
 }
