@@ -1,19 +1,12 @@
-import React, {useState} from 'react';
-import {Avatar} from "@chakra-ui/react";
+import React from 'react';
+import {Avatar, useDisclosure} from "@chakra-ui/react";
 import {IoIosCamera, IoIosInformationCircle} from "react-icons/io";
 import {IoEarth} from "react-icons/io5";
 import {MdInsertPhoto} from "react-icons/md";
-import {ref} from "yup";
-import {imageDb} from "../../FirebaseImageUpload/Config";
-import { v4 } from "uuid";
+import UploadUserAvatarModal from "../UploadUserImage/UploadUserAvatarModal";
 
-const ProfilePage = () => {
-    const [img, setImg] = useState()
-
-    const handleClick = () => {
-      const imgRef = ref(imageDb, `files/${(v4)}`);
-
-    }
+const ProfilePage = ({user, setUser}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
         <div>
@@ -37,7 +30,8 @@ const ProfilePage = () => {
 
                 <div className='mt-4 border border-gray-200 rounded-md relative'>
                     <div className='relative text-white cursor-pointer'>
-                        <div className='bg-gradient-to-r from-cyan-400 to-cyan-200 h-28 rounded-t-md border-b-gray-200'></div>
+                        <div
+                            className='bg-gradient-to-r from-cyan-400 to-cyan-200 h-28 rounded-t-md border-b-gray-200'></div>
 
                         {/* Overlay */}
                         <div
@@ -50,21 +44,18 @@ const ProfilePage = () => {
                     </div>
 
 
-                    <div className='absolute flex flex-col items-center inset-x-10 my-auto top-10 rounded-full border border-white w-fit'>
+                    <div
+                        className='absolute flex flex-col items-center inset-x-10 my-auto top-10 rounded-full border border-white w-fit'>
                         <div>
-                                <Avatar className='border-2 border-white' name='Username' size='xl'/>
+                            <Avatar className='border-2 border-white' name={user.username} size='xl'
+                                    src={user.avatarUrl}/>
                         </div>
 
+                        {/* Overlay */}
                         <label htmlFor="avatarInput" className="cursor-pointer">
                             <div className='absolute flex items-center justify-center inset-0 bg-black rounded-full
-                        opacity-0 hover:bg-opacity-50 hover:opacity-100 transition-opacity duration-300'>
+                        opacity-0 hover:bg-opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-pointer' onClick={onOpen}>
                                 <IoIosCamera className='text-4xl' color='white'/>
-                                <input
-                                    id="avatarInput"
-                                    type="file"
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                />
                             </div>
                         </label>
                     </div>
@@ -82,11 +73,9 @@ const ProfilePage = () => {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-
+            <UploadUserAvatarModal isOpen={isOpen} onClose={onClose} user={user} setUser={setUser}/>
         </div>
     );
 };

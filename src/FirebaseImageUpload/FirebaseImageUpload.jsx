@@ -2,18 +2,16 @@ import React, {useEffect, useState} from 'react';
 import { imageDb } from "./Config";
 import {parse, v4} from "uuid";
 import { getDownloadURL,listAll, ref, uploadBytes } from "firebase/storage";
-import AuthService from "../Service/auth.service";
 import axios from "axios";
 
 const FirebaseImageUpload = () => {
     const [img, setImg] = useState('')
-    const [imgUrl, setImgUrl] = useState([])
     const [user, setUser] = useState({});
 
 
 
     const handleClick = () => {
-        const imgRef = ref(imageDb, `files/${v4()}`)
+        const imgRef = ref(imageDb, `data/${v4()}`)
         uploadBytes(imgRef,img).then(value => {
             getDownloadURL(value.ref).then(url => {
                 console.log(url, "url")

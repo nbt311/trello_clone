@@ -104,7 +104,7 @@ const HomeHeader = () => {
 
                             <MenuList className='mt-1.5'>
                                 <MenuGroup className='font-medium' title='Account'>
-                                    <MenuItem>
+                                    <MenuItem pointerEvents={'none'}>
                                         <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                                         <div className='ml-2'>
                                             <p className='text-base font-medium'>{user.username}</p>

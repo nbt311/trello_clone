@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import HomePage from "../Pages/HomePage/HomePage";
 import ManagePage from "../Pages/ManagePage/ManagePage";
@@ -9,7 +9,15 @@ import FirebaseImageUpload from "../FirebaseImageUpload/FirebaseImageUpload";
 
 const Router = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const navigate = useNavigate()
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate('/')
+        } else {
+            navigate('/login')
+        }
+    }, [isLoggedIn]);
 
     return (
         <div>
@@ -17,13 +25,13 @@ const Router = () => {
                 <Routes>
                     <Route
                         path='/login'
-                        element={<Login/>}
+                        element={<Login isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn}/>}
                     />
                     <Route path='/' element={<HomePage/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
-                    <Route path='/logout' element={<Logout/>}/>
+                    <Route path='/logout' element={<Logout isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn}/>}/>
                     <Route path='/signup' element={<Signup/>}/>
-                    <Route path='/upload' element={<FirebaseImageUpload/>}/>
+                    {/*<Route path='/upload' element={<FirebaseImageUpload/>}/>*/}
                 </Routes>
             </div>
         </div>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Avatar, useToast} from "@chakra-ui/react";
 import AuthService from "../../Service/auth.service";
 import {useNavigate} from "react-router-dom";
-const Logout = () => {
+const Logout = ({isLoggedIn, setLoggedIn}) => {
     const [user, setUser] = useState({});
     const toast = useToast();
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Logout = () => {
             duration: 3000,
             isClosable: true,
         });
-        navigate("/login");
+        setLoggedIn(false)
     }
     return (
         <div>
@@ -34,7 +34,7 @@ const Logout = () => {
                             Sign out of account Atlassian
                         </h1>
                         <div className="flex items-center justify-center">
-                            <Avatar size='lg' name={user.username} src=''/>
+                            <Avatar size='lg' name={user.username} src={user.avatarUrl}/>
                             <div className='ml-2'>
                                 <p className='text-base font-medium'>{user.username}</p>
                                 <p className='text-sm'>{user.email}</p>

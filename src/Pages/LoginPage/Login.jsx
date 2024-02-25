@@ -5,7 +5,7 @@ import axios from "axios";
 import {useToast} from '@chakra-ui/react'
 import {Link, useNavigate} from "react-router-dom";
 
-const Login = () => {
+const Login = ({isLoggedIn, setLoggedIn}) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [form, setForm] = useState({});
     const toast = useToast();
@@ -46,7 +46,7 @@ const Login = () => {
                     duration: 3000,
                     isClosable: true,
                 });
-                navigate('/')
+                setLoggedIn(true)
             })
             .catch(error => {
                 toast({
