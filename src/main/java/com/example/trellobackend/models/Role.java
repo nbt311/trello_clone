@@ -1,6 +1,6 @@
 package com.example.trellobackend.models;
 
-import com.example.trellobackend.enums.ERole;
+import com.example.trellobackend.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ERole name;
+    private UserRole name;
 }

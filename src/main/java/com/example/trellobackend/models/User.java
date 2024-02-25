@@ -1,5 +1,6 @@
 package com.example.trellobackend.models;
 
+import com.example.trellobackend.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -46,6 +47,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private UserRole memberRole;
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
