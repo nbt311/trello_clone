@@ -44,16 +44,17 @@ public class UserController {
     @PostMapping("/security")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request) throws IllegalAccessException {
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
                 throw new IllegalAccessException("Wrong password");
             }
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("Change password successfully!"));
-        }else {
+        } else {
             // Xử lý khi không tìm thấy người dùng với email cung cấp
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found"));
->>>>>>> origin/api/change-password
+        }
+    }
 }
