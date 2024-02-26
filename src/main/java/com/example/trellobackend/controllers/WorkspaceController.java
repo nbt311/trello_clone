@@ -1,36 +1,37 @@
 package com.example.trellobackend.controllers;
 
-<<<<<<< HEAD
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
+import com.example.trellobackend.repositories.WorkspaceRepository;
+import com.example.trellobackend.repositories.WorkspaceTypeRepository;
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
-=======
->>>>>>> parent of fad964f (recreate api create workspace. need to add type and permission)
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
+
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
-=======
->>>>>>> parent of fad964f (recreate api create workspace. need to add type and permission)
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/workspaces")
 public class WorkspaceController {
     @Autowired
     private WorkspaceServiceImpl workspaceService;
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private WorkspaceTypeRepository workspaceTypeRepository;
     @GetMapping
     public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
         Iterable<Workspace> workspaces = workspaceService.findAll();
         return new ResponseEntity<>(workspaces, HttpStatus.OK);
     }
-<<<<<<< HEAD
 //    @PostMapping("/create")
 //    public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest){
 //        Optional<User> userOptional = userRepository.findByEmail(workspaceRequest.getEmail());
@@ -63,11 +64,5 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
-=======
-    @PostMapping("/create")
-    public ResponseEntity<?> createWorkspace(@RequestBody Workspace workspace){
-        Workspace createWorkspace = workspaceService.save(workspace);
-        return new ResponseEntity<>(createWorkspace, HttpStatus.CREATED);
->>>>>>> parent of fad964f (recreate api create workspace. need to add type and permission)
     }
 }

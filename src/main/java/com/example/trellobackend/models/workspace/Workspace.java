@@ -24,7 +24,7 @@ public class Workspace {
     @JoinTable(  name = "workspace_types",
             joinColumns = @JoinColumn(name = "workspace_id"),
             inverseJoinColumns = @JoinColumn(name = "type_id"))
-    private Set<Role> types= new HashSet<>();
+    private Set<Type> types= new HashSet<>();
 
     private String description;
 
@@ -32,6 +32,6 @@ public class Workspace {
     @JoinTable(  name = "workspace_permissions",
             joinColumns = @JoinColumn(name = "workspace_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private Set<Role> permissions = new HashSet<>();
+    private Set<Permission> permissions = new HashSet<>();
 
 }
