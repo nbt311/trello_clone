@@ -53,14 +53,6 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
     }
 }
-
-    @PostMapping("/cr")
-    public ResponseEntity<Workspace> createWorkspace(@RequestBody Workspace workspace) {
-        return new ResponseEntity<>(workspaceRepository.save(workspace), HttpStatus.CREATED);
-    }
-
-
-
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();

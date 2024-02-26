@@ -1,5 +1,6 @@
 package com.example.trellobackend.models.workspace;
 
+import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,4 +21,6 @@ public class Members {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

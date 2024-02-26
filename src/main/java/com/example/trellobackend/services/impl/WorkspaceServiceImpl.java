@@ -50,17 +50,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public Workspace createWorkspace(WorkspaceRequest workspaceRequest) {
-//        WorkspaceType type = workspaceTypeRepository.getReferenceById(workspaceRequest.getTypeId());
-//        WorkspacePermission permission = workspacePermissionRepository.getReferenceById(workspaceRequest.getPermissionId());
-//        Workspace workspace = new Workspace();
-//        workspace.setName(workspaceRequest.getName());
-//        workspace.setDescription(workspaceRequest.getDescription());
-//        workspace.setType(type);
-//        workspace.setPermission(permission);
-//        workspaceRepository.save(workspace);
-//
-//        addMemberToWorkspace(workspace,creator, UserRole.ROLE_ADMIN);
-//        return workspace;
         Optional<User> userOptional = userRepository.findByEmail(workspaceRequest.getEmail());
         if (userOptional.isPresent()) {
             User creator = userOptional.get();
@@ -114,16 +103,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                     }
                 });
             }
-
             workspace.setTypes(types);
-
-
-
-
-//            workspace.setType();
-//            workspace.setPermission(permission);
             workspaceRepository.save(workspace);
-
             addMemberToWorkspace(workspace, creator, UserRole.ROLE_ADMIN);
             return workspace;
         }
@@ -134,6 +115,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Members member = new Members();
         member.setWorkspace(workspace);
         member.setUser(user);
+        member.setRole(userRole);
         workspaceMemberRepository.save(member);
     }
 }
