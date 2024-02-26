@@ -17,15 +17,18 @@ import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
 import AuthService from "../../Service/auth.service";
 
-
-const HomeHeader = () => {
+const HomeHeader = ({onOpen, onClose}) => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
-    // const currentUser = AuthService.getCurrentUser();
+
+    const handleCreate = () => {
+        onOpen()
+    }
+
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
@@ -35,9 +38,8 @@ const HomeHeader = () => {
                     </div>
 
                     <Link className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2' to='/'>
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
-                            alt=""/>
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
+                             alt=""/>
                     </Link>
 
                     <div className='flex space-x-4'>
@@ -84,7 +86,7 @@ const HomeHeader = () => {
                     </div>
 
                     <div>
-                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' color='#2435FA'/>
+                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' onClick={handleCreate} color='#2435FA'/>
                     </div>
                 </div>
 
@@ -127,6 +129,7 @@ const HomeHeader = () => {
                     </div>
 
 
+
                     <div>
                         <Menu>
                             <MenuButton
@@ -136,13 +139,13 @@ const HomeHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                <Avatar size='sm' name={user.username} src=''/>
+                                <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                             </MenuButton>
 
                             <MenuList className='mt-1.5'>
                                 <MenuGroup className='font-medium' title='Account'>
-                                    <MenuItem>
-                                        <Avatar size='sm' name={user.username} src=''/>
+                                    <MenuItem pointerEvents={'none'}>
+                                        <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                                         <div className='ml-2'>
                                             <p className='text-base font-medium'>{user.username}</p>
                                             <p className='text-sm'>{user.email}</p>

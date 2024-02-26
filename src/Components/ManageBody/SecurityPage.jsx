@@ -1,14 +1,52 @@
-import React from 'react';
-import {Button, Input, InputGroup, InputRightElement} from "@chakra-ui/react";
+import React, {useEffect, useState} from 'react';
+import {Button, Input, InputGroup, InputRightElement, useToast} from "@chakra-ui/react";
 import {MdOutlineRemoveRedEye, MdRemoveRedEye} from "react-icons/md";
+import axios from "axios";
+import AuthService from "../../Service/auth.service";
 
 const SecurityPage = () => {
     const [showCurrent, setShowCurrent] = React.useState(false)
     const [showNew, setShowNew] = React.useState(false)
+    const [currentPassword, setCurrentPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("");
+
+    const toast = useToast()
+    const isButtonDisabled = !currentPassword;
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
 
     const handleCurrentClick = () => setShowCurrent(!showCurrent)
     const handleNewClick = () => setShowNew(!showNew)
-
+    const handlePasswordChange = () => {
+        axios.post("http://localhost:8080/api/users/security", { email: user.email,
+            currentPassword,
+           newPassword,
+        })
+            .then(response => {
+                toast({
+                    title: 'Register Successful',
+                    description: 'You have successfully registered.',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                });
+                setCurrentPassword("");
+                setNewPassword("");
+            })
+            .catch(error => {
+                toast({
+                    title: 'Register Failed',
+                    description: 'Please check your credentials and try again.',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            });
+    }
     return (
         <div>
             <div className='mt-10'>
@@ -29,7 +67,8 @@ const SecurityPage = () => {
                         <p className='mb-2 font-semibold text-sm'>Current password <span className='text-sm font-semibold text-red-600'>*</span></p>
 
                         <InputGroup className='mt-3' size='lg'>
-                            <Input
+                            <Input value={currentPassword} onChange={(e) =>
+                                setCurrentPassword(e.target.value) }
                                 type={showCurrent ? 'text' : 'password'}
                                 placeholder='Enter current password'
                             />
@@ -47,7 +86,8 @@ const SecurityPage = () => {
                         <p className='mb-2 font-semibold text-sm'>New password <span className='text-sm font-semibold text-red-600'>*</span></p>
 
                         <InputGroup className='mt-3' size='lg'>
-                            <Input
+                            <Input value={newPassword} onChange={(e) =>
+                                setNewPassword(e.target.value) }
                                 pr='2 rem'
                                 type={showNew ? 'text' : 'password'}
                                 placeholder='Enter new password'
@@ -60,6 +100,8 @@ const SecurityPage = () => {
                         </InputGroup>
                     </div>
                 </div>
+
+                <Button type='submit' isDisabled={isButtonDisabled} colorScheme='blue' onClick={handlePasswordChange}>Save changes</Button>
             </div>
         </div>
     );

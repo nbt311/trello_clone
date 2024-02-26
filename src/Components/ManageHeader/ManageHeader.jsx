@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {IoAppsSharp} from "react-icons/io5";
 import {FaQuestionCircle} from "react-icons/fa";
 import {
@@ -13,7 +13,7 @@ import {FaUserGroup} from "react-icons/fa6";
 import {FiLogOut} from "react-icons/fi";
 import {Link, useNavigate} from "react-router-dom";
 
-const ManageHeader = () => {
+const ManageHeader = ({user, setUser}) => {
     const [activeTab, setActiveTab] = useState('');
     const navigate = useNavigate();
 
@@ -82,15 +82,15 @@ const ManageHeader = () => {
                                 borderRadius='full'
                                 _hover={{bg: 'gray.200'}}
                             >
-                                <Avatar size='sm' name='Username' src=''/>
+                                <Avatar size='sm' name={user.username} src={user.avatarUrl}/>
                             </MenuButton>
 
                             <MenuList className='my-1.5'>
-                                <MenuItem background={'ghostwhite'}>
-                                    <Avatar size='lg' name='Username' src=''/>
+                                <MenuItem background={'ghostwhite'} pointerEvents={'none'}>
+                                    <Avatar size='lg' name={user.username} src={user.avatarUrl}/>
                                     <div className='ml-2'>
-                                        <p className='text-lg font-bold'>Username</p>
-                                        <p className='text-base font-medium'>username@gmail.com</p>
+                                        <p className='text-lg font-bold'>{user.username}</p>
+                                        <p className='text-base font-medium'>{user.email}</p>
                                     </div>
                                 </MenuItem>
 
@@ -101,8 +101,12 @@ const ManageHeader = () => {
                                     </MenuItem>
 
                                     <MenuItem>
-                                        <FiLogOut className='text-base'/>
-                                        <span className='ml-2 text-base font-medium'>Log out</span>
+                                        <Link to={'/logout'}>
+                                            <div className='flex items-center'>
+                                                <FiLogOut className='text-base'/>
+                                                <span className='ml-2 text-base font-medium'>Log out</span>
+                                            </div>
+                                        </Link>
                                     </MenuItem>
                                 </div>
                             </MenuList>
