@@ -10,6 +10,7 @@ import CreateWorkspaceModal from "../Components/WorkspaceModal/CreateWorkspaceMo
 import InviteFriendWorkspace from "../Components/WorkspaceModal/InviteFriendWorkspace";
 import InvitePopup from "../Components/WorkspaceModal/InvitePopup";
 import InvitePopupTwo from "../Components/WorkspaceModal/InvitePopupTwo";
+import Workspace from "../Pages/WorkspacePage/Workspace";
 
 
 const Router = () => {
