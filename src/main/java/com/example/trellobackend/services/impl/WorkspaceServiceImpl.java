@@ -2,6 +2,8 @@ package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.*;
+import com.example.trellobackend.models.workspace.Workspace;
+import com.example.trellobackend.models.workspace.Members;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.WorkspaceService;
@@ -73,7 +75,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     public void addMemberToWorkspace(Workspace workspace, User user, UserRole userRole) {
-        WorkspaceMember member = new WorkspaceMember();
+        Members member = new Members();
         member.setWorkspace(workspace);
         member.setUser(user);
         workspaceMemberRepository.save(member);

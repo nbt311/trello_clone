@@ -1,9 +1,7 @@
-package com.example.trellobackend.models;
+package com.example.trellobackend.models.workspace;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.trellobackend.enums.WorkSpaceType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class WorkspaceType {
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private WorkSpaceType name;
 }

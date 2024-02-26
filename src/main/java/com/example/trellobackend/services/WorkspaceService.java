@@ -1,7 +1,6 @@
 package com.example.trellobackend.services;
 
-import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.Workspace;
+import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 
 import java.util.Optional;

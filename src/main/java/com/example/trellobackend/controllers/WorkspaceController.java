@@ -1,12 +1,10 @@
 package com.example.trellobackend.controllers;
 
-import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.Workspace;
-import com.example.trellobackend.models.WorkspaceType;
+import com.example.trellobackend.models.workspace.Workspace;
+import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.UserRepository;
-import com.example.trellobackend.repositories.WorkspacePermissionRepository;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
@@ -17,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -66,7 +63,7 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
 
 
     @GetMapping("/type")
-    public List<WorkspaceType> getAllWorkspaceTypes() {
+    public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
     }
 }
