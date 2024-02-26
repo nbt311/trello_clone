@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class WorkspaceServiceImpl implements WorkspaceService {
@@ -49,7 +50,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public Workspace createWorkspace(WorkspaceRequest workspaceRequest) {
+    public Workspace createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL) {
         Optional<User> userOptional = userRepository.findByEmail(workspaceRequest.getEmail());
         if (userOptional.isPresent()) {
             User creator = userOptional.get();
@@ -104,11 +105,21 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 });
             }
             workspace.setTypes(types);
+            String inviteCode = generateInviteCode();
+            frontendURL = workspaceRequest.getFrontendURL(); // Lấy đường link của frontend từ request
+            String inviteLink = frontendURL + "/w/" + workspace.getName() + inviteCode;
+            workspace.setInviteCode(inviteCode);
+            workspace.setInviteLink(inviteLink);
             workspaceRepository.save(workspace);
             addMemberToWorkspace(workspace, creator, UserRole.ROLE_ADMIN);
             return workspace;
         }
         throw new UsernameNotFoundException("User not found");
+    }
+
+    private String generateInviteCode() {
+        // Logic để tạo mã đặc biệt, có thể sử dụng UUID, mã ngẫu nhiên, hoặc bất kỳ phương pháp nào khác.
+        return UUID.randomUUID().toString().substring(0, 8);
     }
 
     public void addMemberToWorkspace(Workspace workspace, User user, UserRole userRole) {

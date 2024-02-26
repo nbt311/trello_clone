@@ -34,4 +34,7 @@ public class Workspace {
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<Permission> permissions = new HashSet<>();
 
+    @Column(unique = true)
+    private String inviteCode;
+    private String inviteLink;
 }

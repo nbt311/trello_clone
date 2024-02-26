@@ -32,21 +32,11 @@ public class WorkspaceController {
         Iterable<Workspace> workspaces = workspaceService.findAll();
         return new ResponseEntity<>(workspaces, HttpStatus.OK);
     }
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest){
-//        Optional<User> userOptional = userRepository.findByEmail(workspaceRequest.getEmail());
-//        if (userOptional.isPresent()){
-//            Workspace workspace = workspaceService.createWorkspace(workspaceRequest);
-//            return new ResponseEntity<>(workspace, HttpStatus.CREATED);
-//        } else {
-//            // Xử lý khi không tìm thấy người dùng với email cung cấp
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found"));
-//        }
-//    }
 @PostMapping("/create")
 public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
     try {
-        Workspace workspace = workspaceService.createWorkspace(workspaceRequest);
+        String frontendURL = workspaceRequest.getFrontendURL();
+        Workspace workspace = workspaceService.createWorkspace(workspaceRequest, frontendURL);
         return new ResponseEntity<>(workspace, HttpStatus.CREATED);
     } catch (UsernameNotFoundException e) {
         // Xử lý khi không tìm thấy người dùng

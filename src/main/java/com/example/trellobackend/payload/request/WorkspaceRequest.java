@@ -13,4 +13,5 @@ public class WorkspaceRequest {
     private String description;
     private Set<String> type;
     private Set<String> permission;
+    private String frontendURL;
 }

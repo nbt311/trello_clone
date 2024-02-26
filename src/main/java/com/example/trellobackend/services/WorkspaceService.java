@@ -10,5 +10,5 @@ public interface WorkspaceService {
     Optional<Workspace> findById(Long id);
     Workspace save(Workspace workspace);
     void delete(Long id);
-    Workspace createWorkspace(WorkspaceRequest workspaceRequest);
+    Workspace createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL);
 }
