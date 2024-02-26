@@ -10,13 +10,12 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private WorkSpaceType name;

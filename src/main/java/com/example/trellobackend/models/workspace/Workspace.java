@@ -1,5 +1,6 @@
 package com.example.trellobackend.models.workspace;
 
+import com.example.trellobackend.models.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,26 +20,18 @@ public class Workspace {
     private Long id;
     private String name;
 
-//    @ManyToOne
-//    @JoinColumn(name = "type_id")
-//    private WorkspaceType type;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "workspace_types",
+            joinColumns = @JoinColumn(name = "workspace_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_id"))
+    private Set<Role> types= new HashSet<>();
 
     private String description;
 
-//    @ManyToOne
-//    @JoinColumn(name = "permission_id")
-//    private WorkspacePermission permission;
-
-@ManyToMany
-@JoinTable(name = "workspace_types",
-        joinColumns = @JoinColumn(name = "workspace_id"),
-        inverseJoinColumns = @JoinColumn(name = "type_id"))
-private Set<Type> types = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(name = "workspace_permissions",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "workspace_permissions",
             joinColumns = @JoinColumn(name = "workspace_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private Set<Permission> permissions = new HashSet<>();
+    private Set<Role> permissions = new HashSet<>();
 
 }

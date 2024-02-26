@@ -1,7 +1,9 @@
 package com.example.trellobackend.services;
 
+<<<<<<< HEAD
 import com.example.trellobackend.models.workspace.Workspace;
-import com.example.trellobackend.payload.request.WorkspaceRequest;
+=======
+>>>>>>> parent of fad964f (recreate api create workspace. need to add type and permission)
 
 import java.util.Optional;
 
@@ -10,5 +12,4 @@ public interface WorkspaceService {
     Optional<Workspace> findById(Long id);
     Workspace save(Workspace workspace);
     void delete(Long id);
-    Workspace createWorkspace(WorkspaceRequest workspaceRequest);
 }

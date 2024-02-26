@@ -2,12 +2,8 @@ package com.example.trellobackend.models.workspace;
 
 import com.example.trellobackend.models.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 public class Members {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
