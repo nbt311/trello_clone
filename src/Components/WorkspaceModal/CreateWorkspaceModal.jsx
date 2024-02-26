@@ -30,11 +30,14 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
     }, []);
 
     const handleContinue = () => {
+        const frontendURL = window.location.origin;
+
         axios.post("http://localhost:8080/api/workspaces/create", {
             email: user.email,
             name: workspaceName,
             description: workspaceDescription,
-            workspaceType
+            workspaceType,
+            frontendURL: frontendURL
         })
             .then(res => {
                 console.log(res.data);
