@@ -11,13 +11,13 @@ const HomePage = () => {
     const [workspaceType, setWorkspaceType] = useState("");
     const [workspaceDescription, setWorkspaceDescription] = useState("");
     const [workspace, setWorkspace] = useState([]);
+
     useEffect( () => {
          axios.get('http://localhost:8080/api/workspaces').then((response) => {
-            localStorage.setItem("workspace", JSON.stringify(response.data));
+            // localStorage.setItem("workspace", JSON.stringify(response.data));
             setWorkspace(response.data);
-            console.log(response.data);
         })
-    }, [workspace]);
+    }, []);
 
     return (
         <div>

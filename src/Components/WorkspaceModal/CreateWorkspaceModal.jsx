@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button, Input,
     Modal,
@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import InviteFriendWorkspace from "./InviteFriendWorkspace";
+import AuthService from "../../Service/auth.service";
 const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspaceName,workspaceType,setWorkspaceType,workspaceDescription,setWorkspaceDescription}) => {
     // const [workspaceName, setWorkspaceName] = useState("");
     // const [workspaceType, setWorkspaceType] = useState("");
@@ -16,14 +17,27 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
     const isButtonDisabled = !workspaceName || !workspaceType;
 
     const secondModalDisclosure = useDisclosure()
+    const [workspaceTypes, setWorkspaceTypes] = useState([]);
+    const user = AuthService.getCurrentUser();
+    useEffect(() => {
+        axios.get("http://localhost:8080/api/workspaces/type")
+            .then(response => {
+                setWorkspaceTypes(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching workspace types:", error);
+            });
+    }, []);
 
     const handleContinue = () => {
         axios.post("http://localhost:8080/api/workspaces/create", {
+            email: user.email,
             name: workspaceName,
-            type: workspaceType,
-            description: workspaceDescription
+            description: workspaceDescription,
+            workspaceType
         })
-            .then(response => {
+            .then(res => {
+                console.log(res.data);
             })
             .catch(error => {
                 console.error("Error creating workspace:", error);
@@ -55,9 +69,9 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
                                         <p className="text-sm font-bold font-sans">Workspace type</p>
                                         <Select  value={workspaceType}
                                                  onChange={(e) => setWorkspaceType(e.target.value)} placeholder='Choose...'>
-                                            <option value='option1'>Option 1</option>
-                                            <option value='option2'>Option 2</option>
-                                            <option value='option3'>Option 3</option>
+                                            {workspaceTypes.map(type => (
+                                                <option key={type.id} value={type.id}>{type.name}</option>
+                                            ))}
                                         </Select>
                                     </div>
                                     <div className="w-[80%]">
