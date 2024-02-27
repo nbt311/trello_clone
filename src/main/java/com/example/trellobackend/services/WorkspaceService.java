@@ -11,4 +11,6 @@ public interface WorkspaceService {
     Workspace save(Workspace workspace);
     void delete(Long id);
     Workspace createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL);
+    String inviteUserToWorkspace(String email, Workspace workspace);
+    Workspace getWorkspaceById(long workspaceId);
 }

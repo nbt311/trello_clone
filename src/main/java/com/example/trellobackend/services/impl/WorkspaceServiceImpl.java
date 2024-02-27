@@ -12,6 +12,8 @@ import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private UserService userService;
     @Override
     public Iterable<Workspace> findAll() {
         return workspaceRepository.findAll();
@@ -117,6 +123,20 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         throw new UsernameNotFoundException("User not found");
     }
 
+    @Override
+    public String inviteUserToWorkspace(String email, Workspace workspace) {
+        String inviteCode = generateInviteCode();
+        String inviteLink = workspace.getInviteLink() + "/" + inviteCode;
+        return inviteLink;
+    }
+
+
+    @Override
+    public Workspace getWorkspaceById(long workspaceId) {
+        return workspaceRepository.findById(workspaceId);
+    }
+
+
     private String generateInviteCode() {
         // Logic để tạo mã đặc biệt, có thể sử dụng UUID, mã ngẫu nhiên, hoặc bất kỳ phương pháp nào khác.
         return UUID.randomUUID().toString().substring(0, 8);
@@ -129,4 +149,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         member.setRole(userRole);
         workspaceMemberRepository.save(member);
     }
+
+    public boolean isAdminOf(User user, Workspace workspace) {
+        return workspaceMemberRepository.existsByUserAndWorkspaceAndRole(user, workspace, UserRole.ROLE_ADMIN);
+    }
+
+
 }
