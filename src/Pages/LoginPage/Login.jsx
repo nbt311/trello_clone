@@ -15,14 +15,14 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
         setPasswordVisible(!passwordVisible);
     };
 
-    function handleChange(event) {
+    const handleChange = event => {
         setForm({
             ...form,
             [event.target.name]: event.target.value
         });
-    }
+    };
 
-    function handleValidate() {
+    const handleValidate = () => {
         const errors = {};
         if (!form.email) {
             errors.email = "Please check and re-enter";
@@ -31,9 +31,9 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
             errors.password = "Please check and re-enter";
         }
         return errors;
-    }
+    };
 
-    function handleSubmit() {
+    const handleSubmit =  () => {
         axios.post('http://localhost:8080/api/auth/signin', form)
             .then(response => {
                 if (response.data.accessToken) {
@@ -58,7 +58,7 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
                     isClosable: true,
                 });
             });
-    }
+    };
 
 
     return (

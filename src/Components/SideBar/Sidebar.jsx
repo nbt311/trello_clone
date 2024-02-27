@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SidebarConfig from "./SidebarConfig";
 import WorkspaceDropdown from "./WorkspaceDropdown";
 import {useNavigate} from "react-router-dom";
+import {Avatar} from "@chakra-ui/react";
+import axios from "axios";
 
-const Sidebar = () => {
+const Sidebar = ({workspace,setWorkspace}) => {
     const [selectedTab, setSelectedTab] = useState({});
     const navigate = useNavigate();
     const handleTabClick = (item) => {
@@ -21,6 +23,15 @@ const Sidebar = () => {
                 break;
         }
     };
+
+    // const [workspace, setWorkspace] = useState([]);
+    // useEffect(  () => {
+    //      axios.get('http://localhost:8080/api/workspaces').then((response) => {
+    //         JSON.stringify(response.data);
+    //         setWorkspace(response.data);
+    //         console.log(response.data);
+    //     })
+    // }, [workspace]);
 
     return (
         <div className='flex flex-col items-start'>
@@ -41,9 +52,11 @@ const Sidebar = () => {
                 <p className='text-sm font-bold'>Workspaces</p>
             </div>
 
-            <div className='mx-auto w-full hover:bg-gray-200 rounded-md p-2'>
-                <WorkspaceDropdown/>
+            {workspace.map((item) =>
+                <div className='mx-auto w-full hover:bg-gray-200 rounded-md p-2'>
+                <WorkspaceDropdown workspacename = {item.name} />
             </div>
+            )}
         </div>
     );
 };

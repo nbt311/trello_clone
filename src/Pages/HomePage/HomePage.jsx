@@ -1,13 +1,25 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import HomeHeader from "../../Components/HomeHeader/HomeHeader";
 import Sidebar from "../../Components/SideBar/Sidebar";
 import {useDisclosure} from "@chakra-ui/react";
 import CreateWorkspaceModal from "../../Components/WorkspaceModal/CreateWorkspaceModal";
+import axios from "axios";
 import BoardsPage from "../../Components/HomePageBody/BoardsPage";
 import {Route, Routes} from "react-router-dom";
 
 const HomePage = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    const [workspaceName, setWorkspaceName] = useState("");
+    const [workspaceType, setWorkspaceType] = useState("");
+    const [workspaceDescription, setWorkspaceDescription] = useState("");
+    const [workspace, setWorkspace] = useState([]);
+
+    useEffect( () => {
+         axios.get('http://localhost:8080/api/workspaces').then((response) => {
+            // localStorage.setItem("workspace", JSON.stringify(response.data));
+            setWorkspace(response.data);
+        })
+    }, []);
 
     return (
         <div>
@@ -27,7 +39,12 @@ const HomePage = () => {
                 </div>
             </div>
 
-            <CreateWorkspaceModal onOpen={onOpen} isOpen={isOpen} onClose={onClose}/>
+            <CreateWorkspaceModal onOpen={onOpen} isOpen={isOpen} onClose={onClose}
+                                  workspaceName={workspaceName} setWorkspaceName={setWorkspaceName}
+                                  workspaceType={workspaceType} setWorkspaceType={setWorkspaceType}
+                                  workspaceDescription={workspaceDescription}
+                                  setWorkspaceDescription={setWorkspaceDescription}
+            />
         </div>
     );
 };
