@@ -7,9 +7,6 @@ import Logout from "../Pages/LogoutPage/Logout";
 import Signup from "../Pages/SignUpPage/Signup";
 import FirebaseImageUpload from "../FirebaseImageUpload/FirebaseImageUpload";
 import CreateWorkspaceModal from "../Components/WorkspaceModal/CreateWorkspaceModal";
-import InviteFriendWorkspace from "../Components/WorkspaceModal/InviteFriendWorkspace";
-import InvitePopup from "../Components/WorkspaceModal/InvitePopup";
-import InvitePopupTwo from "../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Router = () => {
@@ -30,12 +27,12 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<HomePage/>}/>
+                    <Route path='/*' element={<HomePage/>}/>
                     <Route path='/create' element={<CreateWorkspaceModal/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>
                     <Route path='/signup' element={<Signup/>}/>
-                    {/*<Route path='/upload' element={<FirebaseImageUpload/>}/>*/}
+                    <Route path='/upload' element={<FirebaseImageUpload/>}/>
                 </Routes>
     );
 };
