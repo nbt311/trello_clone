@@ -14,6 +14,7 @@ import Workspace from "../Pages/WorkspacePage/Workspace";
 import CreateBoards from "../Components/CreateBoards/CreateBoards";
 
 
+
 const Router = () => {
     // const [isLoggedIn, setLoggedIn] = useState();
     // const navigate = useNavigate()
@@ -32,7 +33,7 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<CreateBoards/>}/>
+                    <Route path='/' element={<HomePage/>}/>
                     <Route path='/create' element={<CreateWorkspaceModal/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>

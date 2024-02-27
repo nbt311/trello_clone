@@ -4,6 +4,7 @@ import Sidebar from "../../Components/SideBar/Sidebar";
 import {useDisclosure} from "@chakra-ui/react";
 import CreateWorkspaceModal from "../../Components/WorkspaceModal/CreateWorkspaceModal";
 import axios from "axios";
+import CreateBoards from "../../Components/CreateBoards/CreateBoards";
 
 const HomePage = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -35,6 +36,7 @@ const HomePage = () => {
                                   workspaceDescription={workspaceDescription}
                                   setWorkspaceDescription={setWorkspaceDescription}
             />
+            <CreateBoards/>
         </div>
     );
 };

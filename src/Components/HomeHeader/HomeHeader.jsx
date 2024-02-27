@@ -25,6 +25,7 @@ const HomeHeader = ({onOpen, onClose}) => {
     const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+
     useEffect(() => {
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);
@@ -114,8 +115,7 @@ const HomeHeader = ({onOpen, onClose}) => {
                             </MenuButton>
                             )}
                             <MenuList className='w-1/2'>
-                                <MenuItem>
-                                    <CreateBoards/>
+                                <MenuItem >
                                     <div>
                                         <p className='flex'><BsTrello className='mt-1'/>Create board</p>
                                         <p className='text-sm text-left'>A board is made up of cards ordered on lists. Use it to manage projects, track information, or organize anything.</p>

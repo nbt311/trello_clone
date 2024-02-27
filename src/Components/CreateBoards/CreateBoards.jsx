@@ -13,10 +13,7 @@ const CreateBoards = () => {
     const [boardTitle, setBoardTitle] = useState("")
     const isButtonDisabled = !boardTitle ;
     return (
-            <Menu closeOnSelect={false}>
-                <MenuButton as={Button} colorScheme='blue'>
-                    MenuItem
-                </MenuButton>
+            <Menu>
                 <MenuList minWidth='340px'>
                     <div className="flex flex-col items-center justify-center">
                         <div className='flex w-full justify-between'>
@@ -62,7 +59,6 @@ const CreateBoards = () => {
                             <p>By using images from Unsplash, you agree to their <a href="https://unsplash.com/license"  target="_blank" rel="noopener noreferrer" className="hover:underline">license </a> and <a href="https://unsplash.com/terms"  target="_blank" rel="noopener noreferrer" className="hover:underline"> Terms of Service</a> </p>
                         </div>
                     </div>
-
                 </MenuList>
             </Menu>
     )
