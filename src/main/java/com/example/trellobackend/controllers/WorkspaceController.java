@@ -1,11 +1,13 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.models.workspace.Members;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
+import com.example.trellobackend.services.impl.WorkspaceMemberService;
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class WorkspaceController {
     private WorkspaceRepository workspaceRepository;
     @Autowired
     private WorkspaceTypeRepository workspaceTypeRepository;
+    @Autowired
+    private WorkspaceMemberService workspaceMemberService;
     @GetMapping
     public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
         Iterable<Workspace> workspaces = workspaceService.findAll();
@@ -46,5 +50,11 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
+    }
+
+    @GetMapping("/{id}/members")
+    public ResponseEntity<Iterable<Members>> findMembersByWorkspace (@PathVariable Long id){
+        Iterable<Members> membersList = workspaceMemberService.findAllByWorkspace(id);
+        return new ResponseEntity<>(membersList, HttpStatus.OK);
     }
 }
