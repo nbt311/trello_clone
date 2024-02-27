@@ -11,6 +11,7 @@ import InviteFriendWorkspace from "../Components/WorkspaceModal/InviteFriendWork
 import InvitePopup from "../Components/WorkspaceModal/InvitePopup";
 import InvitePopupTwo from "../Components/WorkspaceModal/InvitePopupTwo";
 import Workspace from "../Pages/WorkspacePage/Workspace";
+import CreateBoards from "../Components/CreateBoards/CreateBoards";
 
 
 const Router = () => {
@@ -31,7 +32,7 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<HomePage/>}/>
+                    <Route path='/' element={<CreateBoards/>}/>
                     <Route path='/create' element={<CreateWorkspaceModal/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>

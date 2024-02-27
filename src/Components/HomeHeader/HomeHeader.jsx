@@ -18,6 +18,8 @@ import {RiShareBoxLine} from "react-icons/ri";
 import { BiGroup } from "react-icons/bi";
 import AuthService from "../../Service/auth.service";
 import {BsTrello} from "react-icons/bs";
+import { GrAdd } from "react-icons/gr";
+import CreateBoards from "../CreateBoards/CreateBoards";
 
 const HomeHeader = ({onOpen, onClose}) => {
     const [user, setUser] = useState({});
@@ -101,10 +103,11 @@ const HomeHeader = ({onOpen, onClose}) => {
                     </div>
 
                     <div>
-                        {/*<Button colorScheme='blue' size='md' onClick={handleCreate}>Create</Button>*/}
                         <Menu>
                             {isSmallScreen ? (
-                            <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' color='#2435FA'></MdAddBox>
+                                <MenuButton  as={Button} colorScheme='blue'>
+                                    <GrAdd/>
+                                </MenuButton>
                             ) : (
                             <MenuButton  as={Button} colorScheme='blue'>
                                 Create
@@ -112,6 +115,7 @@ const HomeHeader = ({onOpen, onClose}) => {
                             )}
                             <MenuList className='w-1/2'>
                                 <MenuItem>
+                                    <CreateBoards/>
                                     <div>
                                         <p className='flex'><BsTrello className='mt-1'/>Create board</p>
                                         <p className='text-sm text-left'>A board is made up of cards ordered on lists. Use it to manage projects, track information, or organize anything.</p>

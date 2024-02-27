@@ -5,7 +5,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 const WorkspaceSidebarConfig = [
     {
-        title: 'Boards', icon: <BsTrello />
+        title: 'CreateBoards.jsx', icon: <BsTrello />
     },
     {
         title: 'Members', icon: <IoPersonOutline/>
