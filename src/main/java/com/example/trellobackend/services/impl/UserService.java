@@ -54,5 +54,4 @@ public class UserService implements IUserService {
     public List<User> getSuggestedUsers(String query) {
         return userRepository.findUsersByPartialMatch(query);
     }
-
 }

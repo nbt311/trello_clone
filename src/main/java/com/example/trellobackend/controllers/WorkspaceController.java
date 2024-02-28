@@ -105,4 +105,9 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
         }
     }
+    @GetMapping("{id}/workspace")
+    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
+      Optional<Workspace> workspace =  workspaceRepository.findById(id);
+        return new ResponseEntity<>(workspace, HttpStatus.OK);
+    }
 }
