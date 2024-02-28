@@ -4,12 +4,12 @@ import {BsPerson, BsTrello} from "react-icons/bs";
 import {GoPerson} from "react-icons/go";
 import {IoIosSettings} from "react-icons/io";
 
-const WorkspaceControlBar = () => {
+const WorkspaceControlBar = ({workspace}) => {
     return (
         <div className='flex items-center w-[90%] justify-between mt-5'>
             <div className='flex items-center space-x-3 '>
                 <Avatar name='My workspace' size='sm' borderRadius='md'/>
-                <p>My Workspace</p>
+                <p>{workspace.name}</p>
             </div>
 
             <div className='flex space-x-4'>

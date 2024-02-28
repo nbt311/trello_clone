@@ -5,7 +5,7 @@ import WorkspaceControlBar from "./WorkspaceControlBar";
 import {IoMdInformationCircleOutline} from "react-icons/io";
 import {BsPeople} from "react-icons/bs";
 
-const BoardsPage = () => {
+const BoardsPage = ({workspace}) => {
     return (
         <div className='text-lg font-bold ml-2 my-3 p-2'>
             <div className='flex items-center'>
@@ -14,7 +14,7 @@ const BoardsPage = () => {
             </div>
 
             <div className='flex space-x-9 mt-4'>
-                {[1, 1, 1, 1].map((item) => (
+                {workspace.map((item) => (
                     <BoardCard/>
                 ))}
             </div>
@@ -24,9 +24,9 @@ const BoardsPage = () => {
             </div>
 
             <div>
-                {[1, 1, 1].map(() => (
+                {workspace.map((data) => (
                     <div className='mt-8'>
-                        <WorkspaceControlBar/>
+                        <WorkspaceControlBar workspace={data}/>
                         <div className='flex space-x-9 mt-4'>
                             {[1, 1, 1, 1].map((item) => (
                                 <BoardCard/>

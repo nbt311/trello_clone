@@ -18,7 +18,6 @@ const Sidebar = ({workspace,setWorkspace}) => {
             case 'Home':
                 navigate('/');
                 break;
-            // Thêm các trường hợp khác nếu cần
             default:
                 break;
         }
@@ -54,7 +53,7 @@ const Sidebar = ({workspace,setWorkspace}) => {
 
             {workspace.map((item) =>
                 <div className='mx-auto w-full hover:bg-gray-200 rounded-md p-2'>
-                <WorkspaceDropdown workspacename = {item.name} />
+                <WorkspaceDropdown workspace = {item} />
             </div>
             )}
         </div>

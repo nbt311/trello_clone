@@ -6,6 +6,7 @@ import CreateWorkspaceModal from "../../Components/WorkspaceModal/CreateWorkspac
 import axios from "axios";
 import BoardsPage from "../../Components/HomePageBody/BoardsPage";
 import {Route, Routes} from "react-router-dom";
+import HomeNotification from "../../Components/HomePageBody/HomeNotification";
 
 const HomePage = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -29,12 +30,13 @@ const HomePage = () => {
 
             <div className='flex'>
                 <div className='w-[20%] ml-20 h-fit mt-4'>
-                    <Sidebar/>
+                    <Sidebar workspace={workspace}/>
                 </div>
 
                 <div className='ml-10 w-full mt-4 overflow-visible'>
                     <Routes>
-                        <Route path='/boards' element={<BoardsPage/>}></Route>
+                        <Route path='/boards' element={<BoardsPage workspace={workspace}/>}></Route>
+                        <Route path='/' element={<HomeNotification workspace={workspace}/>}></Route>
                     </Routes>
                 </div>
             </div>
