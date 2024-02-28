@@ -23,7 +23,7 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
             ...form,
             [event.target.name]: event.target.value
         });
-    }
+    };
 
     const handleValidate = () => {
         const errors = {};
@@ -37,7 +37,7 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
             return errors;
         }
 
-    function handleSubmit() {
+    const handleSubmit =  () => {
         axios.post('http://localhost:8080/api/auth/signin', form)
             .then(response => {
                 if (response.data.accessToken) {
@@ -62,7 +62,7 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
                     isClosable: true,
                 });
             });
-    }
+    };
 
 
     return (
@@ -145,10 +145,12 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
                 </div>
             </div>
             <div className="w-[20%] absolute bottom-0 left-0">
-                <img src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-left.4f52d13c.svg"/>
+                <img
+                    src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-left.4f52d13c.svg"/>
             </div>
             <div className="w-[20%] absolute bottom-0 right-0">
-                <img src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-right.3ee60d6f.svg"/>
+                <img
+                    src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.541/trello-right.3ee60d6f.svg"/>
             </div>
         </section>
     )

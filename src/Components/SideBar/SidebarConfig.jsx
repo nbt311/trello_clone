@@ -5,7 +5,7 @@ import {BiPulse} from "react-icons/bi";
 
 const SidebarConfig = [
     {
-        title: 'CreateBoards.jsx', icon: <BsTrello />
+        title: 'Boards', icon: <BsTrello />
     },
     {
         title: 'Templates', icon: <HiTemplate />

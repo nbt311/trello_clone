@@ -4,18 +4,13 @@ import {Avatar} from "@chakra-ui/react";
 import WorkspaceSidebarConfig from "./WorkspaceSidebarConfig";
 
 const WorkspaceSidebar = () => {
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        setUser(user);
-    }, []);
+    const workspace = JSON.parse(localStorage.getItem('workspaces'));
     return (
         <div className='flex flex-col items-start' >
             <div className="flex mt-4 ml-4">
-                <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                <Avatar size='sm' borderRadius='md' name={workspace.name} src=''/>
                 <div className='ml-2 mt-1'>
-                    <p className='text-base font-medium'>{user.username}</p>
+                    <p className='text-base font-medium'>{workspace.name}</p>
                 </div>
             </div>
 

@@ -33,7 +33,8 @@ const Router = () => {
                         path='/login'
                         element={<Login/>}
                     />
-                    <Route path='/' element={<HomePage/>}/>
+                    <Route path='/*' element={<HomePage/>}/>
+                    <Route path="/workspace/:id/*" element={<Workspace/>}/>
                     <Route path='/create' element={<CreateWorkspaceModal/>}/>
                     <Route path='/manage-profile/*' element={<ManagePage/>}/>
                     <Route path='/logout' element={<Logout/>}/>
