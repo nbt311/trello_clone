@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,4 +44,15 @@ public class UserService implements IUserService {
 
         return (User) authentication.getPrincipal();
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getSuggestedUsers(String query) {
+        return userRepository.findUsersByPartialMatch(query);
+    }
+
 }

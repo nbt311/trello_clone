@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -57,4 +58,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found"));
         }
     }
+    @GetMapping("/suggest/{query}")
+    public List<User> suggestUsers(@PathVariable String query) {
+        // Xử lý logic để trả về danh sách người dùng dựa trên 'query'
+        return iUserService.getSuggestedUsers(query);
+    }
+
 }
