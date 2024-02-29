@@ -9,12 +9,13 @@ import {mapOrder} from "../../../../Utils/Sort";
 
 const Column = ({column}) => {
     const {
-        attributes, listeners, setNodeRef, transform, transition,
+        attributes, listeners, setNodeRef, transform, transition, isDragging
     } = useSortable({id: column._id, data: {...column}});
 
     const dndKitColumnStyle = {
         transform: CSS.Translate.toString(transform),
         transition,
+        opacity: isDragging ? 0.5 : undefined,
     };
 
     const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')

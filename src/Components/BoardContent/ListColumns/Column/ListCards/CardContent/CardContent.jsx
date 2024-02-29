@@ -6,12 +6,14 @@ import {CSS} from "@dnd-kit/utilities";
 
 const CardContent = ({card}) => {
     const {
-        attributes, listeners, setNodeRef, transform, transition,
+        attributes, listeners, setNodeRef, transform, transition, isDragging,
     } = useSortable({id: card._id, data: {...card}});
 
     const dndKitCardStyle = {
         transform: CSS.Translate.toString(transform),
         transition,
+        opacity: isDragging ? 0.5 : undefined,
+        border: isDragging ? '1px solid #2ecc71' : undefined
     };
     return (
         <Card ref={setNodeRef} style={dndKitCardStyle} {...attributes} {...listeners}
