@@ -23,7 +23,7 @@ public class EmailService {
         message.setFrom("nbtrung0311@gmail.com");
         message.setTo(email);
         message.setSubject("Invitation to my workspace");
-        message.setText("You have been invited my workspace, click this link to join: " + inviteLink);
+        message.setText("You have been invited my workspace");
         javaMailSender.send(message);
     }
 }
