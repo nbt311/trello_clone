@@ -39,8 +39,8 @@ public class BoardService implements IBoardService {
         return boardRepository.getBoardByWorkspace_id(id);
     }
 
-//    @Override
-//    public Iterable<Board> getBoardByVisibility(Long id) {
-//        return boardRepository.getBoardByVisibility(id);
-//    }
+    @Override
+    public Iterable<Board> getBoardByVisibility(Long id) {
+        return boardRepository.getBoardByVisibility(id);
+    }
 }

@@ -5,5 +5,5 @@ import com.example.trellobackend.models.workspace.Workspace;
 
 public interface IBoardService extends IGeneralService<Board> {
     Iterable<Board> getBoardByWorkspace_id(Long id);
-//    Iterable<Board> getBoardByVisibility(Long id);
+    Iterable<Board> getBoardByVisibility(Long id);
 }

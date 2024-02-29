@@ -61,6 +61,7 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
         Iterable<Members> membersList = workspaceMemberService.findAllByWorkspace(id);
         return new ResponseEntity<>(membersList, HttpStatus.OK);
     }
+    // show cac board theo workspace
     @GetMapping("/{id}/boards")
     public ResponseEntity<Iterable<Board>> getBoardByWorkspace_id(@PathVariable Long id){
         Iterable<Board> boardsList = boardService.getBoardByWorkspace_id(id);

@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     Iterable<Board> getBoardByWorkspace_id(Long id);
-//    @Query
-//    Iterable<Board> getBoardByVisibility(Long id);
+    @Query (value = "select b.* " +
+                    "from board b " +
+                    "join trello.board_visibilities bv on b.id = bv.board_id " +
+                    "join trello.visibility v on bv.visibility_id = v.id " +
+                    "where v.id = :id", nativeQuery = true)
+    Iterable<Board> getBoardByVisibility(Long id);
 }

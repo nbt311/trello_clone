@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
 public class VisibilityController {
     @Autowired
     private BoardService boardService;
-//    @GetMapping("/{id}/boards")
-//    public ResponseEntity<Iterable<Board>> getBoardByVisibility(@PathVariable Long id){
-//        Iterable<Board> boardsList = boardService.getBoardByVisibility(id);
-//        return new ResponseEntity<>(boardsList, HttpStatus.OK);
-//    }
+    // show cac board theo visibility
+    @GetMapping("/{id}/boards")
+    public ResponseEntity<Iterable<Board>> getBoardByVisibility(@PathVariable Long id){
+        Iterable<Board> boardsList = boardService.getBoardByVisibility(id);
+        return new ResponseEntity<>(boardsList, HttpStatus.OK);
+    }
 }
