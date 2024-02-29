@@ -1,7 +1,7 @@
 import React from 'react';
 
 const BoardCard = () => {
-    const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/trelloimageupload.appspot.com/o/data%2F56b1e5cc-ecb3-490b-a3e0-a3d2792f4016?alt=media&token=d61aaa92-8c0b-4620-9f37-b342343fe888'
+    const imageUrl = 'https://marketplace.canva.com/EAE-g6znT-s/1/0/1600w/canva-soft-purple-fun-modern-minimalist-cats-hi-desktop-wallpaper-Gqj2XviD4_E.jpg'
 
     const divStyle = {
         backgroundImage: `url('${imageUrl}')`,
@@ -11,7 +11,7 @@ const BoardCard = () => {
 
     return (
         <div className='w-[20%] h-24 rounded-sm flex text-start' style={divStyle}>
-            <h1 className='mt-1 ml-3 text-xl font-extrabold text-white'>daad</h1>
+            <h1 className='mt-1 ml-3 text-xl font-extrabold text-black'>daad</h1>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import HomeHeader from "../../Components/HomeHeader/HomeHeader";
 import ListColumns from "../../Components/BoardContent/ListColumns/ListColumns";
-import CreateColumnButton from "../../Components/BoardContent/CreateColumnButton";
+import CreateColumnButton from "../../Components/BoardContent/ListColumns/NewColumn/CreateColumnButton";
 import {
     closestCorners,
     defaultDropAnimationSideEffects,
@@ -24,7 +24,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 }
 
 const BoardContentPage = ({board}) => {
-    const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/trelloimageupload.appspot.com/o/data%2F56b1e5cc-ecb3-490b-a3e0-a3d2792f4016?alt=media&token=d61aaa92-8c0b-4620-9f37-b342343fe888'
+    const imageUrl = 'https://marketplace.canva.com/EAE-g6znT-s/1/0/1600w/canva-soft-purple-fun-modern-minimalist-cats-hi-desktop-wallpaper-Gqj2XviD4_E.jpg'
     const divStyle = {
         backgroundImage: `url('${imageUrl}')`,
         backgroundSize: 'cover',
@@ -50,6 +50,48 @@ const BoardContentPage = ({board}) => {
         return orderedColumns.find(column => column?.cards?.map(card => card._id)?.includes(cardId))
     }
 
+    const moveCardBetweenDifferentColumns = (
+        overColumn,
+        overCardId,
+        active,
+        over,
+        activeColumn,
+        activeDraggingCardId,
+        activeDraggingCardData
+    ) => {
+        setOrderedColumns(prevColumns => {
+            const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
+            let newCardIndex
+
+            const isBelowOverItem = active.rect.current.translated &&
+                active.rect.current.translated.top >
+                over.rect.top + over.rect.height;
+            const modifier = isBelowOverItem ? 1 : 0;
+
+            newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1;
+
+            const nextColumns = cloneDeep(prevColumns)
+            const nextActiveColumns = nextColumns.find(column => column._id === activeColumn._id)
+            const nextOverColumns = nextColumns.find(column => column._id === overColumn._id)
+
+            if (nextActiveColumns) {
+                nextActiveColumns.cards = nextActiveColumns.cards.filter(card => card._id !== activeDraggingCardId)
+                nextActiveColumns.cardOrderIds = nextActiveColumns.cards.map(card => card._id)
+            }
+
+            const rebuild_activeDraggingCardData = {
+                ...activeDraggingCardData,
+                columnId: nextOverColumns._id
+            }
+
+            if (nextOverColumns) {
+                nextOverColumns.cards = nextOverColumns.cards.filter(card => card._id !== activeDraggingCardId)
+                nextOverColumns.cards = nextOverColumns.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
+                nextOverColumns.cardOrderIds = nextOverColumns.cards.map(card => card._id)
+            }
+            return nextColumns;
+        })
+    }
 
     const handleDragStart = (event) => {
         setActiveDragItemId(event?.active?.id)
@@ -76,33 +118,15 @@ const BoardContentPage = ({board}) => {
         if (!activeColumn || !overColumn) return
 
         if (activeColumn._id !== overColumn._id) {
-            setOrderedColumns(prevColumns => {
-                const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
-                let newCardIndex
-
-                const isBelowOverItem = active.rect.current.translated &&
-                    active.rect.current.translated.top >
-                    over.rect.top + over.rect.height;
-                const modifier = isBelowOverItem ? 1 : 0;
-
-                newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1;
-
-                const nextColumns = cloneDeep(prevColumns)
-                const nextActiveColumns = nextColumns.find(column => column._id === activeColumn._id)
-                const nextOverColumns = nextColumns.find(column => column._id === overColumn._id)
-
-                if (nextActiveColumns) {
-                    nextActiveColumns.cards = nextActiveColumns.cards.filter(card => card._id !== activeDraggingCardId)
-                    nextActiveColumns.cardOrderIds = nextActiveColumns.cards.map(card => card._id)
-                }
-
-                if (nextOverColumns) {
-                    nextOverColumns.cards = nextOverColumns.cards.filter(card => card._id !== activeDraggingCardId)
-                    nextOverColumns.cards = nextOverColumns.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
-                    nextOverColumns.cardOrderIds = nextOverColumns.cards.map(card => card._id)
-                }
-                return nextColumns;
-            })
+           moveCardBetweenDifferentColumns(
+                overColumn,
+                    overCardId,
+                    active,
+                    over,
+                    activeColumn,
+                    activeDraggingCardId,
+                    activeDraggingCardData
+            )
         }
     }
 
@@ -120,7 +144,15 @@ const BoardContentPage = ({board}) => {
             if (!activeColumn || !overColumn) return
 
             if (oldColumn._id !== overColumn._id) {
-
+                moveCardBetweenDifferentColumns(
+                    overColumn,
+                    overCardId,
+                    active,
+                    over,
+                    activeColumn,
+                    activeDraggingCardId,
+                    activeDraggingCardData
+                )
             } else {
                 const oldCardIndex = oldColumn?.cards?.findIndex(c => c._id === activeDragItemId)
                 const newCardIndex = overColumn?.cards?.findIndex(c => c._id === overCardId)
@@ -184,7 +216,7 @@ const BoardContentPage = ({board}) => {
                             onDragOver={handleDragOver}
                             onDragEnd={handleDragEnd}
                 >
-                    <div className='flex h-full p-3 space-x-4 max-w-full overflow-x-scroll'>
+                    <div className='flex h-full p-3 space-x-4 overflow-x-scroll'>
                         <ListColumns columns={orderedColumns}/>
                         <DragOverlay dropAnimation={customDropAnimation}>
                             {!activeDragItemType && null}
@@ -193,7 +225,6 @@ const BoardContentPage = ({board}) => {
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) &&
                                 <CardContent card={activeDragItemData}/>}
                         </DragOverlay>
-                        <CreateColumnButton/>
                     </div>
                 </DndContext>
             </div>
