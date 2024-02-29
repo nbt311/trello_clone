@@ -52,7 +52,7 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
         return workspaceTypeRepository.findAll();
     }
 
-    @GetMapping("/{id}/members")
+    @GetMapping("/{id}/members" )
     public ResponseEntity<Iterable<Members>> findMembersByWorkspace (@PathVariable Long id){
         Iterable<Members> membersList = workspaceMemberService.findAllByWorkspace(id);
         return new ResponseEntity<>(membersList, HttpStatus.OK);

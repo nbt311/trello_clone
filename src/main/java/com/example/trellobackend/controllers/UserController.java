@@ -1,8 +1,10 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.models.User;
+import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.AvatarRequest;
 import com.example.trellobackend.services.IUserService;
+import com.example.trellobackend.services.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.example.trellobackend.payload.request.ChangePasswordRequest;
@@ -27,6 +29,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private WorkspaceService workspaceService;
 
     @PostMapping("/{userId}/avatar")
     public ResponseEntity<String> updateAvatar(@PathVariable Long userId, @RequestBody AvatarRequest data) {
@@ -56,5 +60,10 @@ public class UserController {
             // Xử lý khi không tìm thấy người dùng với email cung cấp
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found"));
         }
+    }
+    @GetMapping("/{userId}/workspaces")
+    public ResponseEntity<Iterable<Workspace>> findWorkspaceByUser(@PathVariable Long userId){
+        Iterable<Workspace> workspacesList = workspaceService.getWorkspaceById(userId);
+        return new ResponseEntity<>(workspacesList, HttpStatus.OK);
     }
 }
