@@ -27,13 +27,13 @@ const WorkspaceSidebar = () => {
 
             <hr className='border-1-slate-500 py-1 w-full'/>
 
-            <div className='ml-2 my-3'>
-                <p className='text-sm font-bold'>Workspaces</p>
-            </div>
+            {/*<div className='ml-2 my-3'>*/}
+            {/*    <p className='text-sm font-bold'>Workspaces</p>*/}
+            {/*</div>*/}
 
-            <div className='mx-auto w-full hover:bg-gray-200 rounded-md p-2'>
-                <WorkspaceDropdown/>
-            </div>
+            {/*<div className='mx-auto w-full hover:bg-gray-200 rounded-md p-2'>*/}
+            {/*    <WorkspaceDropdown/>*/}
+            {/*</div>*/}
         </div>
     );
 };

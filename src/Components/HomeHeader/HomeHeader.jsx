@@ -94,15 +94,15 @@ const HomeHeader = ({onOpen, onClose}) => {
                                         </Link>
                                         </MenuItem >
                                     )}
-                                <p className="text-sm flex ml-3">Guest Workspaces</p>
-                                <MenuItem>
-                                    <Link to='/workspace/2'>
-                                        <div className='flex'>
-                                            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
-                                            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>
-                                        </div>
-                                    </Link>
-                                </MenuItem>
+                                {/*<p className="text-sm flex ml-3">Guest Workspaces</p>*/}
+                                {/*<MenuItem>*/}
+                                {/*    <Link to='/workspace/2'>*/}
+                                {/*        <div className='flex'>*/}
+                                {/*            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
+                                {/*            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>*/}
+                                {/*        </div>*/}
+                                {/*    </Link>*/}
+                                {/*</MenuItem>*/}
                             </MenuList>
                         </Menu>
 

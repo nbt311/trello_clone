@@ -56,11 +56,11 @@ const Workspace = () => {
                     )}
                 </div>
 
-                {isInputFilled ? (
+                {/*{isInputFilled ? (*/}
                     <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-                ) : (
-                    <InvitePopup onInputChange={handleInputChange} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-                )}
+                {/*) : (*/}
+                {/*    <InvitePopup onInputChange={handleInputChange} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />*/}
+                {/*)}*/}
 
             </div>
         </div>

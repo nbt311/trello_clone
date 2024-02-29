@@ -12,7 +12,7 @@ import { FaLink } from "react-icons/fa6";
 import { MdCheckCircleOutline } from "react-icons/md";
 import axios from "axios";
 
-const InvitePopup = ({ isOpen, onOpen, onClose, showNotification, setShowNotification }) => {
+const InvitePopup = ({ isOpen, onOpen, onClose, showNotification, setShowNotification,onInputChange }) => {
     const [workspaceEmail, setWorkspaceEmail] = useState('');
     const [suggestedEmails, setSuggestedEmails] = useState([]);
     const hideNotification = () => {
@@ -39,7 +39,6 @@ const InvitePopup = ({ isOpen, onOpen, onClose, showNotification, setShowNotific
     const handleEmailClick = (email) => {
         setWorkspaceEmail(email);
     };
-    console.log(workspaceEmail)
     return (
         <div>
             <Modal size={"xl"} onClose={onClose} isOpen={isOpen} isCentered>
