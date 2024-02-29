@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar, Button, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
+import {Avatar, Button, Menu, MenuButton, MenuItem, MenuList, useDisclosure} from "@chakra-ui/react";
 import {FaLink} from "react-icons/fa";
 import {AiOutlineUserAdd} from "react-icons/ai";
 import {MdCheckCircleOutline} from "react-icons/md";
-import {AiOutlineClose} from "react-icons/ai";
 import axios from "axios";
 import {IoIosClose} from "react-icons/io";
 import InvitePopup from "../WorkspaceModal/InvitePopup";
-import InvitePopupTwo from "../WorkspaceModal/InvitePopupTwo";
 
-const WorkspaceMembers = () => {
+
+const WorkspaceMembers = ({onOpen,onClose}) => {
     const workspace = JSON.parse(localStorage.getItem('workspaces'));
     const workspaceId = workspace.id;
     const [showNotification, setShowNotification] = useState(true);
@@ -53,7 +52,9 @@ const WorkspaceMembers = () => {
             console.error('Error removing member:', error);
         });
     }
-
+    const handleInvite = () => {
+        onOpen()
+    }
     return (
         <div className=''>
             <div className='flex mt-5'>
@@ -65,7 +66,7 @@ const WorkspaceMembers = () => {
                 </div>
 
                 <div className='w-[50%] mt-2 self-center'>
-                    <Button colorScheme='blue'><AiOutlineUserAdd/> <InvitePopupTwo/>Invite Workspace members</Button>
+                    <Button colorScheme='blue' onClick={handleInvite}><AiOutlineUserAdd/>Invite Workspace members</Button>
                 </div>
             </div>
 

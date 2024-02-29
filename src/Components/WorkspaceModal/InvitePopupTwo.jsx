@@ -12,8 +12,7 @@ import { FaLink } from "react-icons/fa6";
 import { MdCheckCircleOutline } from "react-icons/md";
 import axios from "axios";
 
-const InvitePopupTwo = () => {
-    const {isOpen, onOpen, onClose} = useDisclosure();
+const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
     const [showNotification, setShowNotification] = useState(true);
     const [workspaceEmail, setWorkspaceEmail] = useState('');
     const [suggestedEmails, setSuggestedEmails] = useState([]);
@@ -44,7 +43,6 @@ const InvitePopupTwo = () => {
     };
 
     const handleInvite = () => {
-        console.error("Please fill in all fields.");
         axios.post(`http://localhost:8080/api/workspaces/${workspaceId}/addUser/${workspaceEmail}`)
             .then(response => {
                 console.log(response.data);
@@ -55,8 +53,6 @@ const InvitePopupTwo = () => {
     };
     return (
         <div>
-            <Button onClick={onOpen}>Trigger modal</Button>
-
             <Modal size={"xl"} onClose={onClose} isOpen={isOpen} isCentered>
                 <ModalOverlay/>
                 <ModalContent>
@@ -88,7 +84,6 @@ const InvitePopupTwo = () => {
                                     <button onClick={hideNotification}><CopyLinkButton/></button>
                                 </div>
                             </div>
-
                         </div>
                     </ModalBody>
                     <ModalFooter></ModalFooter>
