@@ -4,8 +4,11 @@ import com.example.trellobackend.models.User;
 import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,5 +34,24 @@ public class UserService implements IUserService {
     @Override
     public void remove(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public  User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        return (User) authentication.getPrincipal();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getSuggestedUsers(String query) {
+        return userRepository.findUsersByPartialMatch(query);
     }
 }
