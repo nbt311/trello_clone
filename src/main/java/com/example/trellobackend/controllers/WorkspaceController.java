@@ -1,5 +1,6 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.workspace.Members;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.models.workspace.Type;
@@ -7,6 +8,7 @@ import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
+import com.example.trellobackend.services.impl.BoardService;
 import com.example.trellobackend.services.impl.WorkspaceMemberService;
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
 
@@ -31,6 +33,8 @@ public class WorkspaceController {
     private WorkspaceTypeRepository workspaceTypeRepository;
     @Autowired
     private WorkspaceMemberService workspaceMemberService;
+    @Autowired
+    private BoardService boardService;
     @GetMapping
     public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
         Iterable<Workspace> workspaces = workspaceService.findAll();
@@ -56,5 +60,10 @@ public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspace
     public ResponseEntity<Iterable<Members>> findMembersByWorkspace (@PathVariable Long id){
         Iterable<Members> membersList = workspaceMemberService.findAllByWorkspace(id);
         return new ResponseEntity<>(membersList, HttpStatus.OK);
+    }
+    @GetMapping("/{id}/boards")
+    public ResponseEntity<Iterable<Board>> getBoardByWorkspace_id(@PathVariable Long id){
+        Iterable<Board> boardsList = boardService.getBoardByWorkspace_id(id);
+        return new ResponseEntity<>(boardsList, HttpStatus.OK);
     }
 }
