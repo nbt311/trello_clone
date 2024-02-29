@@ -1,19 +1,20 @@
 package com.example.trellobackend.models.board;
 
-import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-public class WorkspaceBoard {
+public class Columns {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "workspace_id")
-    private Workspace workspace;
-
+    private String title;
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+    @ElementCollection
+    private List<Long> cardOrderIds;
+    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
+    private List<Card> cards;
 }

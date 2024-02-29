@@ -1,23 +1,113 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.WorkSpace;
+import com.example.trellobackend.models.workspace.Workspace;
+import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
-import com.example.trellobackend.serviceImpls.WorkspaceServiceImpl;
+import com.example.trellobackend.payload.response.MessageResponse;
+import com.example.trellobackend.repositories.UserRepository;
+import com.example.trellobackend.repositories.WorkspaceRepository;
+import com.example.trellobackend.repositories.WorkspaceTypeRepository;
+import com.example.trellobackend.services.impl.EmailService;
+import com.example.trellobackend.services.impl.UserService;
+import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/workspace")
-public class WorkSpaceController {
+@RequestMapping("/api/workspaces")
+public class WorkspaceController {
     @Autowired
     private WorkspaceServiceImpl workspaceService;
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private WorkspaceTypeRepository workspaceTypeRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private UserRepository userRepository;
+    @GetMapping
+    public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
+        Iterable<Workspace> workspaces = workspaceService.findAll();
+        return new ResponseEntity<>(workspaces, HttpStatus.OK);
+    }
     @PostMapping("/create")
-    public ResponseEntity<?> createWorkSpace(@RequestBody WorkspaceRequest workspaceRequest, @AuthenticationPrincipal User creator){
-        WorkSpace workSpace = workspaceService.createWorkspace(workspaceRequest,creator);
-        return ResponseEntity.ok(workSpace);
+    public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
+        try {
+            String frontendURL = workspaceRequest.getFrontendURL();
+            Workspace workspace = workspaceService.createWorkspace(workspaceRequest, frontendURL);
+            return new ResponseEntity<>(workspace, HttpStatus.CREATED);
+        } catch (UsernameNotFoundException e) {
+            // Xử lý khi không tìm thấy người dùng
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
+        }
+    }
+    @GetMapping("/type")
+    public List<Type> getAllWorkspaceTypes() {
+        return workspaceTypeRepository.findAll();
+    }
+
+    @GetMapping("/{workspaceId}/invite/{email}")
+    public ResponseEntity<?> inviteUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String email) {
+        Workspace workspace = workspaceRepository.findById(workspaceId)
+                .orElseThrow(() -> new EntityNotFoundException("Workspace not found"));
+        String invitation = workspaceService.inviteUserToWorkspace(email, workspace);
+        emailService.sendInvitationEmail(email, invitation);
+
+        return new ResponseEntity<>(invitation, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{workspaceId}/addUser/{userEmail}")
+    public ResponseEntity<?> addUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String userEmail) {
+        try {
+            // Kiểm tra xem người gửi request có quyền thêm user vào workspace hay không
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                // Lấy thông tin workspace
+                Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
+
+                // Kiểm tra xem người dùng với email đã tồn tại hay không
+                Optional<User> userOptional = userRepository.findByEmail(userEmail);
+                if (userOptional.isPresent()) {
+                    // Thêm user vào workspace với quyền mặc định (ví dụ: ROLE_MEMBER)
+                    User userToAdd = userOptional.get();
+                    workspaceService.addMemberToWorkspace(workspace, userToAdd, UserRole.ROLE_USER);
+
+                    // Gửi email mời tham gia nhóm
+                    String inviteLink = workspaceService.inviteUserToWorkspace(userEmail, workspace);
+                    emailService.sendInvitationEmail(userEmail, inviteLink);
+
+                    return ResponseEntity.ok("User added to workspace successfully and invitation sent.");
+                } else {
+                    // Trường hợp người dùng với email không tồn tại
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + userEmail);
+                }
+            } else {
+                // Trường hợp không có quyền thực hiện thao tác
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized. User not authenticated.");
+            }
+        } catch (Exception e) {
+            // Xử lý lỗi nếu có
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
+        }
+    }
+    @GetMapping("{id}/workspace")
+    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
+        Optional<Workspace> workspace =  workspaceRepository.findById(id);
+        return new ResponseEntity<>(workspace, HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.trellobackend.models.board;
 
-import com.example.trellobackend.models.workspace.Permission;
+import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,9 +21,20 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
     private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
+
+    @ElementCollection
+    private List<Long> columnOrderIds;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Columns> columns;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "board_permissions",
+    @JoinTable(  name = "board_visibilities",
             joinColumns = @JoinColumn(name = "board_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_permission_id"))
-    private Set<BoardPermission> permissions = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "visibility_id"))
+    private Set<Visibility> visibilities = new HashSet<>();
 }
