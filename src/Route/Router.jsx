@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import HomePage from "../Pages/HomePage/HomePage";
 import ManagePage from "../Pages/ManagePage/ManagePage";
 import Login from "../Pages/LoginPage/Login";

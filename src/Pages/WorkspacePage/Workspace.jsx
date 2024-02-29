@@ -26,7 +26,7 @@ const Workspace = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader workspaceData={workspaceData} setWorkspaceData={setWorkspaceData}/>
+                <HomeHeader/>
 
             </div>
 

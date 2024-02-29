@@ -10,10 +10,14 @@ import {
 import CopyLinkButton from "./CopyLinkButton";
 import { FaLink } from "react-icons/fa6";
 import { MdCheckCircleOutline } from "react-icons/md";
+import axios from "axios";
 
 const InvitePopup = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [showNotification, setShowNotification] = useState(true);
+    const [workspaceEmail, setWorkspaceEmail] = useState('');
+    const [suggestedEmails, setSuggestedEmails] = useState([]);
+
     const hideNotification = () => {
         setShowNotification(true);
     };
@@ -22,17 +26,19 @@ const InvitePopup = () => {
             setShowNotification(false);
         }, 3000);
     }
-    const handleCopyLink = () => {
-        console.error("Please fill in all fields.");
-        // axios.post("/api/create-workspace", {
-        //     name: workspaceEmail
-        // })
-        //     .then(response => {
-        //     })
-        //     .catch(error => {
-        //         console.error("Error creating workspace:", error);
-        //     });
+    const handleInputChange = (e) => {
+        const query = e.target.value;
+        axios.get(`http://localhost:8080/api/users/suggest/${query}`)
+            .then(response => {
+                setSuggestedEmails(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching suggested emails:", error);
+            });
+        setWorkspaceEmail(query);
     };
+
+
     return (
         <div>
             <Button onClick={onOpen}>Trigger modal</Button>
@@ -54,7 +60,11 @@ const InvitePopup = () => {
                                 }
                             </div>
                             <div className="">
-                                <Input placeholder="Email address or name"/>
+                                <Input value={workspaceEmail}
+                                       onChange={handleInputChange} placeholder="Email address or name"/>
+                                { suggestedEmails.map((user, index) => (
+                                    <div key={index}>{user.email}</div>
+                                ))}
                             </div>
                             <div className="flex">
                                 <div>

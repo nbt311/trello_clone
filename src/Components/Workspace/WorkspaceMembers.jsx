@@ -6,6 +6,8 @@ import {MdCheckCircleOutline} from "react-icons/md";
 import {AiOutlineClose} from "react-icons/ai";
 import axios from "axios";
 import {IoIosClose} from "react-icons/io";
+import InvitePopup from "../WorkspaceModal/InvitePopup";
+import InvitePopupTwo from "../WorkspaceModal/InvitePopupTwo";
 
 const WorkspaceMembers = () => {
     const workspace = JSON.parse(localStorage.getItem('workspaces'));
@@ -63,7 +65,7 @@ const WorkspaceMembers = () => {
                 </div>
 
                 <div className='w-[50%] mt-2 self-center'>
-                    <Button colorScheme='blue'><AiOutlineUserAdd/>Invite Workspace members</Button>
+                    <Button colorScheme='blue'><AiOutlineUserAdd/> <InvitePopupTwo/>Invite Workspace members</Button>
                 </div>
             </div>
 

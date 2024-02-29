@@ -10,10 +10,19 @@ import {
 import CopyLinkButton from "./CopyLinkButton";
 import { FaLink } from "react-icons/fa6";
 import { MdCheckCircleOutline } from "react-icons/md";
+import axios from "axios";
 
 const InvitePopupTwo = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [showNotification, setShowNotification] = useState(true);
+    const [workspaceEmail, setWorkspaceEmail] = useState('');
+    const [suggestedEmails, setSuggestedEmails] = useState([]);
+    const workspace = JSON.parse(localStorage.getItem('workspacelist'));
+    // console.log(workspace)
+    const workspaceId = workspace[0].id
+    // console.log(workspaceId)
+
+
     const hideNotification = () => {
         setShowNotification(true);
     };
@@ -22,16 +31,27 @@ const InvitePopupTwo = () => {
             setShowNotification(false);
         }, 3000);
     }
-    const handleCopyLink = () => {
+    const handleInputChange = (e) => {
+        const query = e.target.value;
+        axios.get(`http://localhost:8080/api/users/suggest/${query}`)
+            .then(response => {
+                setSuggestedEmails(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching suggested emails:", error);
+            });
+        setWorkspaceEmail(query);
+    };
+
+    const handleInvite = () => {
         console.error("Please fill in all fields.");
-        // axios.post("/api/create-workspace", {
-        //     name: workspaceEmail
-        // })
-        //     .then(response => {
-        //     })
-        //     .catch(error => {
-        //         console.error("Error creating workspace:", error);
-        //     });
+        axios.post(`http://localhost:8080/api/workspaces/${workspaceId}/addUser/${workspaceEmail}`)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("Error creating workspace:", error);
+            });
     };
     return (
         <div>
@@ -54,8 +74,9 @@ const InvitePopupTwo = () => {
                                 }
                             </div>
                             <div className="flex">
-                                <Input placeholder="Email address or name"/>
-                                <Button colorScheme='blue'>Send invite</Button>
+                                <Input value={workspaceEmail} onChange={handleInputChange}
+                                       placeholder="Email address or name"/>
+                                <Button onClick={handleInvite} colorScheme='blue'>Send invite</Button>
                             </div>
                             <Textarea placeholder="Join this Trello Workspace to start collaborating with me!"></Textarea>
                             <div className="flex">

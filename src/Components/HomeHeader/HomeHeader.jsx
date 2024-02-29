@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {IoAppsSharp} from "react-icons/io5";
 import Dropdown from "./Dropdown";
-import {MdAddBox, MdKeyboardArrowDown} from "react-icons/md";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
@@ -16,11 +15,8 @@ import {
 import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
 import {BiGroup} from "react-icons/bi";
-import AuthService from "../../Service/auth.service";
 import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
-import CreateBoards from "../CreateBoards/CreateBoards";
-import workspace from "../../Pages/WorkspacePage/Workspace";
 import axios from "axios";
 
 const HomeHeader = ({onOpen, onClose}) => {
@@ -89,14 +85,14 @@ const HomeHeader = ({onOpen, onClose}) => {
                                 <p className="text-sm flex ml-3">Your Workspaces</p>
 
                                     {workspace.map((item) =>
-                                        <MenuItem>
+                                        <MenuItem >
                                             <Link to={`/workspace/${item.id}`}>
                                             <div className='flex'>
                                                 <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
                                                 <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
                                             </div>
                                         </Link>
-                                        </MenuItem>
+                                        </MenuItem >
                                     )}
                                 <p className="text-sm flex ml-3">Guest Workspaces</p>
                                 <MenuItem>
