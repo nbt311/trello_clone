@@ -29,9 +29,6 @@ public class Board {
     @ElementCollection
     private List<Long> columnOrderIds;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Columns> columns;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "board_visibilities",
             joinColumns = @JoinColumn(name = "board_id"),

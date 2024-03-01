@@ -91,18 +91,25 @@ public class BoardService implements IBoardService {
                 });
                 board.setVisibilities(visibilities);
                 boardRepository.save(board);
-                addMemberToBoard(board,creator,EBoardMemberRole.ADMIN);
+                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
                 return board;
             }
         }
         throw new UsernameNotFoundException("User not found");
     }
 
-    public void addMemberToBoard(Board board, User user, EBoardMemberRole eBoardMemberRole) {
+
+
+    @Override
+    public Board getBoardById(long boardId) {
+        return boardRepository.findById(boardId);
+    }
+
+    public void addMemberToBoard(Board board, User user, UserRole userRole) {
         BoardMembers boardMembers = new BoardMembers();
         boardMembers.setBoard(board);
         boardMembers.setUser(user);
-        boardMembers.setRole(eBoardMemberRole);
+        boardMembers.setRole(userRole);
         boardMembersRepository.save(boardMembers);
     }
 }
