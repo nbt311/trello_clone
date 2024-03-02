@@ -1,6 +1,6 @@
 package com.example.trellobackend.models.board;
 
-import com.example.trellobackend.enums.BoardVisibility;
+import com.example.trellobackend.enums.EBoardVisibility;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +18,5 @@ public class Visibility {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private BoardVisibility boardVisibility;
+    private EBoardVisibility boardVisibility;
 }

@@ -9,6 +9,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
                     "from workspace w2 " +
                     "join members m on w2.id = m.workspace_id " +
                     "join users u on m.user_id = u.id " +
-                    "where u.id = :user_id", nativeQuery = true)
-    Iterable<Workspace> getWorkspaceById(Long user_id);
+                    "where u.id = :userId", nativeQuery = true)
+    Iterable<Workspace> getWorkspaceByUserId(Long userId);
 }

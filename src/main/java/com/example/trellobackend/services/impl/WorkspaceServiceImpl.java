@@ -129,9 +129,4 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         member.setRole(userRole);
         workspaceMemberRepository.save(member);
     }
-
-    @Override
-    public Iterable<Workspace> getWorkspaceById(Long userId) {
-        return workspaceRepository.getWorkspaceById(userId);
-    }
 }

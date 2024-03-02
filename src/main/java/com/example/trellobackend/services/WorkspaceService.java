@@ -10,6 +10,5 @@ public interface WorkspaceService {
     Optional<Workspace> findById(Long id);
     Workspace save(Workspace workspace);
     void delete(Long id);
-    Iterable<Workspace> getWorkspaceById(Long userId);
     Workspace createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL);
 }

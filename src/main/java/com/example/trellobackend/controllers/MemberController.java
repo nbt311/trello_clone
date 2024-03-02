@@ -1,7 +1,7 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.models.workspace.Members;
-import com.example.trellobackend.services.impl.WorkspaceMemberService;
+import com.example.trellobackend.repositories.WorkspaceMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +14,14 @@ import java.util.Optional;
 @RequestMapping("/api/test/members")
 public class MemberController {
     @Autowired
-    private WorkspaceMemberService workspaceMemberService;
+    private WorkspaceMemberRepository workspaceMemberRepository;
     @DeleteMapping("/{id}")
-    public ResponseEntity<Members> deleteMembers(@PathVariable Long id){
-        Optional<Members> membersOptional = workspaceMemberService.findById(id);
+    public ResponseEntity<?> deleteMembers(@PathVariable Long id){
+        Optional<Members> membersOptional = workspaceMemberRepository.findById(id);
         if (membersOptional.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Member not found",HttpStatus.NOT_FOUND);
         }
-        workspaceMemberService.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        workspaceMemberRepository.deleteById(id);
+        return new ResponseEntity<>("Deleted!!!!",HttpStatus.OK);
     }
 }

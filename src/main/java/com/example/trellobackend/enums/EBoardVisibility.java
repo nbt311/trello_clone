@@ -1,5 +1,5 @@
 package com.example.trellobackend.enums;
 
-public enum BoardVisibility {
+public enum EBoardVisibility {
     PRIVATE, WORKSPACE, PUBLIC
 }

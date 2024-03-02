@@ -1,9 +1,10 @@
 package com.example.trellobackend.repositories;
 
 import com.example.trellobackend.models.workspace.Members;
-import com.example.trellobackend.models.workspace.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface WorkspaceMemberRepository extends JpaRepository<Members, Long> {
-    Iterable<Members> findMembersByWorkspace_Id(Long workspace_id);
+    Iterable<Members> findMembersByWorkspaceId(Long workspaceId);
 }
