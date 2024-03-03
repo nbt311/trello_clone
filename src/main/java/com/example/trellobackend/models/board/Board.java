@@ -27,6 +27,9 @@ public class Board {
     private Workspace workspace;
 
     @ElementCollection
+    @CollectionTable(name = "column_order_ids", joinColumns = @JoinColumn(name = "board_id"))
+    @OrderColumn
+    @Column(name = "column_order_id")
     private List<Long> columnOrderIds;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -34,4 +37,7 @@ public class Board {
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "visibility_id"))
     private Set<Visibility> visibilities = new HashSet<>();
+
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Columns> columns;
 }
