@@ -12,9 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoardMembers {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
@@ -24,4 +25,7 @@ private Long id;
     private User user;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+//    @Enumerated(EnumType.STRING)
+//    private EBoardMemberRole role;
 }

@@ -1,8 +1,11 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.models.User;
+import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.AvatarRequest;
+import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.services.IUserService;
+import com.example.trellobackend.services.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.example.trellobackend.payload.request.ChangePasswordRequest;
@@ -28,6 +31,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
     @PostMapping("/{userId}/avatar")
     public ResponseEntity<String> updateAvatar(@PathVariable Long userId, @RequestBody AvatarRequest data) {
@@ -64,4 +69,17 @@ public class UserController {
         return iUserService.getSuggestedUsers(query);
     }
 
+    @GetMapping("/{userId}/workspaces")
+    public ResponseEntity<?> findWorkspaceByUser(@PathVariable Long userId) {
+        try {
+            Iterable<Workspace> workspacesList = workspaceRepository.getWorkspaceByUserId(userId);
+            if (workspacesList == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(workspacesList, HttpStatus.OK);
+        } catch (Exception e) {
+            String errorMessage = "There has been problems with the server" + ":" + e.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -1,16 +1,22 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.workspace.Members;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
+
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.UserRepository;
+import com.example.trellobackend.repositories.BoardRepository;
+import com.example.trellobackend.repositories.WorkspaceMemberRepository;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
+
 import com.example.trellobackend.services.impl.EmailService;
-import com.example.trellobackend.services.impl.UserService;
+
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +46,10 @@ public class WorkspaceController {
     private EmailService emailService;
     @Autowired
     private UserRepository userRepository;
+
+    private WorkspaceMemberRepository workspaceMemberRepository;
+    @Autowired
+    private  BoardRepository boardRepository;
     @GetMapping
     public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
         Iterable<Workspace> workspaces = workspaceService.findAll();
@@ -59,6 +69,32 @@ public class WorkspaceController {
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
+    }
+    @GetMapping("/{workspaceId}/members" )
+    public ResponseEntity<?> findMembersByWorkspace (@PathVariable Long workspaceId){
+        try{
+            Iterable<Members> membersList = workspaceMemberRepository.findMembersByWorkspaceId(workspaceId);
+            if(membersList == null){
+                return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(membersList, HttpStatus.OK);
+        } catch (Exception e) {
+            String errorMessage = "There has been problems with the server" + ":" + e.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/{workspaceId}/boards")
+    public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId){
+        try{
+            Iterable<Board> boardsList = boardRepository.findBoardByWorkspaceId(workspaceId);
+            if (boardsList == null){
+                return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(boardsList, HttpStatus.OK);
+        } catch (Exception e) {
+            String errorMessage = "There has been problems with the server" + ":" + e.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{workspaceId}/invite/{email}")
@@ -105,9 +141,11 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
         }
     }
+
     @GetMapping("{id}/workspace")
     public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
         Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
+
     }
 }
