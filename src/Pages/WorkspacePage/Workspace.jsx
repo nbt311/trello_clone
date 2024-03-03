@@ -18,6 +18,10 @@ const Workspace = () => {
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
+    const workspace = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceId = workspace.id;
+    const [members, setMembers] = useState([]);
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
@@ -35,8 +39,21 @@ const Workspace = () => {
 
         fetchWorkspaceData();
     }, [id, name]);
-    console.log(isInputFilled)
-    console.log(inputValue)
+
+    useEffect(() => {
+        // Fetch members from API
+        const fetchMembers = () => {
+            axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
+                    setMembers(response.data);
+                }
+            ).catch(error => {
+                console.error('Error fetching members:', error);
+            });
+
+        };
+        fetchMembers();
+    }, [workspaceId]);
+
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
@@ -50,7 +67,7 @@ const Workspace = () => {
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
                     {workspaceData ? (
-                        <WorkspaceMembers workspaceData={workspaceData} onOpen={onOpen} onClose={onClose} />
+                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspace}/>
                     ) : (
                         <div>Loading...</div>
                     )}

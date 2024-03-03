@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import WorkspaceDropdown from "./WorkspaceDropdown";
 import {Avatar} from "@chakra-ui/react";
 import WorkspaceSidebarConfig from "./WorkspaceSidebarConfig";
 

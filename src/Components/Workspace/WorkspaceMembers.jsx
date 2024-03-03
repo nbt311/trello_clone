@@ -8,8 +8,7 @@ import {IoIosClose} from "react-icons/io";
 import InvitePopup from "../WorkspaceModal/InvitePopup";
 
 
-const WorkspaceMembers = ({onOpen,onClose}) => {
-    const workspace = JSON.parse(localStorage.getItem('workspaces'));
+const WorkspaceMembers = ({onOpen,onClose, members, setMembers, workspace}) => {
     const workspaceId = workspace.id;
     const [showNotification, setShowNotification] = useState(true);
     const [selectedOption, setSelectedOption] = useState("workspaceMembers");
@@ -26,24 +25,6 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
         }, 3000);
     }
 
-
-    const [members, setMembers] = useState([]);
-
-    useEffect(() => {
-        // Fetch members from API
-        const fetchMembers = () => {
-            axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
-                    setMembers(response.data);
-                }
-            ).catch(error => {
-                console.error('Error fetching members:', error);
-            });
-
-        };
-        fetchMembers();
-    }, []);
-
-
     const handleRemoveMember = (memberId) => {
         axios.delete(`http://localhost:8080/api/test/members/${memberId}`).then(res => {
             setMembers(prevMembers => prevMembers.filter(member => member.id !== memberId));
@@ -55,6 +36,7 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
     const handleInvite = () => {
         onOpen()
     }
+
     return (
         <div className=''>
             <div className='flex mt-5'>
@@ -113,7 +95,7 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
 
                     <hr className='border-1-slate-500 py-1 w-full mt-4'/>
 
-                    <div className='flex'>
+                    <div className='flex justify-between'>
                         <div className='w-[60%] flex flex-col items-start '>
                             <p className='text-xl font-semibold mt-5'>Invite members to join you</p>
                             <p className='text-left text-lg mt-3'>Anyone with an invite link can join this Free
@@ -121,16 +103,14 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
                                 time.</p>
                         </div>
 
-                        <div className="w-[26%]"></div>
-
-                        <div className='w-[14%] place-self-end space-y-10'>
+                        <div className='place-self-end space-y-12'>
                             {showNotification &&
-                                <div className="absolute w-[16%] flex bg-emerald-200 rounded-md">
+                                <div className="absolute flex bg-emerald-200 rounded-md">
                                     <MdCheckCircleOutline className="mt-0.5 text-emerald-600"/>
                                     <p className="text-sm text-emerald-600">Link copied to clipboard</p>
                                 </div>}
-                            <div className='flex hover:bg-gray-300 ml-5'>
-                                <FaLink className='mt-1'/>
+                            <div className='flex items-center hover:bg-gray-300'>
+                                <FaLink/>
                                 <button className='ml-1' onClick={hideNotification}>Invite with link</button>
                             </div>
                         </div>
@@ -151,8 +131,8 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
                     <hr className='border-1-slate-500 py-1 w-full mt-4'/>
                     {members.map((users, index) => (
                         <div key={index} className='mt-2'>
-                            <div className='flex'>
-                                <div className='flex w-[60%]'>
+                            <div className='flex justify-between items-center'>
+                                <div className='flex'>
                                     <Avatar className='mt-1' size='sm' src={users.user.avatarUrl}
                                             name={users.user.username}/>
                                     <div className='ml-2'>
@@ -161,63 +141,67 @@ const WorkspaceMembers = ({onOpen,onClose}) => {
                                     </div>
                                 </div>
 
-                                <div className='w-[15%]'>
-                                    <p className='mt-1'>On 0 boards</p>
-                                </div>
-                                <div className='w-[10%]'>
-                                    <Button variant='outline'>{users.role}</Button>
-                                </div>
-                                <div className='w-[15%]'>
-                                    <Menu>
-                                        {users.role === 'ROLE_ADMIN' ? (
-                                            <MenuButton
-                                                px={5}
-                                                py={2}
-                                                transition='all 0.2s'
-                                                borderRadius='md'
-                                                borderWidth='1px'
-                                                _hover={{bg: 'gray.400'}}
-                                                _expanded={{bg: 'gray.400'}}
-                                                _focus={{boxShadow: 'outline'}}
-                                            >
-                                                <div className='flex'>
-                                                    <IoIosClose className='mt-1'/>Leave
-                                                </div>
-                                            </MenuButton>
-                                        ) : (
-                                            <MenuButton
-                                                px={4}
-                                                py={2}
-                                                transition='all 0.2s'
-                                                borderRadius='md'
-                                                borderWidth='1px'
-                                                _hover={{bg: 'gray.400'}}
-                                                _expanded={{bg: 'gray.400'}}
-                                                _focus={{boxShadow: 'outline'}}
-                                            >
-                                                <div className='flex'>
-                                                    <IoIosClose className='mt-1'/>Remove
-                                                </div>
-                                            </MenuButton>
-                                        )}
-                                        <MenuList>
-                                            <MenuItem onClick={() => handleRemoveMember(users.id)}>
-                                                <div className="">
-                                                    <p>Remove from Workspace</p>
-                                                    <p className='text-sm'>Remove all access to the Workspace</p>
-                                                </div>
-                                            </MenuItem>
+                                <div className='flex space-x-6 items-center'>
+                                    <div>
+                                        <p className='mt-1'>On 0 boards</p>
+                                    </div>
 
-                                            <MenuItem>
-                                                <div className="">
-                                                    <p>Deactivate</p>
-                                                    <p className='text-sm'>Disable member's access to Workspace boards,
-                                                        but <br/> allow other Workspace members to see what
-                                                        cards <br/> and boards the member was on.</p>
-                                                </div>
-                                            </MenuItem>
-                                        </MenuList>
-                                    </Menu>
+                                    <div>
+                                        <Button variant='outline'>{users.role}</Button>
+                                    </div>
+
+                                    <div>
+                                        <Menu>
+                                            {users.role === 'ROLE_ADMIN' ? (
+                                                <MenuButton
+                                                    px={5}
+                                                    py={2}
+                                                    transition='all 0.2s'
+                                                    borderRadius='md'
+                                                    borderWidth='1px'
+                                                    _hover={{bg: 'gray.400'}}
+                                                    _expanded={{bg: 'gray.400'}}
+                                                    _focus={{boxShadow: 'outline'}}
+                                                >
+                                                    <div className='flex'>
+                                                        <IoIosClose className='mt-1'/>Leave
+                                                    </div>
+                                                </MenuButton>
+                                            ) : (
+                                                <MenuButton
+                                                    px={4}
+                                                    py={2}
+                                                    transition='all 0.2s'
+                                                    borderRadius='md'
+                                                    borderWidth='1px'
+                                                    _hover={{bg: 'gray.400'}}
+                                                    _expanded={{bg: 'gray.400'}}
+                                                    _focus={{boxShadow: 'outline'}}
+                                                >
+                                                    <div className='flex'>
+                                                        <IoIosClose className='mt-1'/>Remove
+                                                    </div>
+                                                </MenuButton>
+                                            )}
+                                            <MenuList>
+                                                <MenuItem onClick={() => handleRemoveMember(users.id)}>
+                                                    <div className="">
+                                                        <p>Remove from Workspace</p>
+                                                        <p className='text-sm'>Remove all access to the Workspace</p>
+                                                    </div>
+                                                </MenuItem>
+
+                                                <MenuItem>
+                                                    <div className="">
+                                                        <p>Deactivate</p>
+                                                        <p className='text-sm'>Disable member's access to Workspace boards,
+                                                            but <br/> allow other Workspace members to see what
+                                                            cards <br/> and boards the member was on.</p>
+                                                    </div>
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </div>
                                 </div>
                             </div>
 

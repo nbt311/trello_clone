@@ -16,10 +16,8 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
     const [showNotification, setShowNotification] = useState(true);
     const [workspaceEmail, setWorkspaceEmail] = useState('');
     const [suggestedEmails, setSuggestedEmails] = useState([]);
-    const workspace = JSON.parse(localStorage.getItem('workspacelist'));
-    // console.log(workspace)
-    const workspaceId = workspace[0].id
-    // console.log(workspaceId)
+    const workspace = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceId = workspace.id
 
 
     const hideNotification = () => {
@@ -30,27 +28,23 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
             setShowNotification(false);
         }, 3000);
     }
-    const handleInputChange = (e) => {
-        const query = e.target.value;
-        axios.get(`http://localhost:8080/api/users/suggest/${query}`)
-            .then(response => {
-                setSuggestedEmails(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching suggested emails:", error);
-            });
-        setWorkspaceEmail(query);
-    };
 
     const handleInvite = () => {
         axios.post(`http://localhost:8080/api/workspaces/${workspaceId}/addUser/${workspaceEmail}`)
             .then(response => {
-                console.log(response.data);
+                onClose();
+                setWorkspaceEmail('')
             })
             .catch(error => {
                 console.error("Error creating workspace:", error);
             });
     };
+
+    const handlePopupClose = () => {
+        setWorkspaceEmail("");
+        onClose();
+    };
+
     return (
         <div>
             <Modal size={"xl"} onClose={onClose} isOpen={isOpen} isCentered>
@@ -70,7 +64,7 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
                                 }
                             </div>
                             <div className="flex">
-                                <Input value={workspaceEmail} onChange={handleInputChange}
+                                <Input value={workspaceEmail}
                                        placeholder="Email address or name"/>
                                 <Button onClick={handleInvite} colorScheme='blue'>Send invite</Button>
                             </div>

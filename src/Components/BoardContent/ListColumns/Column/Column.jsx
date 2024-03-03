@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Box, Heading, Text} from "@chakra-ui/react";
 import {BsThreeDots} from "react-icons/bs";
 import ListCards from "./ListCards/ListCards";
-import {IoMdAdd} from "react-icons/io";
+import {IoMdAdd, IoMdClose} from "react-icons/io";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 import {mapOrder} from "../../../../Utils/Sort";
+import CreateNewCardForm from "./ListCards/NewCard/CreateNewCardForm";
 
 const Column = ({column}) => {
+    const [isCreateCard, setIsCreateCard] = useState(false)
+
+    const handleCreateCard = () => {
+        setIsCreateCard(!isCreateCard)
+    }
+
     const {
         attributes, listeners, setNodeRef, transform, transition, isDragging
     } = useSortable({id: column._id, data: {...column}});
@@ -35,13 +42,24 @@ const Column = ({column}) => {
                 paddingRight: '2px'
             }}>
                 <ListCards cards = {orderedCards}/>
+                {isCreateCard ? <CreateNewCardForm/> : ''}
             </div>
 
-            <Text className='mt-4 flex items-center space-x-2 font-medium text-gray-500
-                    hover:text-black hover:bg-gray-200 rounded-md p-1 -ml-1 cursor-pointer'>
-                <IoMdAdd className='text-lg'/>
-                <p>Add a card</p>
-            </Text>
+            <div onClick={handleCreateCard}>
+                {isCreateCard ? (
+                    <div className='flex items-center space-x-2 font-medium text-black p-1 -ml-1'>
+                        <button type="submit"
+                                className='bg-blue-500 hover:bg-blue-600 py-1 px-3 text-white font-semibold rounded-md'>Add list
+                        </button>
+                        <IoMdClose className='text-3xl p-1 hover:bg-gray-300 rounded-md' onClick={handleCreateCard}/>
+                    </div>
+                ) : (
+                    <div className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'>
+                        <IoMdAdd className='text-lg'/>
+                        <p>Add a card</p>
+                    </div>
+                )}
+            </div>
         </Box>
     );
 };

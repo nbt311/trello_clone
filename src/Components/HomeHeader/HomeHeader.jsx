@@ -123,19 +123,19 @@ const HomeHeader = ({onOpen, onClose}) => {
                                     Create
                                 </MenuButton>
                             )}
-                            <MenuList className='w-1/2'>
+                            <MenuList className='w-full'>
                                 <MenuItem>
                                     <div>
-                                        <p className='flex'><BsTrello className='mt-1'/>Create board</p>
+                                        <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
                                         <p className='text-sm text-left'>A board is made up of cards ordered on lists.
-                                            Use it to manage projects, track information, or organize anything.</p>
+                                            Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
                                     </div>
                                 </MenuItem>
                                 <MenuItem onClick={handleCreate}>
                                     <div>
-                                        <p className='flex'><BiGroup className='mt-1'/>Create Workspace</p>
+                                        <p className='flex'><BiGroup className='mt-1 mr-1'/>Create Workspace</p>
                                         <p className='text-sm text-left'>A Workspace is a group of boards and people.
-                                            Use it to organize your company, side hustle,family, or friends.</p>
+                                            Use <br/> it to organize your company, side hustle,family, or <br/> friends.</p>
                                     </div>
                                 </MenuItem>
                             </MenuList>

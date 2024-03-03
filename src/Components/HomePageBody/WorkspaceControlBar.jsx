@@ -8,7 +8,7 @@ const WorkspaceControlBar = ({workspace}) => {
     return (
         <div className='flex items-center w-[90%] justify-between mt-5'>
             <div className='flex items-center space-x-3 '>
-                <Avatar name='My workspace' size='sm' borderRadius='md'/>
+                <Avatar name={workspace.name} size='sm' borderRadius='md'/>
                 <p>{workspace.name}</p>
             </div>
 

@@ -4,6 +4,7 @@ import BoardCard from "./BoardCard";
 import WorkspaceControlBar from "./WorkspaceControlBar";
 import {IoMdInformationCircleOutline} from "react-icons/io";
 import {BsPeople} from "react-icons/bs";
+import {Link} from "react-router-dom";
 
 const BoardsPage = ({workspace}) => {
     return (
@@ -13,11 +14,11 @@ const BoardsPage = ({workspace}) => {
                 <p className='ml-2'>Recently viewed</p>
             </div>
 
-            <div className='flex space-x-9 mt-4'>
-                {workspace.map((item) => (
+            <Link to='/content'>
+                <div className='flex space-x-9 mt-4'>
                     <BoardCard/>
-                ))}
-            </div>
+                </div>
+            </Link>
 
             <div className='text-left text-gray-600 mt-10'>
                 <p>YOUR WORKSPACES</p>

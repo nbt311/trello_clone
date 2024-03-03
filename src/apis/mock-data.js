@@ -3,15 +3,15 @@ export const mockData = {
         _id: 'board-id-01',
         title: 'Board title',
         description: 'Pro MERN stack Course',
-        type: 'public', // 'private'
-        ownerIds: [], // Những users là Admin của board
-        memberIds: [], // Những users là member bình thường của board
+        type: 'public',
+        ownerIds: [],
+        memberIds: [],
         columnOrderIds: ['column-id-01', 'column-id-02', 'column-id-03', 'column-id-04', 'column-id-05'], // Thứ tự sắp xếp / vị trí của các Columns trong 1 boards
         columns: [
             {
                 _id: 'column-id-01',
                 boardId: 'board-id-01',
-                title: 'To Do Column 01',
+                title: 'To Do',
                 cardOrderIds: ['card-id-01', 'card-id-02', 'card-id-03', 'card-id-04', 'card-id-05', 'card-id-06', 'card-id-07'],
                 cards: [
                     {
@@ -35,7 +35,7 @@ export const mockData = {
             {
                 _id: 'column-id-02',
                 boardId: 'board-id-01',
-                title: 'Inprogress Column 02',
+                title: 'Doing',
                 cardOrderIds: ['card-id-08', 'card-id-09', 'card-id-10'],
                 cards: [
                     { _id: 'card-id-08', boardId: 'board-id-01', columnId: 'column-id-02', title: 'Title of card 08', description: null, cover: null, memberIds: [], comments: [], attachments: [] },
@@ -46,7 +46,7 @@ export const mockData = {
             {
                 _id: 'column-id-03',
                 boardId: 'board-id-01',
-                title: 'Done Column 03',
+                title: 'Done',
                 cardOrderIds: ['card-id-11', 'card-id-12', 'card-id-13'],
                 cards: [
                     { _id: 'card-id-11', boardId: 'board-id-01', columnId: 'column-id-03', title: 'Title of card 11', description: null, cover: null, memberIds: [], comments: [], attachments: [] },
@@ -57,7 +57,7 @@ export const mockData = {
             {
                 _id: 'column-id-04',
                 boardId: 'board-id-01',
-                title: 'Bug Column 04',
+                title: 'Review',
                 cardOrderIds: ['card-id-14', 'card-id-15', 'card-id-16', 'card-id-17'],
                 cards: [
                     { _id: 'card-id-14', boardId: 'board-id-01', columnId: 'column-id-04', title: 'Title of card 14', description: null, cover: null, memberIds: [], comments: [], attachments: [] },
@@ -69,7 +69,7 @@ export const mockData = {
             {
                 _id: 'column-id-05',
                 boardId: 'board-id-01',
-                title: 'Review Column 05',
+                title: 'Bug',
                 cardOrderIds: ['card-id-18', 'card-id-19', 'card-id-20'],
                 cards: [
                     { _id: 'card-id-18', boardId: 'board-id-01', columnId: 'column-id-05', title: 'Title of card 18', description: null, cover: null, memberIds: [], comments: [], attachments: [] },
