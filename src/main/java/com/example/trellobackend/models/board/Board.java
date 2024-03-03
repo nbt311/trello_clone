@@ -1,29 +1,36 @@
 package com.example.trellobackend.models.board;
 
-import com.example.trellobackend.models.workspace.Permission;
+import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Data
 @Getter
 @Setter
-@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "board")
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
+    @Size(max = 20)
     private String title;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "board_permissions",
-            joinColumns = @JoinColumn(name = "board_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_permission_id"))
-    private Set<BoardPermission> permissions = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable( name = "board_visibilities",
+                joinColumns = @JoinColumn(name = "board_id"),
+                inverseJoinColumns = @JoinColumn(name = "visibility_id"))
+    private Set<Visibility> types= new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
 }
