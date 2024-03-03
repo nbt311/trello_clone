@@ -15,10 +15,7 @@ import com.example.trellobackend.repositories.WorkspaceMemberRepository;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
 
-import com.example.trellobackend.services.impl.WorkspaceMemberService;
-
 import com.example.trellobackend.services.impl.EmailService;
-import com.example.trellobackend.services.impl.UserService;
 
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
 
@@ -45,9 +42,6 @@ public class WorkspaceController {
     private WorkspaceRepository workspaceRepository;
     @Autowired
     private WorkspaceTypeRepository workspaceTypeRepository;
-    @Autowired
-
-    private WorkspaceMemberService workspaceMemberService;
     @Autowired
     private EmailService emailService;
     @Autowired

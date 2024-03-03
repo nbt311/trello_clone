@@ -1,6 +1,7 @@
 package com.example.trellobackend.models.board;
 
 import com.example.trellobackend.enums.EBoardMemberRole;
+import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,12 +22,10 @@ public class BoardMembers {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-<<<<<<< HEAD
-//    @Enumerated(EnumType.STRING)
-//    private UserRole role;
-=======
 
     @Enumerated(EnumType.STRING)
-    private EBoardMemberRole role;
->>>>>>> origin/api/show-all-members
+    private UserRole role;
+
+//    @Enumerated(EnumType.STRING)
+//    private EBoardMemberRole role;
 }
