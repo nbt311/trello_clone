@@ -1,5 +1,7 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -25,14 +27,23 @@ public class ColumsController {
     private ColumnsService columnsService;
     @Autowired
     private ColumnsRepository columnsRepository;
-    @PostMapping("/create")
-    public ResponseEntity<?> createColumns(@RequestBody ColumnRequest columnRequest){
-            Columns newColumns = columnsService.createColumn(columnRequest);
-            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createColumns(@RequestBody ColumnRequest columnRequest){
+//            Columns newColumns = columnsService.createColumn(columnRequest);
+//            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
+//    }
     @GetMapping("{id}")
     public ResponseEntity<?> getColumsById(@PathVariable Long id){
         Optional<Columns> columns = columnsRepository.findById(id);
         return new ResponseEntity<>(columns, HttpStatus.OK);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<BoardResponseDTO> createColumn(@RequestBody ColumnRequest columnRequest) {
+        try {
+            BoardResponseDTO responseDTO = columnsService.createNewColumn(columnRequest);
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

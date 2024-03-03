@@ -21,8 +21,8 @@ public class Columns {
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
-//    @ElementCollection
-//    private List<Long> cardOrderIds;
-//    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
-//    private List<Card> cards;
+    @ElementCollection
+    private List<Long> cardOrderIds;
+    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
+    private List<Card> cards;
 }

@@ -38,6 +38,6 @@ public class Board {
             inverseJoinColumns = @JoinColumn(name = "visibility_id"))
     private Set<Visibility> visibilities = new HashSet<>();
 
-//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Columns> columns;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Columns> columns;
 }

@@ -1,5 +1,7 @@
 package com.example.trellobackend.services.impl;
 
+import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.enums.EBoardMemberRole;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
@@ -18,9 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardService implements IBoardService {
@@ -98,11 +99,81 @@ public class BoardService implements IBoardService {
         throw new UsernameNotFoundException("User not found");
     }
 
+    @Override
+    public BoardResponseDTO getBoardById(Long boardId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isPresent()) {
+            Board board = boardOptional.get();
+
+            // Fetch Columns associated with the Board
+            List<ColumnsDTO> columnsDTOList = board.getColumns()
+                    .stream()
+                    .map(column -> {
+                        ColumnsDTO columnsDTO = new ColumnsDTO();
+                        columnsDTO.setId(column.getId());
+                        columnsDTO.setTitle(column.getTitle());
+                        // Map other properties as needed
+                        return columnsDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            BoardResponseDTO responseDTO = BoardResponseDTO.fromEntity(board);
+            responseDTO.setColumns(columnsDTOList);
+            responseDTO.setColumnIds(board.getColumnOrderIds());
+
+            return responseDTO;
+        }
+        throw new NoSuchElementException("Board not found");
+    }
+
 
 
     @Override
-    public Board getBoardById(long boardId) {
-        return boardRepository.findById(boardId);
+    public BoardResponseDTO createNewBoard(BoardRequest boardRequest) {
+        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
+        if (userOptional.isPresent()) {
+            User creator = userOptional.get();
+            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
+            if (workspaceOptional.isPresent()) {
+                Workspace workspace = workspaceOptional.get();
+                Board board = new Board();
+                board.setTitle(boardRequest.getTitle());
+                board.setWorkspace(workspace);
+                Set<String> strVisibilities = boardRequest.getVisibility();
+                Set<Visibility> visibilities = new HashSet<>();
+                strVisibilities.forEach(visibility -> {
+                    switch (visibility) {
+                        case "private":
+                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
+                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+                            visibilities.add(privateVisibility);
+                            break;
+                        case "public":
+                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
+                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+                            visibilities.add(publicVisibility);
+                            break;
+                        default:
+                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
+                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+                            visibilities.add(workspaceVisibility);
+                    }
+                });
+                board.setVisibilities(visibilities);
+                boardRepository.save(board);
+                addMemberToBoard(board, creator, UserRole.ROLE_ADMIN);
+
+                // Create a response DTO
+                BoardResponseDTO responseDTO = new BoardResponseDTO();
+                responseDTO.setId(board.getId());
+                responseDTO.setTitle(board.getTitle());
+                responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
+                responseDTO.setColumnIds(Collections.emptyList()); // Initialize the columnIds list
+
+                return responseDTO;
+            }
+        }
+        throw new UsernameNotFoundException("User not found");
     }
 
     public void addMemberToBoard(Board board, User user, UserRole userRole) {
