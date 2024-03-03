@@ -10,10 +10,16 @@ import {
 import CopyLinkButton from "./CopyLinkButton";
 import { FaLink } from "react-icons/fa6";
 import { MdCheckCircleOutline } from "react-icons/md";
+import axios from "axios";
 
-const InvitePopupTwo = () => {
-    const {isOpen, onOpen, onClose} = useDisclosure();
+const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
     const [showNotification, setShowNotification] = useState(true);
+    const [workspaceEmail, setWorkspaceEmail] = useState('');
+    const [suggestedEmails, setSuggestedEmails] = useState([]);
+    const workspace = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceId = workspace.id
+
+
     const hideNotification = () => {
         setShowNotification(true);
     };
@@ -22,21 +28,25 @@ const InvitePopupTwo = () => {
             setShowNotification(false);
         }, 3000);
     }
-    const handleCopyLink = () => {
-        console.error("Please fill in all fields.");
-        // axios.post("/api/create-workspace", {
-        //     name: workspaceEmail
-        // })
-        //     .then(response => {
-        //     })
-        //     .catch(error => {
-        //         console.error("Error creating workspace:", error);
-        //     });
+
+    const handleInvite = () => {
+        axios.post(`http://localhost:8080/api/workspaces/${workspaceId}/addUser/${workspaceEmail}`)
+            .then(response => {
+                onClose();
+                setWorkspaceEmail('')
+            })
+            .catch(error => {
+                console.error("Error creating workspace:", error);
+            });
     };
+
+    const handlePopupClose = () => {
+        setWorkspaceEmail("");
+        onClose();
+    };
+
     return (
         <div>
-            <Button onClick={onOpen}>Trigger modal</Button>
-
             <Modal size={"xl"} onClose={onClose} isOpen={isOpen} isCentered>
                 <ModalOverlay/>
                 <ModalContent>
@@ -54,8 +64,9 @@ const InvitePopupTwo = () => {
                                 }
                             </div>
                             <div className="flex">
-                                <Input placeholder="Email address or name"/>
-                                <Button colorScheme='blue'>Send invite</Button>
+                                <Input value={workspaceEmail}
+                                       placeholder="Email address or name"/>
+                                <Button onClick={handleInvite} colorScheme='blue'>Send invite</Button>
                             </div>
                             <Textarea placeholder="Join this Trello Workspace to start collaborating with me!"></Textarea>
                             <div className="flex">
@@ -67,7 +78,6 @@ const InvitePopupTwo = () => {
                                     <button onClick={hideNotification}><CopyLinkButton/></button>
                                 </div>
                             </div>
-
                         </div>
                     </ModalBody>
                     <ModalFooter></ModalFooter>

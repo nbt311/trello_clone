@@ -48,10 +48,15 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
         secondModalDisclosure.onOpen();
         onClose(setWorkspaceName(null), setWorkspaceType(null), setWorkspaceDescription(null));
     };
-
+    const handleModalClose = () => {
+        setWorkspaceName("");
+        setWorkspaceType("");
+        setWorkspaceDescription("");
+        onClose();
+    };
     return (
             <>
-                <Modal size={"6xl"} onClose={onClose} isOpen={isOpen} isCentered>
+                <Modal size={"6xl"} onClose={handleModalClose} isOpen={isOpen} isCentered >
                     <ModalOverlay />
                     <ModalContent>
                         <ModalCloseButton/>

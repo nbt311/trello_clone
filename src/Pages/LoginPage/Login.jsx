@@ -11,11 +11,14 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
     const toast = useToast();
     const navigate = useNavigate();
 
+    const REGEX = {
+        email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    };
     const PasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    const handleChange = event => {
+    const handleChange = (event)  => {
         setForm({
             ...form,
             [event.target.name]: event.target.value
@@ -26,12 +29,13 @@ const Login = ({isLoggedIn, setLoggedIn}) => {
         const errors = {};
         if (!form.email) {
             errors.email = "Please check and re-enter";
+        } else if (!REGEX.email.test(form.email)) {
+            errors.email = "Invalid email address";
+        }if (!form.password) {
+                errors.password = "Please check and re-enter";
+            }
+            return errors;
         }
-        if (!form.password) {
-            errors.password = "Please check and re-enter";
-        }
-        return errors;
-    };
 
     const handleSubmit =  () => {
         axios.post('http://localhost:8080/api/auth/signin', form)

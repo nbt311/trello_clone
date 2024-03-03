@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {IoAppsSharp} from "react-icons/io5";
 import Dropdown from "./Dropdown";
-import {MdAddBox} from "react-icons/md";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
-    Avatar,
+    Avatar, Button,
     Menu,
     MenuButton,
     MenuDivider,
@@ -15,10 +14,34 @@ import {
 } from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
-import AuthService from "../../Service/auth.service";
+import {BiGroup} from "react-icons/bi";
+import {BsTrello} from "react-icons/bs";
+import {GrAdd} from "react-icons/gr";
+import axios from "axios";
 
 const HomeHeader = ({onOpen, onClose}) => {
     const [user, setUser] = useState({});
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+    const [workspace, setWorkspace] = useState([]);
+
+    useEffect( () => {
+        axios.get('http://localhost:8080/api/workspaces').then((response) => {
+            setWorkspace(response.data);
+            console.log(response.data)
+        })
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth <= 1200);
+        };
+
+        // Gọi hàm handleResize khi kích thước màn hình thay đổi
+        window.addEventListener('resize', handleResize);
+
+        // Đảm bảo việc remove event listener khi component unmount
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -38,20 +61,87 @@ const HomeHeader = ({onOpen, onClose}) => {
                     </div>
 
                     <Link className='w-[10%] cursor-pointer hover:bg-gray-200 rounded-md p-2' to='/'>
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
-                             alt=""/>
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png"
+                            alt=""/>
                     </Link>
 
                     <div className='flex space-x-4'>
-                        <Dropdown title='Workspaces'/>
+                        <Menu>
+                            <MenuButton px={4}
+                                        py={2}
+                                        _hover={{bg: 'gray.200'}}>
+                                <Dropdown title='Workspace'/>
+                            </MenuButton>
+                            <MenuList>
+                                {/*<p className="text-sm flex ml-3">Current Workspace</p>*/}
+                                {/*<MenuItem>*/}
+                                {/*    <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
+                                {/*    <div className='ml-2'>*/}
+                                {/*        <p className='text-base font-medium'>{user.username}</p>*/}
+                                {/*    </div>*/}
+                                {/*</MenuItem>*/}
+                                {/*<MenuDivider/>*/}
+                                <p className="text-sm flex ml-3">Your Workspaces</p>
+
+                                    {workspace.map((item) =>
+                                        <MenuItem >
+                                            <Link to={`/workspace/${item.id}`}>
+                                            <div className='flex'>
+                                                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
+                                                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
+                                            </div>
+                                        </Link>
+                                        </MenuItem >
+                                    )}
+                                {/*<p className="text-sm flex ml-3">Guest Workspaces</p>*/}
+                                {/*<MenuItem>*/}
+                                {/*    <Link to='/workspace/2'>*/}
+                                {/*        <div className='flex'>*/}
+                                {/*            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
+                                {/*            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>*/}
+                                {/*        </div>*/}
+                                {/*    </Link>*/}
+                                {/*</MenuItem>*/}
+                            </MenuList>
+                        </Menu>
+
+
                         <Dropdown title='Recent'/>
                         <Dropdown title='Starred'/>
                         <Dropdown title='Templates'/>
                     </div>
 
                     <div>
-                        <MdAddBox className='text-4xl cursor-pointer opacity-90 hover:opacity-100' onClick={handleCreate} color='#2435FA'/>
+                        <Menu>
+                            {isSmallScreen ? (
+                                <MenuButton as={Button} colorScheme='blue'>
+                                    <GrAdd/>
+                                </MenuButton>
+                            ) : (
+                                <MenuButton as={Button} colorScheme='blue'>
+                                    Create
+                                </MenuButton>
+                            )}
+                            <MenuList className='w-full'>
+                                <MenuItem>
+                                    <div>
+                                        <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
+                                        <p className='text-sm text-left'>A board is made up of cards ordered on lists.
+                                            Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
+                                    </div>
+                                </MenuItem>
+                                <MenuItem onClick={handleCreate}>
+                                    <div>
+                                        <p className='flex'><BiGroup className='mt-1 mr-1'/>Create Workspace</p>
+                                        <p className='text-sm text-left'>A Workspace is a group of boards and people.
+                                            Use <br/> it to organize your company, side hustle,family, or <br/> friends.</p>
+                                    </div>
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
                     </div>
+
                 </div>
 
                 <div className='flex items-center space-x-2'>
@@ -91,7 +181,6 @@ const HomeHeader = ({onOpen, onClose}) => {
                         <FaRegQuestionCircle className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
                                              color='gray'/>
                     </div>
-
 
 
                     <div>
@@ -155,7 +244,7 @@ const HomeHeader = ({onOpen, onClose}) => {
                                             <div>
                                                 <p>Log Out</p>
                                             </div>
-                                    </Link>
+                                        </Link>
                                     </MenuItem>
                                 </MenuGroup>
                             </MenuList>
