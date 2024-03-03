@@ -14,7 +14,7 @@ const HomePage = () => {
 
     useEffect( () => {
          axios.get('http://localhost:8080/api/workspaces').then((response) => {
-            // localStorage.setItem("workspace", JSON.stringify(response.data));
+            localStorage.setItem("workspace", JSON.stringify(response.data));
             setWorkspace(response.data);
         })
     }, []);
@@ -24,7 +24,6 @@ const HomePage = () => {
             <div className='border border-1-slate-500 py-1'>
                 <HomeHeader onOpen={onOpen} onClose={onClose}/>
             </div>
-
             <div className='w-[20%] ml-20'>
                 <Sidebar workspace={workspace} setWorkspace={setWorkspace}/>
             </div>
