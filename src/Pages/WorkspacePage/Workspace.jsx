@@ -12,6 +12,7 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 const Workspace = () => {
     const {id} = useParams();
+
     const [workspaceData, setWorkspaceData] = useState(null);
     const {isOpen, onOpen, onClose} = useDisclosure();
 
@@ -19,7 +20,7 @@ const Workspace = () => {
     const [inputValue, setInputValue] = useState('');
 
     const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
-    const workspaceId = workspaceNew.id;
+    const workspaceId = workspaceNew?.id;
     const [members, setMembers] = useState([]);
 
     const [workspace, setWorkspace] = useState([]);
@@ -31,8 +32,16 @@ const Workspace = () => {
 
         axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
             setWorkspace(response.data);
+            const fetchWorkspaceData = () => {
+                axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
+                    localStorage.setItem("workspaces", JSON.stringify(response.data));
+                    setWorkspaceData(response.data);
+                });
+            };
+
+            fetchWorkspaceData();
         })
-    }, []);
+    }, [id]);
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -41,22 +50,14 @@ const Workspace = () => {
         setIsInputFilled(value.includes('@gmail.com'));
     };
 
-    useEffect(() => {
-        const fetchWorkspaceData = () => {
-            const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
-                setWorkspaceData(response.data);
-                localStorage.setItem("workspaces", JSON.stringify(response.data));
-            });
-        };
-
-        fetchWorkspaceData();
-    }, [id]);
+    // useEffect(() => {
+    //
+    // }, [id]);
 
     useEffect(() => {
         const fetchMembers = () => {
             axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
                     setMembers(response.data);
-
                 }
             ).catch(error => {
                 console.error('Error fetching members:', error);
@@ -74,7 +75,7 @@ const Workspace = () => {
 
             <div className='flex '>
                 <div className='w-[13%]'>
-                    <WorkspaceSidebar/>
+                    <WorkspaceSidebar workspace={workspace}/>
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>

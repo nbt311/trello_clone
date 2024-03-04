@@ -30,7 +30,7 @@ const HomePage = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspace}/>
+                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspace} user={user}/>
             </div>
 
             <div className='flex'>

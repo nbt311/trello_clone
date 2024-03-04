@@ -17,8 +17,6 @@ const CreateBoards = ({user, workspace}) => {
     const [boardVisibility, setBoardVisibility] = useState([]);
     const [selectedVisibility, setSelectedVisibility] = useState('');
 
-    console.log(selectedWorkspaceId)
-
     const handleCreateBoard = () => {
         axios.post('http://localhost:8080/api/boards/create',{
             email: user.email,
@@ -50,7 +48,6 @@ const CreateBoards = ({user, workspace}) => {
         axios.get("http://localhost:8080/api/boards/visibility")
             .then(response => {
                setBoardVisibility(response.data);
-                console.log(response.data);
             })
             .catch(error => {
                 console.error("Error fetching board visibility:", error);

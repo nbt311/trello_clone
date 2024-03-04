@@ -19,9 +19,11 @@ import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
 import axios from "axios";
 import logout from "../../Pages/LogoutPage/Logout";
+import {IoIosAdd} from "react-icons/io";
+import CreateBoards from "../CreateBoards/CreateBoards";
 
 const HomeHeader = ({onOpen, onClose, workspace}) => {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({})
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
     useEffect(() => {
@@ -40,11 +42,12 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
-
     const handleCreate = () => {
         onOpen()
     }
-
+    const handleCheck = () =>{
+        console.log(+1)
+    }
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
@@ -77,7 +80,7 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                                 {/*<MenuDivider/>*/}
                                 <p className="text-sm flex ml-3">Your Workspaces</p>
 
-                                    {workspace.map((item) =>
+                                    {workspace && workspace.map((item) =>
                                         <MenuItem >
                                             <Link to={`/workspace/${item.id}`}>
                                             <div className='flex'>
@@ -118,11 +121,18 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                             )}
                             <MenuList className='w-full'>
                                 <MenuItem>
-                                    <div>
-                                        <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
-                                        <p className='text-sm text-left'>A board is made up of cards ordered on lists.
-                                            Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
-                                    </div>
+                                    <Menu>
+                                        <MenuButton className='w-full cursor-pointer' onClick={handleCheck}>
+                                            <div>
+                                                <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
+                                                <p className='text-sm text-left'>A board is made up of cards ordered on lists.
+                                                    Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
+                                            </div>
+                                        </MenuButton>
+                                        <MenuList minWidth='340px'>
+                                            <CreateBoards user={user} workspace={workspace}/>
+                                        </MenuList>
+                                    </Menu>
                                 </MenuItem>
                                 <MenuItem onClick={handleCreate}>
                                     <div>
