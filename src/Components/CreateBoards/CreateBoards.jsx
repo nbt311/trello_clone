@@ -13,8 +13,10 @@ const CreateBoards = () => {
     const [boardTitle, setBoardTitle] = useState("")
     const isButtonDisabled = !boardTitle ;
     return (
-            <Menu>
-                <MenuList minWidth='340px'>
+            // <Menu>
+            //     <MenuList minWidth='340px'>
+        <div>
+
                     <div className="flex flex-col items-center justify-center">
                         <div className='flex w-full justify-between'>
                             <button className=''><IoChevronBack /></button>
@@ -59,8 +61,9 @@ const CreateBoards = () => {
                             <p>By using images from Unsplash, you agree to their <a href="https://unsplash.com/license"  target="_blank" rel="noopener noreferrer" className="hover:underline">license </a> and <a href="https://unsplash.com/terms"  target="_blank" rel="noopener noreferrer" className="hover:underline"> Terms of Service</a> </p>
                         </div>
                     </div>
-                </MenuList>
-            </Menu>
+        </div>
+            //     </MenuList>
+            // </Menu>
     )
 };
 

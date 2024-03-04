@@ -15,9 +15,18 @@ const HomePage = () => {
     const [workspaceType, setWorkspaceType] = useState("");
     const [workspaceDescription, setWorkspaceDescription] = useState("");
     const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({});
 
-    useEffect( () => {
-         axios.get('http://localhost:8080/api/workspaces').then((response) => {
+    // useEffect( () => {
+    //      axios.get('http://localhost:8080/api/workspaces').then((response) => {
+    //         localStorage.setItem("workspacelist", JSON.stringify(response.data));
+    //         setWorkspace(response.data);
+    //     })
+    // }, []);
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
             localStorage.setItem("workspacelist", JSON.stringify(response.data));
             setWorkspace(response.data);
         })
@@ -26,7 +35,7 @@ const HomePage = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader onOpen={onOpen} onClose={onClose}/>
+                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspace}/>
             </div>
 
             <div className='flex'>
@@ -48,7 +57,6 @@ const HomePage = () => {
                                   workspaceDescription={workspaceDescription}
                                   setWorkspaceDescription={setWorkspaceDescription}
             />
-            <CreateBoards/>
         </div>
     );
 };

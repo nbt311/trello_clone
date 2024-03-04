@@ -11,15 +11,15 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Workspace = () => {
-    const { id, name } = useParams();
+    const { id } = useParams();
     const [workspaceData, setWorkspaceData] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
-    const workspace = JSON.parse(localStorage.getItem('workspaces'));
-    const workspaceId = workspace.id;
+    const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceId = workspaceNew.id;
     const [members, setMembers] = useState([]);
 
     const handleInputChange = (e) => {
@@ -28,6 +28,16 @@ const Workspace = () => {
         // Kiểm tra xem giá trị input có khớp với điều kiện không
         setIsInputFilled(value.includes('@gmail.com'));
     };
+    const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
+            setWorkspace(response.data);
+        })
+    }, []);
 
     useEffect(() => {
         const fetchWorkspaceData = () => {
@@ -38,7 +48,7 @@ const Workspace = () => {
         };
 
         fetchWorkspaceData();
-    }, [id, name]);
+    }, [id]);
 
     useEffect(() => {
         // Fetch members from API
@@ -57,7 +67,7 @@ const Workspace = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader />
+                <HomeHeader workspace={workspace}/>
             </div>
 
             <div className='flex '>
@@ -67,7 +77,7 @@ const Workspace = () => {
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
                     {workspaceData ? (
-                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspace}/>
+                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
                     ) : (
                         <div>Loading...</div>
                     )}
