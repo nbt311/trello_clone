@@ -22,22 +22,24 @@ const Workspace = () => {
     const workspaceId = workspaceNew.id;
     const [members, setMembers] = useState([]);
 
+    const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
+            setWorkspace(response.data);
+        })
+    }, []);
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
         // Kiểm tra xem giá trị input có khớp với điều kiện không
         setIsInputFilled(value.includes('@gmail.com'));
     };
-    const [workspace, setWorkspace] = useState([]);
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        setUser(user);
-        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
-            setWorkspace(response.data);
-        })
-    }, []);
 
     useEffect(() => {
         const fetchWorkspaceData = () => {
@@ -51,7 +53,6 @@ const Workspace = () => {
     }, [id]);
 
     useEffect(() => {
-        // Fetch members from API
         const fetchMembers = () => {
             axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
                     setMembers(response.data);
