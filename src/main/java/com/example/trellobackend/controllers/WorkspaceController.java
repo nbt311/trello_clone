@@ -46,10 +46,12 @@ public class WorkspaceController {
     private EmailService emailService;
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
     private  BoardRepository boardRepository;
+
     @PostMapping("/create")
     public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
         try {
@@ -134,11 +136,9 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
         }
     }
-
     @GetMapping("{id}/workspace")
     public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
         Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
-
     }
 }

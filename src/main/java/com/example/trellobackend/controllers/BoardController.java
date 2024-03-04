@@ -2,10 +2,12 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.board.Visibility;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.BoardRepository;
+import com.example.trellobackend.repositories.VisibilityRepository;
 import com.example.trellobackend.services.impl.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,6 +26,8 @@ public class BoardController {
     private BoardService boardService;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private VisibilityRepository visibilityRepository;
 
     //    @PostMapping("/create")
 //    public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest){
@@ -54,5 +59,9 @@ public class BoardController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/visibility")
+    public List<Visibility> getAllVisibilities(){
+        return  visibilityRepository.findAll();
     }
 }

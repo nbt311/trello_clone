@@ -1,8 +1,8 @@
 package com.example.trellobackend.models.board;
 
 import com.example.trellobackend.enums.EBoardVisibility;
-import com.example.trellobackend.enums.WorkSpacePermission;
 import jakarta.persistence.*;
+import com.example.trellobackend.enums.WorkSpacePermission;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

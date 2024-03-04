@@ -2,6 +2,7 @@ package com.example.trellobackend.repositories;
 
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.workspace.Workspace;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -15,6 +16,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                     "join trello.visibility v on bv.visibility_id = v.id " +
                     "where v.id = :visibilityId", nativeQuery = true)
     Iterable<Board> findBoardByVisibility(Long visibilityId);
+
     @EntityGraph(attributePaths = {"columns"})
     Optional<Board> findById(Long id);
 }

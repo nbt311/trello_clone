@@ -17,8 +17,6 @@ import java.util.List;
 public class VisibilityController {
     @Autowired
     private BoardRepository boardRepository;
-    @Autowired
-    private VisibilityRepository visibilityRepository;
     @GetMapping("/{visibilityId}/boards")
     public ResponseEntity<?> findBoardsByVisibility(@PathVariable Long visibilityId){
         try{
@@ -32,8 +30,5 @@ public class VisibilityController {
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/visibility")
-    public List<Visibility> getAllVisibilities(){
-            return  visibilityRepository.findAll();
-    }
+
 }
