@@ -33,6 +33,7 @@ const Workspace = () => {
         const fetchWorkspaceData = () => {
             const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
                 setWorkspaceData(response.data);
+                console.log(id);
                 localStorage.setItem("workspaces", JSON.stringify(response.data));
             });
         };
