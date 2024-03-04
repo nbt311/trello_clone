@@ -11,9 +11,9 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Workspace = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [workspaceData, setWorkspaceData] = useState(null);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
@@ -55,6 +55,7 @@ const Workspace = () => {
         const fetchMembers = () => {
             axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
                     setMembers(response.data);
+
                 }
             ).catch(error => {
                 console.error('Error fetching members:', error);
@@ -72,19 +73,20 @@ const Workspace = () => {
 
             <div className='flex '>
                 <div className='w-[13%]'>
-                    <WorkspaceSidebar />
+                    <WorkspaceSidebar/>
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
                     {workspaceData ? (
-                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
+                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers}
+                                          workspace={workspaceNew}/>
                     ) : (
                         <div>Loading...</div>
                     )}
                 </div>
 
                 {/*{isInputFilled ? (*/}
-                    <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
                 {/*) : (*/}
                 {/*    <InvitePopup onInputChange={handleInputChange} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />*/}
                 {/*)}*/}

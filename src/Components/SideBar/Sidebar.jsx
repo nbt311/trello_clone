@@ -8,7 +8,6 @@ import axios from "axios";
 const Sidebar = ({workspace,setWorkspace}) => {
     const [selectedTab, setSelectedTab] = useState({});
     const navigate = useNavigate();
-    console.log('hi',workspace)
     const handleTabClick = (item) => {
         setSelectedTab(item);
 
