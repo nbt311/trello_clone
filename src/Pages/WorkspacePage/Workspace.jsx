@@ -12,6 +12,7 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 const Workspace = () => {
     const { id } = useParams();
+    const [workspaceData, setWorkspaceData] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
@@ -29,7 +30,6 @@ const Workspace = () => {
         setUser(user);
 
         axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
-            localStorage.setItem("workspacelist", JSON.stringify(response.data));
             setWorkspace(response.data);
         })
     }, []);
@@ -44,6 +44,7 @@ const Workspace = () => {
     useEffect(() => {
         const fetchWorkspaceData = () => {
             const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
+                setWorkspaceData(response.data);
                 localStorage.setItem("workspaces", JSON.stringify(response.data));
             });
         };
@@ -76,11 +77,11 @@ const Workspace = () => {
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
-                    {/*{workspaceData ? (*/}
+                    {workspaceData ? (
                         <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
-                    {/*) : (*/}
-                    {/*    <div>Loading...</div>*/}
-                    {/*)}*/}
+                    ) : (
+                        <div>Loading...</div>
+                    )}
                 </div>
 
                 {/*{isInputFilled ? (*/}

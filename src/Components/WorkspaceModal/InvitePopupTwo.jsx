@@ -29,6 +29,18 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
         }, 3000);
     }
 
+    const handleInputChange = (e) => {
+        const query = e.target.value;
+        axios.get(`http://localhost:8080/api/users/suggest/${query}`)
+            .then(response => {
+                setSuggestedEmails(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching suggested emails:", error);
+            });
+        setWorkspaceEmail(query);
+    };
+
     const handleInvite = () => {
         axios.post(`http://localhost:8080/api/workspaces/${workspaceId}/addUser/${workspaceEmail}`)
             .then(response => {
@@ -47,7 +59,7 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
 
     return (
         <div>
-            <Modal size={"xl"} onClose={onClose} isOpen={isOpen} isCentered>
+            <Modal size={"xl"} onClose={handlePopupClose} isOpen={isOpen} isCentered>
                 <ModalOverlay/>
                 <ModalContent>
                     <ModalHeader></ModalHeader>
@@ -64,7 +76,7 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
                                 }
                             </div>
                             <div className="flex">
-                                <Input value={workspaceEmail}
+                                <Input value={workspaceEmail} onChange={handleInputChange}
                                        placeholder="Email address or name"/>
                                 <Button onClick={handleInvite} colorScheme='blue'>Send invite</Button>
                             </div>
