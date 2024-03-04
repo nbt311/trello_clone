@@ -46,12 +46,13 @@ public class WorkspaceController {
     private EmailService emailService;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
-    private  BoardRepository boardRepository;
+    private BoardRepository boardRepository;
+
     @GetMapping
-    public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
+    public ResponseEntity<Iterable<Workspace>> findAllWorkspace() {
         Iterable<Workspace> workspaces = workspaceService.findAll();
         return new ResponseEntity<>(workspaces, HttpStatus.OK);
     }
@@ -72,11 +73,12 @@ public class WorkspaceController {
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
     }
-    @GetMapping("/{workspaceId}/members" )
-    public ResponseEntity<?> findMembersByWorkspace (@PathVariable Long workspaceId){
-        try{
+
+    @GetMapping("/{workspaceId}/members")
+    public ResponseEntity<?> findMembersByWorkspace(@PathVariable Long workspaceId) {
+        try {
             Iterable<Members> membersList = workspaceMemberRepository.findMembersByWorkspaceId(workspaceId);
-            if(membersList == null){
+            if (membersList == null) {
                 return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(membersList, HttpStatus.OK);
@@ -85,11 +87,12 @@ public class WorkspaceController {
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/{workspaceId}/boards")
-    public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId){
-        try{
+    public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId) {
+        try {
             Iterable<Board> boardsList = boardRepository.findBoardByWorkspaceId(workspaceId);
-            if (boardsList == null){
+            if (boardsList == null) {
                 return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(boardsList, HttpStatus.OK);
