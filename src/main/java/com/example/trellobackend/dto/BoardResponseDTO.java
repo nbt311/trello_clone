@@ -23,6 +23,11 @@ public class BoardResponseDTO {
     private List<Long> columnIds;
     private List<ColumnsDTO> columns;
 
+    public BoardResponseDTO(Board board) {
+        this.id = board.getId();
+        this.title = board.getTitle();
+    }
+
 
     public static BoardResponseDTO fromEntity(Board board) {
         BoardResponseDTO responseDTO = new BoardResponseDTO();

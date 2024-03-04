@@ -1,13 +1,16 @@
 package com.example.trellobackend.models;
 
 import com.example.trellobackend.enums.UserRole;
+import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,6 +46,13 @@ public class User {
     private String location;
     private String localTime;
     private String avatarUrl;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Workspace> ownedWorkspaces = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "members")
+    private Set<Workspace> memberWorkspaces = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

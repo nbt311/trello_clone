@@ -3,6 +3,7 @@ package com.example.trellobackend.security;
 import com.example.trellobackend.security.jwt.AuthEntryPointJwt;
 import com.example.trellobackend.security.jwt.AuthTokenFilter;
 import com.example.trellobackend.security.service.UserDetailsServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,11 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

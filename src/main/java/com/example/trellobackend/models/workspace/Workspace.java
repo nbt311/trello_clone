@@ -1,10 +1,14 @@
 package com.example.trellobackend.models.workspace;
 
 import com.example.trellobackend.models.Role;
+import com.example.trellobackend.models.User;
+import com.example.trellobackend.models.board.Board;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,6 +23,18 @@ public class Workspace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @ManyToMany
+    @JoinTable(
+            name = "workspace_members",
+            joinColumns = @JoinColumn(name = "workspace_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> members = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "workspace_types",
@@ -37,4 +53,7 @@ public class Workspace {
     @Column(unique = true)
     private String inviteCode;
     private String inviteLink;
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<Board> boards = new ArrayList<>();
 }
