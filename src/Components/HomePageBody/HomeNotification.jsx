@@ -1,11 +1,12 @@
 import React from 'react';
 import {FaRegClock} from "react-icons/fa";
-import {Avatar} from "@chakra-ui/react";
+import {Avatar, Menu, MenuButton, MenuList} from "@chakra-ui/react";
 import {IoChevronDownSharp} from "react-icons/io5";
 import {MdAdd, MdAddBox} from "react-icons/md";
 import {IoIosAdd} from "react-icons/io";
+import CreateBoards from "../CreateBoards/CreateBoards";
 
-const HomeNotification = ({workspace}) => {
+const HomeNotification = ({workspace, user}) => {
     return (
         <div className='flex h-full'>
             <div className='w-[45%]'>
@@ -45,9 +46,18 @@ const HomeNotification = ({workspace}) => {
 
                 <p className='flex pl-4 items-center mt-10 text-base font-bold'>Links</p>
 
-                <div className='group flex items-center cursor-pointer mt-3 hover:bg-gray-200 py-2 pl-2 rounded-md'>
-                    <IoIosAdd className='text-4xl rounded-sm bg-gray-100 group-hover:bg-gray-400'/>
-                    <p className='ml-2'>Create a board</p>
+                <div className='group flex items-center  mt-3 hover:bg-gray-200 py-2 pl-2 rounded-md'>
+                    <Menu>
+                        <MenuButton className='w-full cursor-pointer'>
+                            <div className='flex items-center'>
+                                <IoIosAdd className='text-4xl rounded-sm bg-gray-100 group-hover:bg-gray-400'/>
+                                <p className='ml-2'>Create a board</p>
+                            </div>
+                        </MenuButton>
+                        <MenuList minWidth='340px'>
+                            <CreateBoards user={user} workspace={workspace}/>
+                        </MenuList>
+                    </Menu>
                 </div>
 
             </div>

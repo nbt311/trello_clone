@@ -1,12 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FaRegClock} from "react-icons/fa";
 import BoardCard from "./BoardCard";
 import WorkspaceControlBar from "./WorkspaceControlBar";
 import {IoMdInformationCircleOutline} from "react-icons/io";
 import {BsPeople} from "react-icons/bs";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 const BoardsPage = ({workspace}) => {
+    const [board, setBoard] = useState([])
+
+
+    useEffect(() => {
+        const boardsByWorkspace = {};
+        workspace.forEach((data) => {
+            axios.get(`http://localhost:8080/api/workspaces/${data.id}/boards`).then((response) => {
+                boardsByWorkspace[data.id] = response.data
+                localStorage.setItem("boardList", JSON.stringify(response.data));
+                setBoard(boardsByWorkspace)
+            })
+        })
+    },[workspace])
+
     return (
         <div className='text-lg font-bold ml-2 my-3 p-2'>
             <div className='flex items-center'>
@@ -26,11 +41,11 @@ const BoardsPage = ({workspace}) => {
 
             <div>
                 {workspace.map((data) => (
-                    <div className='mt-8'>
+                    <div key={data.id} className='mt-8'>
                         <WorkspaceControlBar workspace={data}/>
                         <div className='flex space-x-9 mt-4'>
-                            {[1, 1, 1, 1].map((item) => (
-                                <BoardCard/>
+                            {board[data.id]?.map((item) => (
+                                <BoardCard key={item.id} board={item}/>
                             ))}
                         </div>
                     </div>
