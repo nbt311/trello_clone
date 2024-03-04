@@ -40,7 +40,7 @@ const HomePage = () => {
 
                 <div className='ml-10 w-full mt-4 overflow-visible'>
                     <Routes>
-                        <Route path='/boards' element={<BoardsPage workspace={workspace}/>}></Route>
+                        <Route path='/boards' element={<BoardsPage workspace={workspace} user={user}/>}></Route>
                         <Route path='/' element={<HomeNotification workspace={workspace} user={user}/>}></Route>
                     </Routes>
                 </div>

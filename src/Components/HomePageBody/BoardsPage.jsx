@@ -7,20 +7,34 @@ import {BsPeople} from "react-icons/bs";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-const BoardsPage = ({workspace}) => {
+const BoardsPage = ({workspace, user}) => {
     const [board, setBoard] = useState([])
 
 
     useEffect(() => {
-        const boardsByWorkspace = {};
-        workspace.forEach((data) => {
-            axios.get(`http://localhost:8080/api/workspaces/${data.id}/boards`).then((response) => {
-                boardsByWorkspace[data.id] = response.data
-                localStorage.setItem("boardList", JSON.stringify(response.data));
-                setBoard(boardsByWorkspace)
-            })
-        })
-    },[workspace])
+        const fetchData = async () => {
+            const boardsByWorkspace = {};
+
+            const axiosRequests = workspace.map(async (data) => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/workspaces/${data.id}/boards`);
+                    boardsByWorkspace[data.id] = response.data;
+                    localStorage.setItem("boardList", JSON.stringify(response.data));
+                } catch (error) {
+                    console.error(`Error fetching boards for workspace ${data.id}:`, error);
+                }
+            });
+
+            try {
+                await Promise.all(axiosRequests);
+                setBoard(boardsByWorkspace);
+            } catch (error) {
+                console.error("Error fetching boards:", error);
+            }
+        };
+
+        fetchData();
+    }, [workspace]);
 
     return (
         <div className='text-lg font-bold ml-2 my-3 p-2'>
