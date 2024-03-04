@@ -18,18 +18,11 @@ import {BiGroup} from "react-icons/bi";
 import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
 import axios from "axios";
+import logout from "../../Pages/LogoutPage/Logout";
 
-const HomeHeader = ({onOpen, onClose}) => {
+const HomeHeader = ({onOpen, onClose, workspace}) => {
     const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
-    const [workspace, setWorkspace] = useState([]);
-
-    useEffect( () => {
-        axios.get('http://localhost:8080/api/workspaces').then((response) => {
-            setWorkspace(response.data);
-            console.log(response.data)
-        })
-    }, []);
 
     useEffect(() => {
         const handleResize = () => {

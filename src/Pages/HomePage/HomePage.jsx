@@ -15,9 +15,13 @@ const HomePage = () => {
     const [workspaceType, setWorkspaceType] = useState("");
     const [workspaceDescription, setWorkspaceDescription] = useState("");
     const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({})
 
-    useEffect( () => {
-         axios.get('http://localhost:8080/api/workspaces').then((response) => {
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
             localStorage.setItem("workspacelist", JSON.stringify(response.data));
             setWorkspace(response.data);
         })
@@ -26,7 +30,7 @@ const HomePage = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader onOpen={onOpen} onClose={onClose}/>
+                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspace}/>
             </div>
 
             <div className='flex'>
@@ -36,8 +40,8 @@ const HomePage = () => {
 
                 <div className='ml-10 w-full mt-4 overflow-visible'>
                     <Routes>
-                        <Route path='/boards' element={<BoardsPage workspace={workspace}/>}></Route>
-                        <Route path='/' element={<HomeNotification workspace={workspace}/>}></Route>
+                        <Route path='/boards' element={<BoardsPage workspace={workspace} user={user}/>}></Route>
+                        <Route path='/' element={<HomeNotification workspace={workspace} user={user}/>}></Route>
                     </Routes>
                 </div>
             </div>

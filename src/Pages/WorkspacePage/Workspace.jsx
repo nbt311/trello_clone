@@ -11,16 +11,28 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Workspace = () => {
-    const { id, name } = useParams();
-    const [workspaceData, setWorkspaceData] = useState(null);
+    const { id } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
-    const workspace = JSON.parse(localStorage.getItem('workspaces'));
-    const workspaceId = workspace.id;
+    const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceId = workspaceNew.id;
     const [members, setMembers] = useState([]);
+
+    const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
+            localStorage.setItem("workspacelist", JSON.stringify(response.data));
+            setWorkspace(response.data);
+        })
+    }, []);
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -32,17 +44,14 @@ const Workspace = () => {
     useEffect(() => {
         const fetchWorkspaceData = () => {
             const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
-                setWorkspaceData(response.data);
-                console.log(id);
                 localStorage.setItem("workspaces", JSON.stringify(response.data));
             });
         };
 
         fetchWorkspaceData();
-    }, [id, name]);
+    }, [id]);
 
     useEffect(() => {
-        // Fetch members from API
         const fetchMembers = () => {
             axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
                     setMembers(response.data);
@@ -58,7 +67,7 @@ const Workspace = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader />
+                <HomeHeader workspace={workspace}/>
             </div>
 
             <div className='flex '>
@@ -67,11 +76,11 @@ const Workspace = () => {
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
-                    {workspaceData ? (
-                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspace}/>
-                    ) : (
-                        <div>Loading...</div>
-                    )}
+                    {/*{workspaceData ? (*/}
+                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
+                    {/*) : (*/}
+                    {/*    <div>Loading...</div>*/}
+                    {/*)}*/}
                 </div>
 
                 {/*{isInputFilled ? (*/}
