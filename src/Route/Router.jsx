@@ -39,7 +39,7 @@ const Router = () => {
                 <Route path='/logout' element={<Logout/>}/>
                 <Route path='/signup' element={<Signup/>}/>
                 <Route path='/upload' element={<FirebaseImageUpload/>}/>
-                <Route path='/content' element={<BoardContentPage board = {mockData?.board}/>}/>
+                {/*<Route path='/content/:id/*' element={<BoardContentPage board = {mockData?.board}/>}/>*/}
             </Routes>
     );
 };
