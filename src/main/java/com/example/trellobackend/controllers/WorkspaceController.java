@@ -46,15 +46,10 @@ public class WorkspaceController {
     private EmailService emailService;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
     private  BoardRepository boardRepository;
-    @GetMapping
-    public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
-        Iterable<Workspace> workspaces = workspaceService.findAll();
-        return new ResponseEntity<>(workspaces, HttpStatus.OK);
-    }
     @PostMapping("/create")
     public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
         try {
@@ -110,10 +105,8 @@ public class WorkspaceController {
     @PostMapping("/{workspaceId}/addUser/{userEmail}")
     public ResponseEntity<?> addUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String userEmail) {
         try {
-            // Kiểm tra xem người gửi request có quyền thêm user vào workspace hay không
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
-                // Lấy thông tin workspace
                 Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
 
                 // Kiểm tra xem người dùng với email đã tồn tại hay không
