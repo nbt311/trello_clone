@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,13 +25,22 @@ public class Board {
     @Size(max = 20)
     private String title;
 
-    @ManyToMany
-    @JoinTable( name = "board_visibilities",
-                joinColumns = @JoinColumn(name = "board_id"),
-                inverseJoinColumns = @JoinColumn(name = "visibility_id"))
-    private Set<Visibility> types= new HashSet<>();
-
     @ManyToOne
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
+
+    @ElementCollection
+    @CollectionTable(name = "column_order_ids", joinColumns = @JoinColumn(name = "board_id"))
+    @OrderColumn
+    @Column(name = "column_order_id")
+    private List<Long> columnOrderIds;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "board_visibilities",
+            joinColumns = @JoinColumn(name = "board_id"),
+            inverseJoinColumns = @JoinColumn(name = "visibility_id"))
+    private Set<Visibility> visibilities = new HashSet<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Columns> columns;
 }

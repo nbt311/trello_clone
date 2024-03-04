@@ -47,14 +47,10 @@ public class WorkspaceController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
     private  BoardRepository boardRepository;
-    @GetMapping
-    public ResponseEntity<Iterable<Workspace>> findAllWorkspace(){
-        Iterable<Workspace> workspaces = workspaceService.findAll();
-        return new ResponseEntity<>(workspaces, HttpStatus.OK);
-    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
@@ -67,7 +63,6 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
         }
     }
-
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
@@ -143,11 +138,9 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
         }
     }
-
     @GetMapping("{id}/workspace")
-    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id) {
-        Optional<Workspace> workspace = workspaceRepository.findById(id);
+    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
+        Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
-
     }
 }
