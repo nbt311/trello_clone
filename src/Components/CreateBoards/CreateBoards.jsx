@@ -15,8 +15,6 @@ const CreateBoards = ({user, workspace}) => {
     const isButtonDisabled = !boardTitle;
     const toast = useToast()
 
-    console.log(selectedWorkspaceId)
-
     const handleCreateBoard = () => {
         axios.post('http://localhost:8080/api/boards/create',{
             email: user.email,
@@ -38,7 +36,6 @@ const CreateBoards = ({user, workspace}) => {
     }
 
     useEffect(() => {
-        // Thiết lập giá trị ban đầu bằng giá trị của option đầu tiên
         if (workspace.length > 0) {
             setSelectedWorkspaceId(workspace[0].id);
         }

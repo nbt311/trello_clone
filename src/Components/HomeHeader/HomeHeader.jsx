@@ -24,6 +24,8 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
     const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+
+
     useEffect(() => {
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);
@@ -67,14 +69,7 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                                 <Dropdown title='Workspace'/>
                             </MenuButton>
                             <MenuList>
-                                {/*<p className="text-sm flex ml-3">Current Workspace</p>*/}
-                                {/*<MenuItem>*/}
-                                {/*    <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
-                                {/*    <div className='ml-2'>*/}
-                                {/*        <p className='text-base font-medium'>{user.username}</p>*/}
-                                {/*    </div>*/}
-                                {/*</MenuItem>*/}
-                                {/*<MenuDivider/>*/}
+
                                 <p className="text-sm flex ml-3">Your Workspaces</p>
 
                                     {workspace.map((item) =>
@@ -87,15 +82,7 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                                         </Link>
                                         </MenuItem >
                                     )}
-                                {/*<p className="text-sm flex ml-3">Guest Workspaces</p>*/}
-                                {/*<MenuItem>*/}
-                                {/*    <Link to='/workspace/2'>*/}
-                                {/*        <div className='flex'>*/}
-                                {/*            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
-                                {/*            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>*/}
-                                {/*        </div>*/}
-                                {/*    </Link>*/}
-                                {/*</MenuItem>*/}
+
                             </MenuList>
                         </Menu>
 
