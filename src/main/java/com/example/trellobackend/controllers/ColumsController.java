@@ -32,11 +32,13 @@ public class ColumsController {
 //            Columns newColumns = columnsService.createColumn(columnRequest);
 //            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
 //    }
-    @GetMapping("{id}")
-    public ResponseEntity<?> getColumsById(@PathVariable Long id){
-        Optional<Columns> columns = columnsRepository.findById(id);
-        return new ResponseEntity<>(columns, HttpStatus.OK);
-    }
+@GetMapping("/{id}")
+public ColumnsDTO getColumnById(@PathVariable Long id) {
+    ColumnsDTO columnsDTO = new ColumnsDTO();
+    columnsDTO.setId(id);
+    columnsDTO.setTitle("Column " + id);
+    return columnsDTO;
+}
     @PostMapping("/create")
     public ResponseEntity<BoardResponseDTO> createColumn(@RequestBody ColumnRequest columnRequest) {
         try {

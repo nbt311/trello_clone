@@ -12,4 +12,6 @@ import lombok.Setter;
 public class ColumnsDTO {
     private Long id;
     private String title;
+
+
 }

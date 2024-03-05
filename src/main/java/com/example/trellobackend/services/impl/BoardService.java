@@ -57,47 +57,47 @@ public class BoardService implements IBoardService {
     }
 
 
-    @Override
-    public Board createBoard(BoardRequest boardRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
-        if (userOptional.isPresent()) {
-            User creator = userOptional.get();
-            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
-            if (workspaceOptional.isPresent()){
-                Workspace workspace = workspaceOptional.get();
-                Board board = new Board();
-                board.setTitle(boardRequest.getTitle());
-                board.setWorkspace(workspace);
-                Set<String> strVisibilities = boardRequest.getVisibility();
-                Set<Visibility> visibilities = new HashSet<>();
-                strVisibilities.forEach(visibility -> {
-                    switch (visibility) {
-                        case "private":
-                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(privateVisibility);
-
-                            break;
-                        case "public":
-                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(publicVisibility);
-
-                            break;
-                        default:
-                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(workspaceVisibility);
-                    }
-                });
-                board.setVisibilities(visibilities);
-                boardRepository.save(board);
-                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
-                return board;
-            }
-        }
-        throw new UsernameNotFoundException("User not found");
-    }
+//    @Override
+//    public Board createBoard(BoardRequest boardRequest) {
+//        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
+//        if (userOptional.isPresent()) {
+//            User creator = userOptional.get();
+//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
+//            if (workspaceOptional.isPresent()){
+//                Workspace workspace = workspaceOptional.get();
+//                Board board = new Board();
+//                board.setTitle(boardRequest.getTitle());
+//                board.setWorkspace(workspace);
+//                Set<String> strVisibilities = boardRequest.getVisibility();
+//                Set<Visibility> visibilities = new HashSet<>();
+//                strVisibilities.forEach(visibility -> {
+//                    switch (visibility) {
+//                        case "private":
+//                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(privateVisibility);
+//
+//                            break;
+//                        case "public":
+//                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(publicVisibility);
+//
+//                            break;
+//                        default:
+//                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(workspaceVisibility);
+//                    }
+//                });
+//                board.setVisibilities(visibilities);
+//                boardRepository.save(board);
+//                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
+//                return board;
+//            }
+//        }
+//        throw new UsernameNotFoundException("User not found");
+//    }
 
     @Override
     public BoardResponseDTO getBoardById(Long boardId) {
@@ -125,8 +125,6 @@ public class BoardService implements IBoardService {
         }
         throw new NoSuchElementException("Board not found");
     }
-
-
 
     @Override
     public BoardResponseDTO createNewBoard(BoardRequest boardRequest) {

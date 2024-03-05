@@ -27,7 +27,15 @@ public class WorkspaceDTO {
                 .collect(Collectors.toList());
 
         this.boards = workspace.getBoards().stream()
-                .map(BoardResponseDTO::new)
+                .map(board -> new BoardResponseDTO(
+                                board,
+                                board.getVisibilities(),
+                                board.getColumnOrderIds(),
+                                board.getColumns().stream()
+                                        .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                                        .collect(Collectors.toList())
+                        )
+                )
                 .collect(Collectors.toList());
     }
 }

@@ -5,11 +5,9 @@ import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
+import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.ColumnRequest;
-import com.example.trellobackend.repositories.BoardMembersRepository;
-import com.example.trellobackend.repositories.BoardRepository;
-import com.example.trellobackend.repositories.ColumnsRepository;
-import com.example.trellobackend.repositories.UserRepository;
+import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.IColumsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,10 @@ public class ColumnsService implements IColumsService {
     private ColumnsRepository columnsRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
     @Override
     public Iterable<Columns> findAll() {
@@ -46,59 +48,79 @@ public class ColumnsService implements IColumsService {
 
     }
 
-    @Override
-    public Columns createColumn(ColumnRequest columnRequest) {
-      Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
-        if (boardOptional.isPresent()) {
-            Board board = boardOptional.get();
-            Columns newColumns = new Columns();
-            newColumns.setTitle(columnRequest.getTitle());
-            newColumns.setBoard(board);
-            columnsRepository.save(newColumns);
-            return newColumns;
-        } else {
-            throw new RuntimeException("Error: Board not found.");
-        }
-    }
+//    @Override
+//    public Columns createColumn(ColumnRequest columnRequest) {
+//        Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
+//        if (userOptional.isPresent()){
+//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
+//            if (workspaceOptional.isPresent()){
+//                Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
+//                if (boardOptional.isPresent()) {
+//                    Board board = boardOptional.get();
+//                    Columns newColumns = new Columns();
+//                    newColumns.setTitle(columnRequest.getTitle());
+//                    newColumns.setBoard(board);
+//                    columnsRepository.save(newColumns);
+//                    return newColumns;
+//                } else {
+//                    throw new RuntimeException("Error: Board not found.");
+//                }
+//            }else {
+//                throw new RuntimeException("Error: Workspace not found.");
+//            }
+//        }else {
+//            throw new RuntimeException("Error: User not found.");
+//        }
+//
+//    }
 
     @Override
-    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) {
-        Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
-        if (boardOptional.isPresent()) {
-            Board board = boardOptional.get();
-            Columns newColumns = new Columns();
-            newColumns.setTitle(columnRequest.getTitle());
-            newColumns.setBoard(board);
-            columnsRepository.save(newColumns);
+    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
+        if (userOptional.isPresent()){
+            Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
+            if (workspaceOptional.isPresent()){
+                Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
+                if (boardOptional.isPresent()) {
+                    Board board = boardOptional.get();
+                    Columns newColumns = new Columns();
+                    newColumns.setTitle(columnRequest.getTitle());
+                    newColumns.setBoard(board);
+                    columnsRepository.save(newColumns);
 
-            // Tạo đối tượng BoardResponseDTO và set thông tin cần thiết
-            BoardResponseDTO responseDTO = new BoardResponseDTO();
-            responseDTO.setId(board.getId());
-            responseDTO.setTitle(board.getTitle());
+                    // Tạo đối tượng BoardResponseDTO và set thông tin cần thiết
+                    BoardResponseDTO responseDTO = new BoardResponseDTO();
+                    responseDTO.setId(board.getId());
+                    responseDTO.setTitle(board.getTitle());
 
-            // Chuyển đổi danh sách Columns thành danh sách ColumnsDTO và cập nhật columnIds
-            List<ColumnsDTO> columnsDTOList = board.getColumns()
-                    .stream()
-                    .map(columns -> {
-                        ColumnsDTO columnsDTO = new ColumnsDTO();
-                        columnsDTO.setId(columns.getId());
-                        columnsDTO.setTitle(columns.getTitle());
-                        return columnsDTO;
-                    })
-                    .collect(Collectors.toList());
+                    // Chuyển đổi danh sách Columns thành danh sách ColumnsDTO và cập nhật columnIds
+                    List<ColumnsDTO> columnsDTOList = board.getColumns()
+                            .stream()
+                            .map(columns -> {
+                                ColumnsDTO columnsDTO = new ColumnsDTO();
+                                columnsDTO.setId(columns.getId());
+                                columnsDTO.setTitle(columns.getTitle());
+                                return columnsDTO;
+                            })
+                            .collect(Collectors.toList());
 
-            responseDTO.setColumns(columnsDTOList);
+                    responseDTO.setColumns(columnsDTOList);
 
-            // Cập nhật columnIds
-            List<Long> columnIds = board.getColumnOrderIds();
-            columnIds.add(newColumns.getId());
-            board.setColumnOrderIds(columnIds);
-            boardRepository.save(board);
-            responseDTO.setColumnIds(columnIds);
+                    // Cập nhật columnIds
+                    List<Long> columnIds = board.getColumnOrderIds();
+                    columnIds.add(newColumns.getId());
+                    board.setColumnOrderIds(columnIds);
+                    boardRepository.save(board);
+                    responseDTO.setColumnIds(columnIds);
 
-            return responseDTO;
-        } else {
-            throw new RuntimeException("Error: Board not found.");
+                    return responseDTO;
+                } else {
+                    throw new RuntimeException("Error: Board not found.");
+                }
+            }else {
+                throw new RuntimeException("Error: Workspace not found.");
+            }
+        }else {
+            throw new RuntimeException("Error: User not found.");
         }
     }
 }
