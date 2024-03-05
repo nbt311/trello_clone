@@ -11,77 +11,56 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Workspace = () => {
-    const {id} = useParams();
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const { id } = useParams();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
-
-    const [workspace, setWorkspace] = useState([]);
-    console.log('workspace: ', workspace)
-    const [user, setUser] = useState({})
 
     const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
     const workspaceId = workspaceNew.id;
     const [members, setMembers] = useState([]);
 
-    console.log('workspaceID: ', workspaceId)
+    const [workspace, setWorkspace] = useState([]);
+    const [user, setUser] = useState({})
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
 
-    // useEffect(() => {
-    //     console.log('useEffect - fetchData');
-    //     const fetchData = async () => {
-    //         const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
-    //         setUser(userFromLocalStorage);
-    //
-    //         const workspaceResponse = await axios.get(`http://localhost:8080/api/users/${userFromLocalStorage.id}/workspaces`);
-    //         localStorage.setItem("workspacelist", JSON.stringify(workspaceResponse.data));
-    //         setWorkspace(workspaceResponse.data);
-    //     };
-    //
-    //     fetchData()
-    // }, []);
+        axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
+            localStorage.setItem("workspacelist", JSON.stringify(response.data));
+            setWorkspace(response.data);
+        })
+    }, []);
 
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
+        // Kiểm tra xem giá trị input có khớp với điều kiện không
         setIsInputFilled(value.includes('@gmail.com'));
     };
 
     useEffect(() => {
-        console.log('useEffect - fetchData');
-        const fetchData = async () => {
-            const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
-            setUser(userFromLocalStorage);
-
-            const workspaceResponse = await axios.get(`http://localhost:8080/api/users/${userFromLocalStorage.id}/workspaces`);
-            localStorage.setItem("workspacelist", JSON.stringify(workspaceResponse.data));
-            setWorkspace(workspaceResponse.data);
+        const fetchWorkspaceData = () => {
+            const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
+                localStorage.setItem("workspaces", JSON.stringify(response.data));
+            });
         };
 
-        console.log('useEffect - fetchWorkspaceData');
-        const fetchWorkspaceData = async () => {
-            const response = await axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`);
-            localStorage.setItem("workspaces", JSON.stringify(response.data));
-        };
-
-        const fetchDataAndWorkspaceData = async () => {
-            await Promise.all([fetchData(), fetchWorkspaceData()]);
-        };
-
-        fetchDataAndWorkspaceData();
+        fetchWorkspaceData();
     }, [id]);
 
     useEffect(() => {
-        const fetchMembers = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/workspaces/${id}/members`);
-                setMembers(response.data);
-            } catch (error) {
+        const fetchMembers = () => {
+            axios.get(`http://localhost:8080/api/workspaces/${workspaceId}/members`).then(response => {
+                    setMembers(response.data);
+                }
+            ).catch(error => {
                 console.error('Error fetching members:', error);
-            }
-        };
+            });
 
+        };
         fetchMembers();
     }, [workspaceId]);
 
@@ -93,19 +72,14 @@ const Workspace = () => {
 
             <div className='flex '>
                 <div className='w-[13%]'>
-                    <WorkspaceSidebar/>
+                    <WorkspaceSidebar />
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
-                    <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers}
-                                      workspace={workspaceNew}/>
+                    <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
                 </div>
 
-                {/*{isInputFilled ? (*/}
-                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
-                {/*) : (*/}
-                {/*    <InvitePopup onInputChange={handleInputChange} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />*/}
-                {/*)}*/}
+                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
 
             </div>
         </div>

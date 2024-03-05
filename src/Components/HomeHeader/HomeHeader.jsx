@@ -17,8 +17,6 @@ import {RiShareBoxLine} from "react-icons/ri";
 import {BiGroup} from "react-icons/bi";
 import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
-import axios from "axios";
-import logout from "../../Pages/LogoutPage/Logout";
 
 const HomeHeader = ({onOpen, onClose, workspace}) => {
     const [user, setUser] = useState({});
