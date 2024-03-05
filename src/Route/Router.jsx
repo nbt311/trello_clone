@@ -10,6 +10,7 @@ import CreateWorkspaceModal from "../Components/WorkspaceModal/CreateWorkspaceMo
 import BoardContentPage from "../Pages/BoardContentPage/BoardContentPage";
 import {mockData} from "../apis/mock-data";
 import Workspace from "../Pages/WorkspacePage/Workspace";
+import axios from "axios";
 
 
 const Router = () => {
@@ -24,6 +25,7 @@ const Router = () => {
     //     }
     // }, [isLoggedIn]);
 
+
     return (
             <Routes>
                 <Route
@@ -37,7 +39,7 @@ const Router = () => {
                 <Route path='/logout' element={<Logout/>}/>
                 <Route path='/signup' element={<Signup/>}/>
                 <Route path='/upload' element={<FirebaseImageUpload/>}/>
-                <Route path='/content' element={<BoardContentPage board = {mockData?.board}/>}/>
+                {/*<Route path='/content/:id/*' element={<BoardContentPage board = {mockData?.board}/>}/>*/}
             </Routes>
     );
 };

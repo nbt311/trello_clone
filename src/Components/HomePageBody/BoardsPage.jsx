@@ -4,37 +4,8 @@ import BoardCard from "./BoardCard";
 import WorkspaceControlBar from "./WorkspaceControlBar";
 import {IoMdInformationCircleOutline} from "react-icons/io";
 import {BsPeople} from "react-icons/bs";
-import {Link} from "react-router-dom";
-import axios from "axios";
-
-const BoardsPage = ({workspace, user}) => {
-    const [board, setBoard] = useState([])
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const boardsByWorkspace = {};
-
-            const axiosRequests = workspace.map(async (data) => {
-                try {
-                    const response = await axios.get(`http://localhost:8080/api/workspaces/${data.id}/boards`);
-                    boardsByWorkspace[data.id] = response.data;
-                    localStorage.setItem("boardList", JSON.stringify(response.data));
-                } catch (error) {
-                    console.error(`Error fetching boards for workspace ${data.id}:`, error);
-                }
-            });
-
-            try {
-                await Promise.all(axiosRequests);
-                setBoard(boardsByWorkspace);
-            } catch (error) {
-                console.error("Error fetching boards:", error);
-            }
-        };
-
-        fetchData();
-    }, [workspace]);
+import {Link, useNavigate} from "react-router-dom";
+const BoardsPage = ({workspace,setWorkspace, user}) => {
 
     return (
         <div className='text-lg font-bold ml-2 my-3 p-2'>
@@ -57,9 +28,9 @@ const BoardsPage = ({workspace, user}) => {
                 {workspace.map((data) => (
                     <div key={data.id} className='mt-8'>
                         <WorkspaceControlBar workspace={data}/>
-                        <div className='flex space-x-9 mt-4'>
-                            {board[data.id]?.map((item) => (
-                                <BoardCard key={item.id} board={item}/>
+                        <div className='flex space-x-9 mt-4 cursor-pointer w-full'>
+                            {data.boards.map((item) => (
+                                        <BoardCard key={item.id} board={item}/>
                             ))}
                         </div>
                     </div>

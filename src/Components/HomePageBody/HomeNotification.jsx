@@ -30,18 +30,18 @@ const HomeNotification = ({workspace, user}) => {
                 </div>
 
                 <div className='mt-4'>
-                    {workspace.map((item) => (
-                        <div className='mt-2 hover:bg-gray-200 rounded-md'>
-                            <div className='flex items-center space-x-3 pl-2'>
-                                <Avatar name={item.name} size='sm' borderRadius='md'/>
+                    {/*{workspace.map((item) => (*/}
+                    {/*    <div className='mt-2 hover:bg-gray-200 rounded-md'>*/}
+                    {/*        <div className='flex items-center space-x-3 pl-2'>*/}
+                    {/*            <Avatar name={item.name} size='sm' borderRadius='md'/>*/}
 
-                                <div className='text-left'>
-                                    <p className='text-lg font-bold'>daad</p>
-                                    <p className='text-sm '>{item.name}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    {/*            <div className='text-left'>*/}
+                    {/*                <p className='text-lg font-bold'>daad</p>*/}
+                    {/*                <p className='text-sm '>{item.name}</p>*/}
+                    {/*            </div>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*))}*/}
                 </div>
 
                 <p className='flex pl-4 items-center mt-10 text-base font-bold'>Links</p>

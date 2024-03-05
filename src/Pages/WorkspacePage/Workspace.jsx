@@ -19,6 +19,7 @@ const Workspace = () => {
 
     const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
     const workspaceId = workspaceNew.id;
+
     const [members, setMembers] = useState([]);
 
     const [workspace, setWorkspace] = useState([]);
@@ -29,7 +30,6 @@ const Workspace = () => {
         setUser(user);
 
         axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
-            localStorage.setItem("workspacelist", JSON.stringify(response.data));
             setWorkspace(response.data);
         })
     }, []);
@@ -43,13 +43,14 @@ const Workspace = () => {
 
     useEffect(() => {
         const fetchWorkspaceData = () => {
-            const response = axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
+            axios.get(`http://localhost:8080/api/workspaces/${id}`).then(response => {
                 localStorage.setItem("workspaces", JSON.stringify(response.data));
             });
         };
 
         fetchWorkspaceData();
-    }, [id]);
+    }, []);
+
 
     useEffect(() => {
         const fetchMembers = () => {

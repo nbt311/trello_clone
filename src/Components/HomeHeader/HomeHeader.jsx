@@ -17,12 +17,12 @@ import {RiShareBoxLine} from "react-icons/ri";
 import {BiGroup} from "react-icons/bi";
 import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
+import axios from "axios";
+import logout from "../../Pages/LogoutPage/Logout";
 
 const HomeHeader = ({onOpen, onClose, workspace}) => {
     const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -70,17 +70,25 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
 
                                 <p className="text-sm flex ml-3">Your Workspaces</p>
 
-                                    {workspace.map((item) =>
-                                        <MenuItem >
-                                            <Link to={`/workspace/${item.id}`}>
-                                            <div className='flex'>
-                                                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
-                                                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
-                                            </div>
-                                        </Link>
-                                        </MenuItem >
-                                    )}
-
+                                {/*{workspace.map((item) => (*/}
+                                {/*    <MenuItem key={item.id}>*/}
+                                {/*        <Link to={`/workspace/${item.id}`}>*/}
+                                {/*            <div className='flex'>*/}
+                                {/*                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>*/}
+                                {/*                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>*/}
+                                {/*            </div>*/}
+                                {/*        </Link>*/}
+                                {/*    </MenuItem>*/}
+                                {/*))}*/}
+                                <p className="text-sm flex ml-3">Guest Workspaces</p>
+                                <MenuItem>
+                                    <Link to='/workspace/2'>
+                                        <div className='flex'>
+                                            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>
+                                        </div>
+                                    </Link>
+                                </MenuItem>
                             </MenuList>
                         </Menu>
 

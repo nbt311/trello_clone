@@ -13,7 +13,9 @@ const CreateBoards = ({user, workspace}) => {
     const [boardTitle, setBoardTitle] = useState("")
     const [selectedWorkspaceId, setSelectedWorkspaceId] = useState('');
     const isButtonDisabled = !boardTitle;
-    const toast = useToast()
+    const toast = useToast();
+    const [boardVisibility, setBoardVisibility] = useState([]);
+    const [selectedVisibility, setSelectedVisibility] = useState('');
 
     const handleCreateBoard = () => {
         axios.post('http://localhost:8080/api/boards/create',{
@@ -40,6 +42,17 @@ const CreateBoards = ({user, workspace}) => {
             setSelectedWorkspaceId(workspace[0].id);
         }
     }, [workspace]);
+
+    useEffect(() => {
+        axios.get("http://localhost:8080/api/boards/visibility")
+            .then(response => {
+               setBoardVisibility(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching board visibility:", error);
+            });
+    }, []);
 
 
     return (
@@ -77,14 +90,18 @@ const CreateBoards = ({user, workspace}) => {
                 </Select>
             </div>
 
-            {/*<div className="w-[90%]">*/}
-            {/*    <p className='flex font-semibold'>Visibility</p>*/}
-            {/*    <Select placeholder=''>*/}
-            {/*        <option value='option1'>Option 1</option>*/}
-            {/*        <option value='option2'>Option 2</option>*/}
-            {/*        <option value='option3'>Option 3</option>*/}
-            {/*    </Select>*/}
-            {/*</div>*/}
+            <div className="w-[90%]">
+                <p className='flex font-semibold'>Visibility</p>
+                <Select
+                    value={selectedVisibility}
+                    onChange={(e) => setSelectedVisibility(e.target.value)}
+                >
+                    {boardVisibility.map((type) => (
+                        <option key={type.id} value={type.id}>{type.name}</option>
+                    ) )}
+
+                </Select>
+            </div>
 
             <div className="w-[90%] mt-3">
                 <Button className="w-full" isDisabled={isButtonDisabled} colorScheme='blue' onClick={handleCreateBoard}>
