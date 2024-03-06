@@ -8,5 +8,11 @@ class BoardService {
     getListColumn(boardId) {
         return axios.get(`${API_URL}${boardId}/columns`)
     }
+
+    updateBoardDetail(boardId, updateData) {
+        return axios.put(`${API_URL}${boardId}`, updateData).then(response => {
+            return response.data
+        })
+    }
 }
 export default new BoardService();

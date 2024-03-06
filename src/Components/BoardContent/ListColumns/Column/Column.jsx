@@ -16,8 +16,12 @@ const Column = ({column}) => {
     }
 
     const {
-        attributes, listeners, setNodeRef, transform, transition, isDragging
-    } = useSortable({id: column._id, data: {...column}});
+        attributes,
+        listeners,
+        setNodeRef, transform,
+        transition,
+        isDragging
+    } = useSortable({id: column.id, data: {...column}});
 
     const dndKitColumnStyle = {
         transform: CSS.Translate.toString(transform),
@@ -25,11 +29,14 @@ const Column = ({column}) => {
         opacity: isDragging ? 0.5 : undefined,
     };
 
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, 'id')
 
     return (
-        <Box ref={setNodeRef} style={dndKitColumnStyle} {...attributes} {...listeners}
-            key={column._id}
+        <Box ref={setNodeRef}
+             style={dndKitColumnStyle}
+             {...attributes}
+             {...listeners}
+            key={column.id}
             className='w-[280px] h-fit bg-gray-100 p-4 pr-2 rounded-md drop-shadow-md text-left'>
             <Heading className='flex items-center justify-between mb-4'>
                 <p className='text-lg cursor-pointer'>{column.title}</p>

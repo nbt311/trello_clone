@@ -17,7 +17,7 @@ const ListColumns = ({columns, setColumns}) => {
         <SortableContext items={columns?.map(c => c.id)} strategy={horizontalListSortingStrategy}>
             <div className='flex space-x-4'>
                 {columns?.map((column) => (
-                    <Column column={column}/>
+                    <Column key={column.id} column={column}/>
                 ))}
             </div>
             {!openNewColumnForm ? <CreateColumnButton toggle={toggleOpenNewColumnForm}/> :
