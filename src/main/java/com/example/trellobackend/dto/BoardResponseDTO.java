@@ -32,6 +32,7 @@ public class BoardResponseDTO {
         this.columns = columns;
     }
 
+
     public static BoardResponseDTO fromEntity(Board board) {
         BoardResponseDTO responseDTO = new BoardResponseDTO();
         responseDTO.setId(board.getId());

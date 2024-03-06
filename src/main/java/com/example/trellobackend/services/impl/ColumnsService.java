@@ -57,41 +57,13 @@ public class ColumnsService implements IColumsService {
             throw new RuntimeException("Not found column id: " + columnId);
         }
     }
+
     @Override
     public List<ColumnsDTO> getAllColumns() {
         return columnsRepository.findAll().stream()
                 .map(ColumnsDTO::fromEntity)
                 .collect(Collectors.toList());
     }
-
-//    @Override
-//    public ColumnsDTO createColumn(ColumnRequest columnRequest) {
-//        Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
-//        if (userOptional.isPresent()){
-//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
-//            if (workspaceOptional.isPresent()){
-//                Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
-//                if (boardOptional.isPresent()) {
-//                    Board board = boardOptional.get();
-//                    Columns newColumns = new Columns();
-//                    newColumns.setTitle(columnRequest.getTitle());
-//                    newColumns.setBoard(board);
-//                    columnsRepository.save(newColumns);
-//                    ColumnsDTO responseDTO = new ColumnsDTO();
-//                    responseDTO.setId(newColumns.getId());
-//                    responseDTO.setTitle(newColumns.getTitle());
-//                    return responseDTO;
-//                } else {
-//                    throw new RuntimeException("Error: Board not found.");
-//                }
-//            }else {
-//                throw new RuntimeException("Error: Workspace not found.");
-//            }
-//        }else {
-//            throw new RuntimeException("Error: User not found.");
-//        }
-//
-//    }
 
     @Override
     public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());

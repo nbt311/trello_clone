@@ -3,16 +3,12 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.enums.EBoardMemberRole;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
-import com.example.trellobackend.enums.WorkSpaceType;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.BoardMembers;
 import com.example.trellobackend.models.board.Visibility;
-import com.example.trellobackend.models.workspace.Members;
-import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
@@ -57,59 +53,17 @@ public class BoardService implements IBoardService {
 
     }
 
-
-//    @Override
-//    public Board createBoard(BoardRequest boardRequest) {
-//        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
-//        if (userOptional.isPresent()) {
-//            User creator = userOptional.get();
-//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
-//            if (workspaceOptional.isPresent()){
-//                Workspace workspace = workspaceOptional.get();
-//                Board board = new Board();
-//                board.setTitle(boardRequest.getTitle());
-//                board.setWorkspace(workspace);
-//                Set<String> strVisibilities = boardRequest.getVisibility();
-//                Set<Visibility> visibilities = new HashSet<>();
-//                strVisibilities.forEach(visibility -> {
-//                    switch (visibility) {
-//                        case "private":
-//                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(privateVisibility);
-//
-//                            break;
-//                        case "public":
-//                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(publicVisibility);
-//
-//                            break;
-//                        default:
-//                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(workspaceVisibility);
-//                    }
-//                });
-//                board.setVisibilities(visibilities);
-//                boardRepository.save(board);
-//                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
-//                return board;
-//            }
-//        }
-//        throw new UsernameNotFoundException("User not found");
-//    }
-
     @Override
     public BoardResponseDTO getBoardById(Long boardId) {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isPresent()) {
             Board board = boardOptional.get();
-            BoardResponseDTO responseDTO = BoardResponseDTO.fromEntity(board);
-            return responseDTO;
+            return BoardResponseDTO.fromEntity(board);
         }
         throw new NoSuchElementException("Board not found");
     }
+
+
 
     @Override
     public BoardResponseDTO createNewBoard(BoardRequest boardRequest) {
@@ -170,7 +124,7 @@ public class BoardService implements IBoardService {
                 List<CardDTO> cards = columns.getCards()
                         .stream().map(card ->
                                 new CardDTO(card.getId(),card.getTitle()))
-                        .collect(Collectors.toList()); ;
+                        .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
             })
                     .collect(Collectors.toList());
