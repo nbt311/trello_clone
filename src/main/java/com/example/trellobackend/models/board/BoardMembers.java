@@ -3,6 +3,7 @@ package com.example.trellobackend.models.board;
 import com.example.trellobackend.enums.EBoardMemberRole;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
+import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

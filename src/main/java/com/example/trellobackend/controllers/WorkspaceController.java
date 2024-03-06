@@ -49,13 +49,7 @@ public class WorkspaceController {
     @Autowired
     private WorkspaceMemberRepository workspaceMemberRepository;
     @Autowired
-    private BoardRepository boardRepository;
-
-    @GetMapping
-    public ResponseEntity<Iterable<Workspace>> findAllWorkspace() {
-        Iterable<Workspace> workspaces = workspaceService.findAll();
-        return new ResponseEntity<>(workspaces, HttpStatus.OK);
-    }
+    private  BoardRepository boardRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
@@ -68,17 +62,15 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
         }
     }
-
     @GetMapping("/type")
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
     }
-
-    @GetMapping("/{workspaceId}/members")
-    public ResponseEntity<?> findMembersByWorkspace(@PathVariable Long workspaceId) {
-        try {
+    @GetMapping("/{workspaceId}/members" )
+    public ResponseEntity<?> findMembersByWorkspace (@PathVariable Long workspaceId){
+        try{
             Iterable<Members> membersList = workspaceMemberRepository.findMembersByWorkspaceId(workspaceId);
-            if (membersList == null) {
+            if(membersList == null){
                 return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(membersList, HttpStatus.OK);
@@ -87,12 +79,11 @@ public class WorkspaceController {
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/{workspaceId}/boards")
-    public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId) {
-        try {
+    public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId){
+        try{
             Iterable<Board> boardsList = boardRepository.findBoardByWorkspaceId(workspaceId);
-            if (boardsList == null) {
+            if (boardsList == null){
                 return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(boardsList, HttpStatus.OK);
@@ -115,10 +106,8 @@ public class WorkspaceController {
     @PostMapping("/{workspaceId}/addUser/{userEmail}")
     public ResponseEntity<?> addUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String userEmail) {
         try {
-            // Kiểm tra xem người gửi request có quyền thêm user vào workspace hay không
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
-                // Lấy thông tin workspace
                 Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
 
                 // Kiểm tra xem người dùng với email đã tồn tại hay không
@@ -146,11 +135,9 @@ public class WorkspaceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user to workspace: " + e.getMessage());
         }
     }
-
     @GetMapping("{id}/workspace")
-    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id) {
-        Optional<Workspace> workspace = workspaceRepository.findById(id);
+    public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
+        Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
-
     }
 }

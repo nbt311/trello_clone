@@ -1,24 +1,28 @@
 package com.example.trellobackend.models.board;
 
-import com.example.trellobackend.enums.EBoardVisibility;
 import jakarta.persistence.*;
-import com.example.trellobackend.enums.WorkSpacePermission;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Visibility {
+public class Columns {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private EBoardVisibility name;
+    private String title;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+    @ElementCollection
+    private List<Long> cardOrderIds;
+    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
+    private List<Card> cards;
 }

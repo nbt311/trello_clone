@@ -1,11 +1,15 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.board.Visibility;
 import com.example.trellobackend.repositories.BoardRepository;
+import com.example.trellobackend.repositories.VisibilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,4 +30,5 @@ public class VisibilityController {
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
