@@ -1,7 +1,9 @@
 package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
@@ -12,6 +14,7 @@ import com.example.trellobackend.services.IColumsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,12 +47,25 @@ public class ColumnsService implements IColumsService {
     }
 
     @Override
-    public void remove(Long id) {
-
+    public void remove(Long columnId) {
+        Optional<Columns> optionalColumn = columnsRepository.findById(columnId);
+        if (optionalColumn.isPresent()) {
+            // Nếu tồn tại, xóa cột
+            columnsRepository.deleteById(columnId);
+        } else {
+            // Nếu không tồn tại, có thể xử lý theo ý của bạn, ví dụ: ném một ngoại lệ.
+            throw new RuntimeException("Not found column id: " + columnId);
+        }
+    }
+    @Override
+    public List<ColumnsDTO> getAllColumns() {
+        return columnsRepository.findAll().stream()
+                .map(ColumnsDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
 //    @Override
-//    public Columns createColumn(ColumnRequest columnRequest) {
+//    public ColumnsDTO createColumn(ColumnRequest columnRequest) {
 //        Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
 //        if (userOptional.isPresent()){
 //            Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
@@ -61,7 +77,10 @@ public class ColumnsService implements IColumsService {
 //                    newColumns.setTitle(columnRequest.getTitle());
 //                    newColumns.setBoard(board);
 //                    columnsRepository.save(newColumns);
-//                    return newColumns;
+//                    ColumnsDTO responseDTO = new ColumnsDTO();
+//                    responseDTO.setId(newColumns.getId());
+//                    responseDTO.setTitle(newColumns.getTitle());
+//                    return responseDTO;
 //                } else {
 //                    throw new RuntimeException("Error: Board not found.");
 //                }
@@ -87,20 +106,14 @@ public class ColumnsService implements IColumsService {
                     newColumns.setBoard(board);
                     columnsRepository.save(newColumns);
 
-                    // Tạo đối tượng BoardResponseDTO và set thông tin cần thiết
                     BoardResponseDTO responseDTO = new BoardResponseDTO();
                     responseDTO.setId(board.getId());
                     responseDTO.setTitle(board.getTitle());
+                    responseDTO.setVisibility(board.getVisibilities());
 
-                    // Chuyển đổi danh sách Columns thành danh sách ColumnsDTO và cập nhật columnIds
                     List<ColumnsDTO> columnsDTOList = board.getColumns()
                             .stream()
-                            .map(columns -> {
-                                ColumnsDTO columnsDTO = new ColumnsDTO();
-                                columnsDTO.setId(columns.getId());
-                                columnsDTO.setTitle(columns.getTitle());
-                                return columnsDTO;
-                            })
+                            .map(ColumnsDTO::fromEntity)
                             .collect(Collectors.toList());
 
                     responseDTO.setColumns(columnsDTOList);

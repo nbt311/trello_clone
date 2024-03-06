@@ -2,6 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,12 +35,24 @@ public class ColumsController {
 //            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
 //    }
 @GetMapping("/{id}")
-public ColumnsDTO getColumnById(@PathVariable Long id) {
-    ColumnsDTO columnsDTO = new ColumnsDTO();
-    columnsDTO.setId(id);
-    columnsDTO.setTitle("Column " + id);
-    return columnsDTO;
+public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
+    try {
+        Optional<Columns> columnsOptional = columnsRepository.findById(id);
+        if (columnsOptional.isPresent()){
+            Columns columns = columnsOptional.get();
+            ColumnsDTO columnsDTO = new ColumnsDTO();
+            columnsDTO.setId(columns.getId());
+            columnsDTO.setTitle(columns.getTitle());
+            return new ResponseEntity<>(columnsDTO, HttpStatus.OK);
+        }else {
+            throw new RuntimeException( "Column not found");
+        }
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
+
     @PostMapping("/create")
     public ResponseEntity<BoardResponseDTO> createColumn(@RequestBody ColumnRequest columnRequest) {
         try {
@@ -46,6 +60,22 @@ public ColumnsDTO getColumnById(@PathVariable Long id) {
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ColumnsDTO>> getAllWorkspaces() {
+        List<ColumnsDTO> list = columnsService.getAllColumns();
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @DeleteMapping("/{columnId}/delete")
+    public ResponseEntity<String> deleteColumn(@PathVariable Long columnId) {
+        try {
+            columnsService.remove(columnId);
+            return ResponseEntity.ok("Delete Column Succesfully!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
         }
     }
 }

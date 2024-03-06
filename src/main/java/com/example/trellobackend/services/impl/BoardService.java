@@ -1,6 +1,7 @@
 package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.enums.EBoardMemberRole;
 import com.example.trellobackend.enums.EBoardVisibility;
@@ -104,23 +105,7 @@ public class BoardService implements IBoardService {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isPresent()) {
             Board board = boardOptional.get();
-
-            // Fetch Columns associated with the Board
-            List<ColumnsDTO> columnsDTOList = board.getColumns()
-                    .stream()
-                    .map(column -> {
-                        ColumnsDTO columnsDTO = new ColumnsDTO();
-                        columnsDTO.setId(column.getId());
-                        columnsDTO.setTitle(column.getTitle());
-                        // Map other properties as needed
-                        return columnsDTO;
-                    })
-                    .collect(Collectors.toList());
-
             BoardResponseDTO responseDTO = BoardResponseDTO.fromEntity(board);
-            responseDTO.setColumns(columnsDTOList);
-            responseDTO.setColumnIds(board.getColumnOrderIds());
-
             return responseDTO;
         }
         throw new NoSuchElementException("Board not found");
@@ -172,6 +157,27 @@ public class BoardService implements IBoardService {
             }
         }
         throw new UsernameNotFoundException("User not found");
+    }
+
+    @Override
+    public List<ColumnsDTO> getAllColumnsDTOByBoardId(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board != null) {
+            // Chuyển đổi danh sách cột sang danh sách DTO và trả về
+            return board.getColumns().stream()
+                    .map(columns -> {
+                List<Long> cardOrderIds = columns.getCardOrderIds();
+                List<CardDTO> cards = columns.getCards()
+                        .stream().map(card ->
+                                new CardDTO(card.getId(),card.getTitle()))
+                        .collect(Collectors.toList()); ;
+                return new ColumnsDTO(columns, cardOrderIds, cards);
+            })
+                    .collect(Collectors.toList());
+        } else {
+            // Nếu không tìm thấy bảng, có thể xử lý theo ý của bạn, ví dụ: ném một ngoại lệ.
+            throw new RuntimeException("Không tìm thấy bảng với ID: " + boardId);
+        }
     }
 
     public void addMemberToBoard(Board board, User user, UserRole userRole) {

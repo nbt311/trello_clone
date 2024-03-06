@@ -22,6 +22,9 @@ public class Columns {
     @JoinColumn(name = "board_id")
     private Board board;
     @ElementCollection
+    @CollectionTable(name = "card_order_ids", joinColumns = @JoinColumn(name = "columns_id"))
+    @OrderColumn
+    @Column(name = "card_order_id")
     private List<Long> cardOrderIds;
     @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
     private List<Card> cards;
