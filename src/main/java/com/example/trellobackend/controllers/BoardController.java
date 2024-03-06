@@ -2,6 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Visibility;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -34,6 +35,17 @@ public class BoardController {
     public ResponseEntity<BoardResponseDTO> getBoardById(@PathVariable Long boardId) {
         try {
             BoardResponseDTO responseDTO = boardService.getBoardById(boardId);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<BoardResponseDTO> updateBoardById(@PathVariable Long boardId,
+                                                            @RequestBody UpdateBoardDTO updateData) {
+        try {
+            BoardResponseDTO responseDTO = boardService.updateBoardColumnOrderIds(boardId, updateData);
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
