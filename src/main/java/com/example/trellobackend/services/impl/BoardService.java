@@ -105,7 +105,7 @@ public class BoardService implements IBoardService {
                 responseDTO.setId(board.getId());
                 responseDTO.setTitle(board.getTitle());
                 responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
-                responseDTO.setColumnIds(Collections.emptyList()); // Initialize the columnIds list
+                responseDTO.setColumnOrderIds(Collections.emptyList()); // Initialize the columnIds list
 
                 return responseDTO;
             }

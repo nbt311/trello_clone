@@ -1,9 +1,7 @@
 package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
@@ -14,7 +12,6 @@ import com.example.trellobackend.services.IColumsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,12 +87,11 @@ public class ColumnsService implements IColumsService {
 
                     responseDTO.setColumns(columnsDTOList);
 
-                    // Cập nhật columnIds
-                    List<Long> columnIds = board.getColumnOrderIds();
-                    columnIds.add(newColumns.getId());
-                    board.setColumnOrderIds(columnIds);
+                    List<Long> columnOrderIds = board.getColumnOrderIds();
+                    columnOrderIds.add(newColumns.getId());
+                    board.setColumnOrderIds(columnOrderIds);
                     boardRepository.save(board);
-                    responseDTO.setColumnIds(columnIds);
+                    responseDTO.setColumnOrderIds(columnOrderIds);
 
                     return responseDTO;
                 } else {
