@@ -11,8 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 public class ColumnRequest {
-//    private String email;
+    private String email;
     private String title;
+    private Long workspaceId;
     private Long boardId;
 //    private List<Long> cardOrderIds;
 }

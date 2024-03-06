@@ -19,13 +19,17 @@ import java.util.stream.Collectors;
 public class BoardResponseDTO {
     private Long id;
     private String title;
-    private EBoardVisibility visibility;
+//    private EBoardVisibility visibility;
+    private Set<Visibility> visibility;
     private List<Long> columnIds;
     private List<ColumnsDTO> columns;
 
-    public BoardResponseDTO(Board board) {
+    public BoardResponseDTO(Board board, Set<Visibility> visibility, List<Long> columnIds, List<ColumnsDTO> columns) {
         this.id = board.getId();
         this.title = board.getTitle();
+        this.visibility = visibility;
+        this.columnIds = columnIds;
+        this.columns = columns;
     }
 
 
@@ -47,10 +51,10 @@ public class BoardResponseDTO {
 
         responseDTO.setColumns(columnsDTOList);
         responseDTO.setColumnIds(board.getColumnOrderIds());
-
-        if (!board.getVisibilities().isEmpty()) {
-            responseDTO.setVisibility(board.getVisibilities().iterator().next().getName());
-        }
+        responseDTO.setVisibility(board.getVisibilities());
+//        if (!board.getVisibilities().isEmpty()) {
+//            responseDTO.setVisibility(board.getVisibilities().iterator().next().getName());
+//        }
         return responseDTO;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Visibility;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -29,16 +30,6 @@ public class BoardController {
     @Autowired
     private VisibilityRepository visibilityRepository;
 
-    //    @PostMapping("/create")
-//    public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest){
-//        try {
-//            Board board = boardService.createBoard(boardRequest);
-//            return new ResponseEntity<>(board, HttpStatus.CREATED);
-//        } catch (UsernameNotFoundException e) {
-//            // Xử lý khi không tìm thấy người dùng
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
-//        }
-//    }
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponseDTO> getBoardById(@PathVariable Long boardId) {
         try {
@@ -60,6 +51,17 @@ public class BoardController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{boardId}/columns")
+    public ResponseEntity<List<ColumnsDTO>> getAllColumnsByBoardId(@PathVariable Long boardId) {
+        try {
+            List<ColumnsDTO> columnsDTOList = boardService.getAllColumnsDTOByBoardId(boardId);
+            return ResponseEntity.ok(columnsDTOList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/visibility")
     public List<Visibility> getAllVisibilities(){
         return  visibilityRepository.findAll();
