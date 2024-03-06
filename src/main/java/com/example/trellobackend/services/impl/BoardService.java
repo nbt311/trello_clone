@@ -176,6 +176,20 @@ public class BoardService implements IBoardService {
         throw new UsernameNotFoundException("User not found");
     }
 
+    @Override
+    public List<ColumnsDTO> getAllColumnsDTOByBoardId(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board != null) {
+            // Chuyển đổi danh sách cột sang danh sách DTO và trả về
+            return board.getColumns().stream()
+                    .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                    .collect(Collectors.toList());
+        } else {
+            // Nếu không tìm thấy bảng, có thể xử lý theo ý của bạn, ví dụ: ném một ngoại lệ.
+            throw new RuntimeException("Không tìm thấy bảng với ID: " + boardId);
+        }
+    }
+
     public void addMemberToBoard(Board board, User user, UserRole userRole) {
         BoardMembers boardMembers = new BoardMembers();
         boardMembers.setBoard(board);

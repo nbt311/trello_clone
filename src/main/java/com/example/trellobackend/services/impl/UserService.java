@@ -1,5 +1,6 @@
 package com.example.trellobackend.services.impl;
 
+import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.services.IUserService;
@@ -53,5 +54,14 @@ public class UserService implements IUserService {
     @Override
     public List<User> getSuggestedUsers(String query) {
         return userRepository.findUsersByPartialMatch(query);
+    }
+
+    public UserDTO getUserWorkspaces(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            return new UserDTO(user);
+        }
+        return null;
     }
 }
