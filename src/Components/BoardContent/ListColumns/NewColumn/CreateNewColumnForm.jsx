@@ -1,9 +1,53 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import formik, {Formik, useFormik} from "formik";
 import * as Yup from "yup";
 import {IoMdClose} from "react-icons/io";
+import ColumnService from "../../../../Service/ColumnService";
+import {useToast} from "@chakra-ui/react";
+import UserContext from "../../../../Context/UserContext";
+import WorkspaceContext from "../../../../Context/WorkspaceContext";
+import BoardContext from "../../../../Context/BoardContext";
+import {values} from "lodash";
+import BoardService from "../../../../Service/BoardService";
 
-const CreateNewColumnForm = ({onSubmit, toggle}) => {
+const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
+    const {user, updateUser} = useContext(UserContext)
+    const {workspace, updateWorkspace} = useContext(WorkspaceContext);
+    const {board, updateBoard} = useContext(BoardContext);
+
+    const toast = useToast()
+
+    const createNewColumnAndLogResponse = async () => {
+        try {
+            const response = await ColumnService.createNewColumn(user.email, workspace.id, formik.values.title, board.id);
+
+            toast({
+                title: 'Create Column Successful',
+                description: 'You have successfully created a new column.',
+                status: 'success',
+                duration: 3000,
+            });
+            BoardService.getListColumn(board.id).then(response => {
+                setColumns(response.data)
+            })
+            return response.data;
+        } catch (error) {
+            console.error('Error creating column', error);
+            throw error;
+        }
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const newColumnList = await createNewColumnAndLogResponse();
+            updateBoard(newColumnList)
+            localStorage.setItem('board', JSON.stringify(newColumnList))
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
     const formik = useFormik({
         initialValues: {
             title: '',
@@ -32,7 +76,9 @@ const CreateNewColumnForm = ({onSubmit, toggle}) => {
             ) : null}
             <div className='flex items-center space-x-2 mt-2 pl-2'>
                 <button type="submit"
-                        className='bg-blue-500 hover:bg-blue-600 py-1 px-3 text-white font-semibold rounded-md'>Add list
+                        className='bg-blue-500 hover:bg-blue-600 py-1 px-3 text-white font-semibold rounded-md'
+                        onClick={handleSubmit}>
+                    Add list
                 </button>
                 <IoMdClose className='text-3xl p-1 hover:bg-gray-300 rounded-md' onClick={toggle}/>
             </div>

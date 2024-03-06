@@ -9,7 +9,7 @@ const BoardCard = ({board}) => {
     };
 
     return (
-        <div className='w-[20%] h-24 rounded-sm flex text-start' style={divStyle}>
+        <div className='h-24 w-full rounded-sm flex text-start' style={divStyle}>
             <h1 className='mt-1 ml-3 text-xl font-extrabold text-black'>{board?.title}</h1>
         </div>
     );

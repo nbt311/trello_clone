@@ -19,11 +19,9 @@ import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
 import axios from "axios";
 import logout from "../../Pages/LogoutPage/Logout";
-import {IoIosAdd} from "react-icons/io";
-import CreateBoards from "../CreateBoards/CreateBoards";
 
 const HomeHeader = ({onOpen, onClose, workspace}) => {
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
     useEffect(() => {
@@ -42,12 +40,11 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
+
     const handleCreate = () => {
         onOpen()
     }
-    const handleCheck = () =>{
-        console.log(+1)
-    }
+
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
             <div className='flex flex-row items-center justify-between mx-auto max-w-screen relative'>
@@ -70,35 +67,28 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                                 <Dropdown title='Workspace'/>
                             </MenuButton>
                             <MenuList>
-                                {/*<p className="text-sm flex ml-3">Current Workspace</p>*/}
-                                {/*<MenuItem>*/}
-                                {/*    <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
-                                {/*    <div className='ml-2'>*/}
-                                {/*        <p className='text-base font-medium'>{user.username}</p>*/}
-                                {/*    </div>*/}
-                                {/*</MenuItem>*/}
-                                {/*<MenuDivider/>*/}
+
                                 <p className="text-sm flex ml-3">Your Workspaces</p>
 
-                                    {workspace && workspace.map((item) =>
-                                        <MenuItem >
-                                            <Link to={`/workspace/${item.id}`}>
-                                            <div className='flex'>
-                                                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
-                                                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
-                                            </div>
-                                        </Link>
-                                        </MenuItem >
-                                    )}
-                                {/*<p className="text-sm flex ml-3">Guest Workspaces</p>*/}
-                                {/*<MenuItem>*/}
-                                {/*    <Link to='/workspace/2'>*/}
-                                {/*        <div className='flex'>*/}
-                                {/*            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
-                                {/*            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>*/}
-                                {/*        </div>*/}
-                                {/*    </Link>*/}
-                                {/*</MenuItem>*/}
+                                {/*{workspace.map((item) => (*/}
+                                {/*    <MenuItem key={item.id}>*/}
+                                {/*        <Link to={`/workspace/${item.id}`}>*/}
+                                {/*            <div className='flex'>*/}
+                                {/*                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>*/}
+                                {/*                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>*/}
+                                {/*            </div>*/}
+                                {/*        </Link>*/}
+                                {/*    </MenuItem>*/}
+                                {/*))}*/}
+                                <p className="text-sm flex ml-3">Guest Workspaces</p>
+                                <MenuItem>
+                                    <Link to='/workspace/2'>
+                                        <div className='flex'>
+                                            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>
+                                            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>
+                                        </div>
+                                    </Link>
+                                </MenuItem>
                             </MenuList>
                         </Menu>
 
@@ -121,18 +111,11 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
                             )}
                             <MenuList className='w-full'>
                                 <MenuItem>
-                                    <Menu>
-                                        <MenuButton className='w-full cursor-pointer' onClick={handleCheck}>
-                                            <div>
-                                                <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
-                                                <p className='text-sm text-left'>A board is made up of cards ordered on lists.
-                                                    Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
-                                            </div>
-                                        </MenuButton>
-                                        <MenuList minWidth='340px'>
-                                            <CreateBoards user={user} workspace={workspace}/>
-                                        </MenuList>
-                                    </Menu>
+                                    <div>
+                                        <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
+                                        <p className='text-sm text-left'>A board is made up of cards ordered on lists.
+                                            Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
+                                    </div>
                                 </MenuItem>
                                 <MenuItem onClick={handleCreate}>
                                     <div>

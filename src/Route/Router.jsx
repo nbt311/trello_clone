@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import HomePage from "../Pages/HomePage/HomePage";
 import ManagePage from "../Pages/ManagePage/ManagePage";
@@ -11,9 +11,11 @@ import BoardContentPage from "../Pages/BoardContentPage/BoardContentPage";
 import {mockData} from "../apis/mock-data";
 import Workspace from "../Pages/WorkspacePage/Workspace";
 import axios from "axios";
+import BoardContext from "../Context/BoardContext";
 
 
 const Router = () => {
+
     // const [isLoggedIn, setLoggedIn] = useState();
     // const navigate = useNavigate()
 
@@ -39,7 +41,7 @@ const Router = () => {
                 <Route path='/logout' element={<Logout/>}/>
                 <Route path='/signup' element={<Signup/>}/>
                 <Route path='/upload' element={<FirebaseImageUpload/>}/>
-                <Route path='/content' element={<BoardContentPage board = {mockData?.board}/>}/>
+                <Route path='/board/:id' element={<BoardContentPage/>}/>
             </Routes>
     );
 };

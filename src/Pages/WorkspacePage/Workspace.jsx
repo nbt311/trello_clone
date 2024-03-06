@@ -11,16 +11,15 @@ import InvitePopupTwo from "../../Components/WorkspaceModal/InvitePopupTwo";
 
 
 const Workspace = () => {
-    const {id} = useParams();
-
-    const [workspaceData, setWorkspaceData] = useState(null);
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const { id } = useParams();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
     const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
-    const workspaceId = workspaceNew?.id;
+    const workspaceId = workspaceNew.id;
+
     const [members, setMembers] = useState([]);
 
     const [workspace, setWorkspace] = useState([]);
@@ -32,16 +31,8 @@ const Workspace = () => {
 
         axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {
             setWorkspace(response.data);
-            const fetchWorkspaceData = () => {
-                axios.get(`http://localhost:8080/api/workspaces/${id}/workspace`).then(response => {
-                    localStorage.setItem("workspaces", JSON.stringify(response.data));
-                    setWorkspaceData(response.data);
-                });
-            };
-
-            fetchWorkspaceData();
         })
-    }, [id]);
+    }, []);
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -50,9 +41,16 @@ const Workspace = () => {
         setIsInputFilled(value.includes('@gmail.com'));
     };
 
-    // useEffect(() => {
-    //
-    // }, [id]);
+    useEffect(() => {
+        const fetchWorkspaceData = () => {
+            axios.get(`http://localhost:8080/api/workspaces/${id}`).then(response => {
+                localStorage.setItem("workspaces", JSON.stringify(response.data));
+            });
+        };
+
+        fetchWorkspaceData();
+    }, []);
+
 
     useEffect(() => {
         const fetchMembers = () => {
@@ -75,23 +73,14 @@ const Workspace = () => {
 
             <div className='flex '>
                 <div className='w-[13%]'>
-                    <WorkspaceSidebar workspace={workspace}/>
+                    <WorkspaceSidebar />
                 </div>
                 <div className='w-[3%]'></div>
                 <div className='w-[75%]'>
-                    {workspaceData ? (
-                        <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers}
-                                          workspace={workspaceNew}/>
-                    ) : (
-                        <div>Loading...</div>
-                    )}
+                    <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers} workspace={workspaceNew}/>
                 </div>
 
-                {/*{isInputFilled ? (*/}
-                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
-                {/*) : (*/}
-                {/*    <InvitePopup onInputChange={handleInputChange} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />*/}
-                {/*)}*/}
+                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
 
             </div>
         </div>

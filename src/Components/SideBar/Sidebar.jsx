@@ -1,13 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import SidebarConfig from "./SidebarConfig";
 import WorkspaceDropdown from "./WorkspaceDropdown";
 import {useNavigate} from "react-router-dom";
 import {Avatar} from "@chakra-ui/react";
 import axios from "axios";
+import UserContext from "../../Context/UserContext";
+import UserService from "../../Service/UserService";
 
 const Sidebar = ({workspace,setWorkspace}) => {
     const [selectedTab, setSelectedTab] = useState({});
     const navigate = useNavigate();
+
     const handleTabClick = (item) => {
         setSelectedTab(item);
 

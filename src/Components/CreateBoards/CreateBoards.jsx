@@ -38,7 +38,6 @@ const CreateBoards = ({user, workspace}) => {
     }
 
     useEffect(() => {
-        // Thiết lập giá trị ban đầu bằng giá trị của option đầu tiên
         if (workspace.length > 0) {
             setSelectedWorkspaceId(workspace[0].id);
         }
