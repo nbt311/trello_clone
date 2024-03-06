@@ -17,8 +17,9 @@ const Workspace = () => {
     const [isInputFilled, setIsInputFilled] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
-    const workspaceNew = JSON.parse(localStorage.getItem('workspaces'));
+    const workspaceNew = JSON.parse(localStorage.getItem('workspacelist'));
     const workspaceId = workspaceNew.id;
+    console.log('ha?',workspaceId)
 
     const [members, setMembers] = useState([]);
 
