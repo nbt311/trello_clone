@@ -8,6 +8,7 @@ import CreateBoards from "../../Components/CreateBoards/CreateBoards";
 import BoardsPage from "../../Components/HomePageBody/BoardsPage";
 import {Route, Routes} from "react-router-dom";
 import HomeNotification from "../../Components/HomePageBody/HomeNotification";
+import ShareBoards from "../../Components/CreateBoards/ShareBoards";
 
 const HomePage = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -52,6 +53,7 @@ const HomePage = () => {
                                   workspaceDescription={workspaceDescription}
                                   setWorkspaceDescription={setWorkspaceDescription}
             />
+            <ShareBoards/>
         </div>
     );
 };
