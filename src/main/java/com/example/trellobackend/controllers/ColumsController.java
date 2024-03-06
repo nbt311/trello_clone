@@ -2,6 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -18,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,25 +29,29 @@ public class ColumsController {
     private ColumnsService columnsService;
     @Autowired
     private ColumnsRepository columnsRepository;
-
-    @GetMapping("{id}")
-//    public ResponseEntity<?> getColumsById(@PathVariable Long id){
-//        Optional<Columns> columns = columnsRepository.findById(id);
-//        return new ResponseEntity<>(columns, HttpStatus.OK);
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createColumns(@RequestBody ColumnRequest columnRequest){
+//            Columns newColumns = columnsService.createColumn(columnRequest);
+//            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
 //    }
-    public ColumnsDTO getColumnsById(@PathVariable Long id) {
-        ColumnsDTO columnsDTO = new ColumnsDTO();
-        Optional<Columns> columnOptional = columnsRepository.findById(id);
-        if (columnOptional.isPresent()) {
-            Columns columns = columnOptional.get();
+@GetMapping("/{id}")
+public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
+    try {
+        Optional<Columns> columnsOptional = columnsRepository.findById(id);
+        if (columnsOptional.isPresent()){
+            Columns columns = columnsOptional.get();
+            ColumnsDTO columnsDTO = new ColumnsDTO();
             columnsDTO.setId(columns.getId());
             columnsDTO.setTitle(columns.getTitle());
-            return columnsDTO;
-        } else {
-            throw new NoSuchElementException("Column not found");
+            return new ResponseEntity<>(columnsDTO, HttpStatus.OK);
+        }else {
+            throw new RuntimeException( "Column not found");
         }
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+}
 
     @PostMapping("/create")
     public ResponseEntity<BoardResponseDTO> createColumn(@RequestBody ColumnRequest columnRequest) {
@@ -65,5 +69,13 @@ public class ColumsController {
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
+    @DeleteMapping("/{columnId}/delete")
+    public ResponseEntity<String> deleteColumn(@PathVariable Long columnId) {
+        try {
+            columnsService.remove(columnId);
+            return ResponseEntity.ok("Delete Column Succesfully!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
+        }
+    }
 }

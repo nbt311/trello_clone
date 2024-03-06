@@ -39,21 +39,13 @@ public class BoardResponseDTO {
 
         List<ColumnsDTO> columnsDTOList = board.getColumns()
                 .stream()
-                .map(column -> {
-                    ColumnsDTO columnsDTO = new ColumnsDTO();
-                    columnsDTO.setId(column.getId());
-                    columnsDTO.setTitle(column.getTitle());
-                    // Map other properties as needed
-                    return columnsDTO;
-                })
+                .map(ColumnsDTO::fromEntity)
                 .collect(Collectors.toList());
 
         responseDTO.setColumns(columnsDTOList);
         responseDTO.setColumnOrderIds(board.getColumnOrderIds());
         responseDTO.setVisibility(board.getVisibilities());
-//        if (!board.getVisibilities().isEmpty()) {
-//            responseDTO.setVisibility(board.getVisibilities().iterator().next().getName());
-//        }
+
         return responseDTO;
     }
 }
