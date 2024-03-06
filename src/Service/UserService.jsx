@@ -8,10 +8,18 @@ class UserService {
             .then(response => {
                 localStorage.setItem("workspacelist", JSON.stringify(response.data.ownedWorkspaces));
                 return response.data.ownedWorkspaces;
-                console.log(response.data.ownedWorkspaces);
             }).catch(error => {
                 throw error;
             });
+    }
+
+    getUserById(userId) {
+        return axios.get(`${API_URL}${userId}/workspaces`).then(response => {
+            localStorage.setItem("user", JSON.stringify(response.data))
+            return response.data
+        }).catch(error => {
+            throw error;
+        })
     }
     getBoardByWorkspaceId() {
 

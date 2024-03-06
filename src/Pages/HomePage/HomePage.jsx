@@ -14,13 +14,17 @@ const HomePage = () => {
     const [workspaceName, setWorkspaceName] = useState("");
     const [workspaceType, setWorkspaceType] = useState("");
     const [workspaceDescription, setWorkspaceDescription] = useState("");
-    const [workspace, setWorkspace] = useState([]);
+    const [workspaceList, setWorkspaceList] = useState([]);
     const {user, updateUser} = useContext(UserContext);
     useEffect(() => {
-        const newUser = JSON.parse(localStorage.getItem('user'));
-        updateUser(newUser);
+        const newUser = JSON.parse(localStorage.getItem('userLogin'));
+
+        UserService.getUserById(newUser.id).then((data) => {
+            updateUser(data)
+        })
+
         UserService.getWorkspaceByUser(newUser.id).then((data) => {
-            setWorkspace(data)
+            setWorkspaceList(data)
         })
 
     }, []);
@@ -28,18 +32,18 @@ const HomePage = () => {
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspace}/>
+                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspaceList}/>
             </div>
 
             <div className='flex'>
                 <div className='w-[20%] ml-20 h-fit mt-4'>
-                    <Sidebar workspace={workspace}/>
+                    <Sidebar workspace={workspaceList}/>
                 </div>
 
                 <div className='ml-10 w-full mt-4 overflow-visible'>
                     <Routes>
-                        <Route path='/boards' element={<BoardsPage setWorkspace={setWorkspace} workspace={workspace} user={user}/>}></Route>
-                        <Route path='/' element={<HomeNotification workspace={workspace} user={user}/>}></Route>
+                        <Route path='/boards' element={<BoardsPage workspaceList={workspaceList} user={user}/>}></Route>
+                        <Route path='/' element={<HomeNotification workspace={workspaceList} user={user}/>}></Route>
                     </Routes>
                 </div>
             </div>
