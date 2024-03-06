@@ -46,6 +46,7 @@ const BoardContentPage = () => {
     const [activeDragItemId, setActiveDragItemId] = useState(null)
     const [activeDragItemType, setActiveDragItemType] = useState(null)
     const [activeDragItemData, setActiveDragItemData] = useState(null)
+
     const [oldColumn, setOldColumn] = useState(null)
 
     const pointerSensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
@@ -118,10 +119,10 @@ const BoardContentPage = () => {
     // }
 
     const handleDragStart = (event) => {
-    //     setActiveDragItemId(event?.active?.id)
-    //     setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
-    //     setActiveDragItemData(event?.active?.data?.current)
-    //
+        setActiveDragItemId(event?.active?.id)
+        setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
+        setActiveDragItemData(event?.active?.data?.current)
+
     //     if (event?.active?.data?.current?.columnId) {
     //         setOldColumn(findColumnByCardId(event?.active?.id))
     //     }
@@ -157,7 +158,7 @@ const BoardContentPage = () => {
     const handleDragEnd = (event) => {
         const {active, over} = event
         if (!active || !over) return
-        //
+
         // if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
         //     const {id: activeDraggingCardId, data: {current: activeDraggingCardData}} = active
         //     const {id: overCardId} = over
@@ -192,7 +193,7 @@ const BoardContentPage = () => {
         //     }
         // }
 
-        // if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+        if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
             if (active.id !== over.id) {
                 const oldColumnIndex = orderedColumns.findIndex(c => c.id === active.id)
                 const newColumnIndex = orderedColumns.findIndex(c => c.id === over.id)
@@ -202,25 +203,23 @@ const BoardContentPage = () => {
 
                 setOrderedColumns(dndOrderedColumns)
             }
-        // }
+        }
 
-
-
-        // setActiveDragItemId(null)
-        // setActiveDragItemType(null)
-        // setActiveDragItemData(null)
+        setActiveDragItemId(null)
+        setActiveDragItemType(null)
+        setActiveDragItemData(null)
         // setOldColumn(null)
     }
 
-    // const customDropAnimation = {
-    //     sideEffects: defaultDropAnimationSideEffects({
-    //         styles: {
-    //             active: {
-    //                 opacity: '0.5',
-    //             },
-    //         },
-    //     }),
-    // };
+    const customDropAnimation = {
+        sideEffects: defaultDropAnimationSideEffects({
+            styles: {
+                active: {
+                    opacity: '0.5',
+                },
+            },
+        }),
+    };
 
 
     return (
@@ -233,19 +232,19 @@ const BoardContentPage = () => {
             <div className='h-full' style={divStyle}>
                 <DndContext sensors={sensors}
                             collisionDetection={closestCorners}
-                            // onDragStart={handleDragStart}
+                            onDragStart={handleDragStart}
                             // onDragOver={handleDragOver}
                             onDragEnd={handleDragEnd}
                 >
                     <div className='flex h-full p-3 space-x-4 overflow-x-scroll'>
                         <ListColumns columns={orderedColumns} setColumns={setOrderedColumns}/>
-                        {/*<DragOverlay dropAnimation={customDropAnimation}>*/}
+                        <DragOverlay dropAnimation={customDropAnimation}>
                             {!activeDragItemType && null}
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) &&
                                 <Column column={activeDragItemData}/>}
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) &&
                                 <CardContent card={activeDragItemData}/>}
-                        {/*</DragOverlay>*/}
+                        </DragOverlay>
                     </div>
                 </DndContext>
             </div>
