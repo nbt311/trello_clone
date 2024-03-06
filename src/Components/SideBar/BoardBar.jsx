@@ -102,7 +102,7 @@ const BoardBar = () => {
                         <Avatar name='Ryan Florence' src='https://bit.ly/ryan-florence' boxSize="34px"/>
                     </Tooltip>
                 </AvatarGroup>
-                <Button onClick={onOpen}><AiOutlineUserAdd className= 'mr-1'/>Share</Button>
+                <Button onClick={onOpen} colorScheme='teal' variant='solid'><AiOutlineUserAdd className= 'mr-1'/>Share</Button>
                 <Modal size={"xl"} isOpen={isOpen} onClose={onClose} isCentered>
                     <ModalOverlay/>
                     <ModalContent>
