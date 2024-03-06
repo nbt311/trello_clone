@@ -37,15 +37,6 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
-    public  User getLoggedInUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        return (User) authentication.getPrincipal();
-    }
-
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);

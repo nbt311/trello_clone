@@ -1,5 +1,6 @@
 package com.example.trellobackend.repositories;
 
+import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.workspace.Workspace;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,4 +20,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @EntityGraph(attributePaths = {"columns"})
     Optional<Board> findById(Long id);
+
 }

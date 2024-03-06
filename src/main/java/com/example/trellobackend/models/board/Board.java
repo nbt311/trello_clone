@@ -1,5 +1,6 @@
 package com.example.trellobackend.models.board;
 
+import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +40,16 @@ public class Board {
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "visibility_id"))
     private Set<Visibility> visibilities = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "board_owner_id")
+    private User boardOwner;
+
+    @ManyToMany
+    @JoinTable(name = "members_board",
+               joinColumns = @JoinColumn(name = "board_id"),
+               inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> boardMembers = new HashSet<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Columns> columns;

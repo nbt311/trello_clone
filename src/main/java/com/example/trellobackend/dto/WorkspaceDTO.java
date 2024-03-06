@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WorkspaceDTO {
+public class    WorkspaceDTO {
     private Long id;
     private String name;
     private List<UserDTO> members;

@@ -1,6 +1,7 @@
 package com.example.trellobackend.models;
 
 import com.example.trellobackend.enums.UserRole;
+import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -52,6 +53,12 @@ public class User {
 
     @ManyToMany(mappedBy = "members")
     private Set<Workspace> memberWorkspaces = new HashSet<>();
+
+    @OneToMany(mappedBy = "boardOwner")
+    private List<Board> ownerBoards = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "boardMembers")
+    private Set<Board> memberBoards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",

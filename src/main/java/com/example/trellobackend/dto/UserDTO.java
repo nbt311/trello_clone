@@ -18,6 +18,8 @@ public class UserDTO {
     private String email;
     private List<WorkspaceDTO> ownedWorkspaces;
     private List<WorkspaceDTO> memberWorkspaces;
+    private List<BoardResponseDTO> ownedBoards;
+    private List<BoardResponseDTO> memberBoards;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -31,6 +33,30 @@ public class UserDTO {
 
         this.memberWorkspaces = user.getMemberWorkspaces().stream()
                 .map(WorkspaceDTO::new)
+                .collect(Collectors.toList());
+
+        this.ownedBoards = user.getOwnerBoards().stream()
+                .map(board -> new BoardResponseDTO(
+                                board,
+                                board.getVisibilities(),
+                                board.getColumnOrderIds(),
+                                board.getColumns().stream()
+                                        .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                                        .collect(Collectors.toList())
+                        )
+                )
+                .collect(Collectors.toList());
+
+        this.memberBoards = user.getMemberBoards().stream()
+                .map(board -> new BoardResponseDTO(
+                                board,
+                                board.getVisibilities(),
+                                board.getColumnOrderIds(),
+                                board.getColumns().stream()
+                                        .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                                        .collect(Collectors.toList())
+                        )
+                )
                 .collect(Collectors.toList());
     }
 }
