@@ -90,12 +90,12 @@ public class ColumnsService implements IColumsService {
 
                     responseDTO.setColumns(columnsDTOList);
 
-                    // Cập nhật columnIds
-                    List<Long> columnIds = board.getColumnOrderIds();
-                    columnIds.add(newColumns.getId());
-                    board.setColumnOrderIds(columnIds);
+                    // Cập nhật columnOrderIds
+                    List<Long> columnOrderIds = board.getColumnOrderIds();
+                    columnOrderIds.add(newColumns.getId());
+                    board.setColumnOrderIds(columnOrderIds);
                     boardRepository.save(board);
-                    responseDTO.setColumnIds(columnIds);
+                    responseDTO.setColumnOrderIds(columnOrderIds);
 
                     return responseDTO;
                 } else {
