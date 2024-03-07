@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -35,7 +37,8 @@ public class ColumnsDTO {
         responseDTO.setId(columns.getId());
         responseDTO.setTitle(columns.getTitle());
 
-        List<CardDTO> cardDTOList = columns.getCards()
+        List<CardDTO> cardDTOList = Optional.ofNullable(columns.getCards())
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(card -> {
                     CardDTO cardDTO = new CardDTO();
@@ -47,11 +50,7 @@ public class ColumnsDTO {
                 .collect(Collectors.toList());
 
         responseDTO.setCards(cardDTOList);
-        responseDTO.setCardOrderIds(columns.getCardOrderIds());
-
-//        if (!board.getVisibilities().isEmpty()) {
-//            responseDTO.setVisibility(board.getVisibilities().iterator().next().getName());
-//        }
+        responseDTO.setCardOrderIds(columns.getCardOrderIds() != null ? columns.getCardOrderIds() : Collections.emptyList());
         return responseDTO;
     }
 }

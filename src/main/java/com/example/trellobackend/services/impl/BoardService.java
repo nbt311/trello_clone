@@ -3,6 +3,7 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
@@ -131,6 +132,34 @@ public class BoardService implements IBoardService {
         } else {
             // Nếu không tìm thấy bảng, có thể xử lý theo ý của bạn, ví dụ: ném một ngoại lệ.
             throw new RuntimeException("Không tìm thấy bảng với ID: " + boardId);
+        }
+    }
+
+    @Override
+    public BoardResponseDTO updateBoardColumnOrderIds(Long boardId, UpdateBoardDTO updateData) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            board.setColumnOrderIds(updateData.getColumnOrderIds());
+            boardRepository.save(board);
+
+            Set<Visibility> visibility = board.getVisibilities();
+            List<ColumnsDTO> columns = board.getColumns()
+                    .stream()
+                    .map(column -> {
+                        ColumnsDTO columnsDTO = new ColumnsDTO();
+                        columnsDTO.setId(column.getId());
+                        columnsDTO.setTitle(column.getTitle());
+                        // Map other properties as needed
+                        return columnsDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            return new BoardResponseDTO(board, visibility, updateData.getColumnOrderIds(), columns);
+        } else {
+            // Xử lý trường hợp không tìm thấy Board
+            throw new RuntimeException("Board not found with id: " + boardId);
         }
     }
 

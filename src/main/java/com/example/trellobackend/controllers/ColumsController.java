@@ -1,6 +1,7 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.board.Board;
@@ -29,11 +30,6 @@ public class ColumsController {
     private ColumnsService columnsService;
     @Autowired
     private ColumnsRepository columnsRepository;
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createColumns(@RequestBody ColumnRequest columnRequest){
-//            Columns newColumns = columnsService.createColumn(columnRequest);
-//            return new ResponseEntity<>(newColumns, HttpStatus.CREATED);
-//    }
 @GetMapping("/{id}")
 public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
     try {
@@ -54,12 +50,13 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
 }
 
     @PostMapping("/create")
-    public ResponseEntity<BoardResponseDTO> createColumn(@RequestBody ColumnRequest columnRequest) {
+    public ResponseEntity<?> createColumn(@RequestBody ColumnRequest columnRequest) {
         try {
             BoardResponseDTO responseDTO = columnsService.createNewColumn(columnRequest);
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace(); // In thông tin lỗi ra console (hoặc sử dụng Logger)
+            return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -76,6 +73,15 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
             return ResponseEntity.ok("Delete Column Succesfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
+        }
+    }
+    @GetMapping("{columnId}/cards")
+    public ResponseEntity<List<CardDTO>> getAllColumnsByBoardId(@PathVariable Long columnId) {
+        try {
+            List<CardDTO> cardDTOList = columnsService.getAllCardDTOByBoardId(columnId);
+            return ResponseEntity.ok(cardDTOList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

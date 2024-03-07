@@ -1,5 +1,6 @@
 package com.example.trellobackend.services.impl;
 
+import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.models.board.Board;
@@ -47,11 +48,13 @@ public class CardService implements ICardService {
     }
 
     @Override
-    public ColumnsDTO createNewCard(CardRequest cardRequest) {
+    public BoardResponseDTO createNewCard(CardRequest cardRequest) {
         Optional<Board> boardOptional = boardRepository.findById(cardRequest.getBoardId());
+
         if (boardOptional.isPresent()) {
             Board board = boardOptional.get();
             Optional<Columns> columnsOptional = columnsRepository.findById(cardRequest.getColumnId());
+
             if (columnsOptional.isPresent()) {
                 Columns columns = columnsOptional.get();
                 Card newCard = new Card();
@@ -59,37 +62,31 @@ public class CardService implements ICardService {
                 newCard.setBoard(board);
                 newCard.setColumn(columns);
                 cardRepository.save(newCard);
-                ColumnsDTO responseDTO = new ColumnsDTO();
-                responseDTO.setId(columns.getId());
-                responseDTO.setTitle(columns.getTitle());
-                List<CardDTO> cardDTOList = columns.getCards()
-                        .stream()
-                        .map(card -> {
-                            CardDTO cardDTO = new CardDTO();
-                            cardDTO.setId(card.getId());
-                            cardDTO.setTitle(card.getTitle());
-                            return cardDTO;
-                        })
+
+                columns.getCardOrderIds().add(newCard.getId());
+                columns.getCards().add(newCard);
+                columnsRepository.save(columns);
+
+                BoardResponseDTO responseDTO = new BoardResponseDTO();
+                responseDTO.setId(board.getId());
+                responseDTO.setTitle(board.getTitle());
+                responseDTO.setVisibility(board.getVisibilities());
+
+                List<ColumnsDTO> columnsDTOList = board.getColumns().stream()
+                        .map(ColumnsDTO::fromEntity)
                         .collect(Collectors.toList());
 
-                responseDTO.setCards(cardDTOList);
+                responseDTO.setColumns(columnsDTOList);
 
-                List<Long> cardOrderIds = columns.getCardOrderIds();
-                cardOrderIds.add(newCard.getId());
-                columns.setCardOrderIds(cardOrderIds);
+                List<Long> columnOrderIds = board.getColumnOrderIds();
+                responseDTO.setColumnOrderIds(columnOrderIds);
 
-                List<Card> cards = columns.getCards();
-                cards.add(newCard);
-                columns.setCards(cards);
-
-                columnsRepository.save(columns);
                 return responseDTO;
             } else {
                 throw new RuntimeException("Error: Columns not found.");
             }
         } else {
             throw new RuntimeException("Error: Board not found.");
-
         }
     }
 }
