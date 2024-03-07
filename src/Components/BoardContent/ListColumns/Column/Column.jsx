@@ -48,19 +48,20 @@ const Column = ({column, setColumn}) => {
                     scrollbarColor: '#888 #f1f1f1',
                     paddingRight: '2px'
                 }}>
-                    <ListCards cards = {orderedCards}/>
+                    <ListCards cards={orderedCards}/>
+                    {isCreateCard ? <CreateNewCardForm handleCreateCard={handleCreateCard} isCreateCard={isCreateCard}
+                                                        column={column}
+                                                        cards={orderedCards}/> : null}
                 </div>
 
-                <div>
-                    {isCreateCard ? (
-                            <CreateNewCardForm handleCreateCard={handleCreateCard} column={column}/>
-                    ) : (
-                        <div className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'
-                             onClick={handleCreateCard}>
+                <div onClick={handleCreateCard}>
+                    {!isCreateCard &&
+                        <div
+                            className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'
+                            onClick={handleCreateCard}>
                             <IoMdAdd className='text-lg'/>
                             <p>Add a card</p>
-                        </div>
-                    )}
+                        </div>}
                 </div>
             </Box>
         </div>
