@@ -17,22 +17,30 @@ import {BiGroup} from "react-icons/bi";
 import {MdOutlinePublic} from "react-icons/md";
 import {AiOutlineUserAdd} from "react-icons/ai";
 import axios from "axios";
+import {useParams} from "react-router-dom";
 
 const BoardBar = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [isClicked, setIsClicked] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
+    const [suggestedEmails, setSuggestedEmails] = useState([]);
+    const [user, setUser] = useState({});
     const toast = useToast();
-
+    const { id } = useParams();
     const handleClick = () => {
         setIsClicked(!isClicked);
     };
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('userLogin'));
+        setUser(user);
+    }, []);
+
     const [members, setMembers] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/boards/1/members`)
+        axios.get(`http://localhost:8080/api/boards/${id}/members`)
             .then(response => {
                 setMembers(response.data);
             }) .catch(error => {
@@ -41,9 +49,26 @@ const BoardBar = () => {
         });
     }, []);
 
+    const handleInputChange = (e) => {
+        const query = e.target.value;
+        axios.get(`http://localhost:8080/api/users/suggest/${query}`)
+            .then(response => {
+                setSuggestedEmails(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching suggested emails:", error);
+            });
+        setUserEmail(query);
+    };
+
+
+
+    const handleEmailClick = (email) => {
+        setUserEmail(email);
+    };
+
     const handleShareButtonClick = () => {
-        // Send a POST request to add user to board
-        axios.post(`http://localhost:8080/api/boards/1/addUser/ducanhlccd2@gmail.com`)
+        axios.post(`http://localhost:8080/api/boards/${id}/addUser/${userEmail}`)
             .then(response => {
                 console.log('User added successfully:', response.data);
                 toast({
@@ -65,6 +90,11 @@ const BoardBar = () => {
                     isClosable: true,
                 });
             });
+    };
+    const handleShareClose = () => {
+        setUserEmail("");
+        setSelectedRole("");
+        onClose();
     };
     return (
         <Box sx={{
@@ -125,21 +155,24 @@ const BoardBar = () => {
                 borderRadius: 'md',
                 backgroundColor: 'gray.100'}}>
                 <AvatarGroup size='sm' max={5}>
+                    <Tooltip label={user.name}>
+                        <Avatar name={user.name} src={user.avatarUrl} boxSize='34px' />
+                    </Tooltip>
                     {members.map(member => (
-                        <Tooltip key={member.id} label={member.name}>
-                            <Avatar name={member.name} src={member.avatarUrl} boxSize='34px' />
+                        <Tooltip key={member.id} label={member.username}>
+                            <Avatar name={member.username} src={member.avatarUrl} boxSize='34px' />
                         </Tooltip>
                     ))}
                 </AvatarGroup>
                 <Button onClick={onOpen} colorScheme='teal' variant='solid'><AiOutlineUserAdd className= 'mr-1'/>Share</Button>
-                <Modal size={"xl"} isOpen={isOpen} onClose={onClose} isCentered>
+                <Modal size={"xl"} isOpen={isOpen} onClose={handleShareClose} isCentered>
                     <ModalOverlay/>
                     <ModalContent>
                         <ModalHeader>Share board</ModalHeader>
                         <ModalCloseButton/>
                         <ModalBody>
                             <div className='flex'>
-                                <Input value={userEmail} onChange={e => setUserEmail(e.target.value)}
+                                <Input value={userEmail} onChange={handleInputChange}
                                     placeholder='Email address or name' className='mr-1'/>
                                 <div className='w-44 mr-1'>
                                     <Select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}
@@ -150,13 +183,22 @@ const BoardBar = () => {
 
                                 <Button onClick={handleShareButtonClick} colorScheme='blue'>Share</Button>
                             </div>
+                            {suggestedEmails.map((user, index) => (
+                                <div
+                                    key={index}
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => handleEmailClick(user.email)}
+                                >
+                                    {user.email}
+                                </div>
+                            ))}
                             {members.map(member => (
                             <div className='mt-2'>
                                 <div className='flex justify-between items-center'>
                                     <div className='flex'>
-                                        <Avatar className='mt-1' size='sm' name={member.name} src={member.avatarUrl}/>
+                                        <Avatar className='mt-1' size='sm' name={member.username} src={member.avatarUrl}/>
                                         <div className='ml-2'>
-                                            <p className='text-base font-medium'>{member.name}</p>
+                                            <p className='text-base font-medium'>{member.username}</p>
                                             <p className='text-sm'>{member.email}</p>
                                         </div>
                                     </div>

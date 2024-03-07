@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Avatar, Button, Menu, MenuButton, MenuItem, MenuList, useDisclosure} from "@chakra-ui/react";
 import {FaLink} from "react-icons/fa";
 import {AiOutlineUserAdd} from "react-icons/ai";
@@ -6,12 +6,21 @@ import {MdCheckCircleOutline} from "react-icons/md";
 import axios from "axios";
 import {IoIosClose} from "react-icons/io";
 import InvitePopup from "../WorkspaceModal/InvitePopup";
+import WorkspaceContext from "../../Context/WorkspaceContext";
 
 
-const WorkspaceMembers = ({onOpen,onClose, members, setMembers, workspace}) => {
+const WorkspaceMembers = ({onOpen,onClose, members, setMembers}) => {
     const [showNotification, setShowNotification] = useState(true);
     const [selectedOption, setSelectedOption] = useState("workspaceMembers");
+    const { workspace, updateWorkspace } = useContext(WorkspaceContext);
 
+    useEffect(() => {
+        const storedWorkspace = localStorage.getItem('workspace');
+
+        if (storedWorkspace) {
+            updateWorkspace(JSON.parse(storedWorkspace));
+        }
+    }, []);
     const handleClick = (option) => {
         setSelectedOption(option);
     };
