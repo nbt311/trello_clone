@@ -1,9 +1,6 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.WorkspaceDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
@@ -76,6 +73,33 @@ public class ColumnsService implements IColumsService {
                     .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Không tìm thấy bảng với ID: " + columnId);
+        }
+    }
+
+    @Override
+    public ColumnsDTO updateColumnCardOrderIds(Long columnId, UpdateColumnDTO updateData) {
+        Optional<Columns> columnsOptional = columnsRepository.findById(columnId);
+
+        if (columnsOptional.isPresent()) {
+            Columns columns = columnsOptional.get();
+            columns.setCardOrderIds(updateData.getCardOrderIds());
+            columnsRepository.save(columns);
+
+            List<CardDTO> cards = columns.getCards()
+                    .stream()
+                    .map(card -> {
+                        CardDTO cardDTO = new CardDTO();
+                        cardDTO.setId(card.getId());
+                        cardDTO.setTitle(card.getTitle());
+                        // Map other properties as needed
+                        return cardDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            return new ColumnsDTO(columns, updateData.getCardOrderIds(), cards);
+        } else {
+            // Xử lý trường hợp không tìm thấy Board
+            throw new RuntimeException("Board not found with id: " + columnId);
         }
     }
 
