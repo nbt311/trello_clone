@@ -1,6 +1,7 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.models.board.Board;
@@ -76,6 +77,16 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
             return ResponseEntity.ok("Delete Column Succesfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
+        }
+    }
+
+    @GetMapping("{columnId}/cards")
+    public ResponseEntity<List<CardDTO>> getAllColumnsByBoardId(@PathVariable Long columnId) {
+        try {
+            List<CardDTO> cardDTOList = columnsService.getAllCardDTOByBoardId(columnId);
+            return ResponseEntity.ok(cardDTOList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

@@ -17,8 +17,8 @@ public class CardController {
     @Autowired
     private CardService cardService;
     @PostMapping("/create")
-    public ResponseEntity<ColumnsDTO> createNewCard(@RequestBody CardRequest cardRequest) {
-            ColumnsDTO responseDTO = cardService.createNewCard(cardRequest);
+    public ResponseEntity<?> createNewCard(@RequestBody CardRequest cardRequest) {
+            BoardResponseDTO responseDTO = cardService.createNewCard(cardRequest);
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }

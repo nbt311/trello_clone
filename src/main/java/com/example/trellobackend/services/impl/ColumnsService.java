@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,19 @@ public class ColumnsService implements IColumsService {
     }
 
     @Override
+    public List<CardDTO> getAllCardDTOByBoardId(Long columnId) {
+        Columns columns = columnsRepository.findById(columnId).orElse(null);
+        if (columns != null) {
+            return columns.getCards().stream()
+                    .map(CardDTO::new
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("Không tìm thấy bảng với ID: " + columnId);
+        }
+    }
+
+    @Override
     public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
         if (userOptional.isPresent()){
             Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
@@ -77,24 +91,27 @@ public class ColumnsService implements IColumsService {
                     newColumns.setTitle(columnRequest.getTitle());
                     newColumns.setBoard(board);
                     columnsRepository.save(newColumns);
+                    List<Long> columnOrderIds = board.getColumnOrderIds();
+                    columnOrderIds.add(newColumns.getId());
+                    board.setColumnOrderIds(columnOrderIds);
+                    boardRepository.save(board);
+
+                    // Update the board with the new list of columns
+                    List<Columns> updatedColumns = columnOrderIds.stream()
+                            .map(id -> columnsRepository.findById(id).orElse(null))
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
 
                     BoardResponseDTO responseDTO = new BoardResponseDTO();
                     responseDTO.setId(board.getId());
                     responseDTO.setTitle(board.getTitle());
                     responseDTO.setVisibility(board.getVisibilities());
 
-                    List<ColumnsDTO> columnsDTOList = board.getColumns()
-                            .stream()
+                    List<ColumnsDTO> columnsDTOList = updatedColumns.stream()
                             .map(ColumnsDTO::fromEntity)
                             .collect(Collectors.toList());
 
                     responseDTO.setColumns(columnsDTOList);
-
-                    // Cập nhật columnOrderIds
-                    List<Long> columnOrderIds = board.getColumnOrderIds();
-                    columnOrderIds.add(newColumns.getId());
-                    board.setColumnOrderIds(columnOrderIds);
-                    boardRepository.save(board);
                     responseDTO.setColumnOrderIds(columnOrderIds);
 
                     return responseDTO;

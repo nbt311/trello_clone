@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 public class ColumnsDTO {
     private Long id;
+    private Long boardId;
     private String title;
     private List<Long> cardOrderIds;
     private List<CardDTO> cards;
@@ -33,13 +36,17 @@ public class ColumnsDTO {
     public static ColumnsDTO fromEntity(Columns columns) {
         ColumnsDTO responseDTO = new ColumnsDTO();
         responseDTO.setId(columns.getId());
+        responseDTO.setBoardId(columns.getBoard().getId());
         responseDTO.setTitle(columns.getTitle());
 
-        List<CardDTO> cardDTOList = columns.getCards()
+        List<CardDTO> cardDTOList = Optional.ofNullable(columns.getCards())
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(card -> {
                     CardDTO cardDTO = new CardDTO();
                     cardDTO.setId(card.getId());
+                    cardDTO.setBoardId(card.getBoard().getId());
+                    cardDTO.setColumnId(card.getColumn().getId());
                     cardDTO.setTitle(card.getTitle());
                     // Map other properties as needed
                     return cardDTO;
@@ -47,11 +54,7 @@ public class ColumnsDTO {
                 .collect(Collectors.toList());
 
         responseDTO.setCards(cardDTOList);
-        responseDTO.setCardOrderIds(columns.getCardOrderIds());
-
-//        if (!board.getVisibilities().isEmpty()) {
-//            responseDTO.setVisibility(board.getVisibilities().iterator().next().getName());
-//        }
+        responseDTO.setCardOrderIds(columns.getCardOrderIds() != null ? columns.getCardOrderIds() : Collections.emptyList());
         return responseDTO;
     }
 }
