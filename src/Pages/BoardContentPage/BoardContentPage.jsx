@@ -14,9 +14,10 @@ import {mapOrder} from "../../Utils/Sort";
 import {arrayMove} from "@dnd-kit/sortable";
 import Column from "../../Components/BoardContent/ListColumns/Column/Column";
 import CardContent from "../../Components/BoardContent/ListColumns/Column/ListCards/CardContent/CardContent";
-import {cloneDeep} from "lodash";
+import {cloneDeep, isEmpty} from "lodash";
 import BoardContext from "../../Context/BoardContext";
 import BoardService from "../../Service/BoardService";
+import ColumnService from "../../Service/ColumnService";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -26,12 +27,20 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 const BoardContentPage = () => {
     const {board, updateBoard} = useContext(BoardContext);
 
+
     useEffect(() => {
         const storedBoard = localStorage.getItem('board');
 
         if (storedBoard) {
             updateBoard(JSON.parse(storedBoard));
         }
+
+        board.columns = mapOrder(board.columns, board.columnOrderIds, 'id')
+        board.columns.forEach(column => {
+            if (!isEmpty(column.cards)) {
+                column.cards = mapOrder(column.cards, column.cardOrderIds, 'id')
+            }
+        })
     }, []);
 
     const imageUrl = 'https://marketplace.canva.com/EAE-g6znT-s/1/0/1600w/canva-soft-purple-fun-modern-minimalist-cats-hi-desktop-wallpaper-Gqj2XviD4_E.jpg'
@@ -47,26 +56,41 @@ const BoardContentPage = () => {
     const [activeDragItemType, setActiveDragItemType] = useState(null)
     const [activeDragItemData, setActiveDragItemData] = useState(null)
 
-    const [oldColumn, setOldColumn] = useState(null)
+    const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
 
     const pointerSensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
     const sensors = useSensors(pointerSensor)
 
+
     useEffect(() => {
-        setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, 'id'))
+        setOrderedColumns(board.columns)
     }, [board])
 
     const moveColumns = (dndOrderedColumns) => {
         const dndOrderedColumnsIds = dndOrderedColumns.map(c => c.id)
-        console.log("Column Ids", dndOrderedColumnsIds)
-
         const newBoard = {...board}
+
         newBoard.columns = dndOrderedColumns
+        console.log('OrderedCol: ', dndOrderedColumnsIds)
         newBoard.columnOrderIds = dndOrderedColumnsIds
+
         updateBoard(newBoard)
         localStorage.setItem('board', JSON.stringify(newBoard));
 
         BoardService.updateBoardDetail(newBoard.id, {columnOrderIds: dndOrderedColumnsIds})
+    }
+
+    const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
+        const newBoard = {...board}
+        const columnToUpdate = newBoard.columns.find(column => column.id === columnId)
+        if (columnToUpdate) {
+            columnToUpdate.cards = dndOrderedCards
+            columnToUpdate.cardOrderIds = dndOrderedCardIds
+        }
+
+        updateBoard(newBoard)
+        localStorage.setItem('board', JSON.stringify(newBoard));
+        ColumnService.updateColumnDetail(columnId, {cardOrderIds: dndOrderedCardIds})
     }
 
 
@@ -81,7 +105,8 @@ const BoardContentPage = () => {
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData
+        activeDraggingCardData,
+        triggerFrom
     ) => {
         setOrderedColumns(prevColumns => {
             const overCardIndex = overColumn?.cards?.findIndex(card => card.id === overCardId)
@@ -123,7 +148,7 @@ const BoardContentPage = () => {
         setActiveDragItemData(event?.active?.data?.current)
 
         if (event?.active?.data?.current?.columnId) {
-            setOldColumn(findColumnByCardId(event?.active?.id))
+            setOldColumnWhenDraggingCard(findColumnByCardId(event?.active?.id))
         }
     }
 
@@ -149,7 +174,8 @@ const BoardContentPage = () => {
                 over,
                 activeColumn,
                 activeDraggingCardId,
-                activeDraggingCardData
+                activeDraggingCardData,
+                'handleDragOver'
             )
         }
     }
@@ -165,31 +191,37 @@ const BoardContentPage = () => {
                 const activeColumn = findColumnByCardId(activeDraggingCardId)
                 const overColumn = findColumnByCardId(overCardId)
 
-            //     if (!activeColumn || !overColumn) return
-            //
-            //     if (oldColumn.id !== overColumn.id) {
-            //         moveCardBetweenDifferentColumns(
-            //             overColumn,
-            //             overCardId,
-            //             active,
-            //             over,
-            //             activeColumn,
-            //             activeDraggingCardId,
-            //             activeDraggingCardData
-            //         )
-            //     } else {
-            //         const oldCardIndex = oldColumn?.cards?.findIndex(c => c.id === activeDragItemId)
-            //         const newCardIndex = overColumn?.cards?.findIndex(c => c.id === overCardId)
-            //         const dndOrderedCards = arrayMove(oldColumn?.cards, oldCardIndex, newCardIndex)
-            //         setOrderedColumns(prevColumns => {
-            //             const nextColumns = cloneDeep(prevColumns)
-            //             const targetColumn = nextColumns.find(column => column.id === overColumn.id)
-            //
-            //             targetColumn.cards = dndOrderedCards
-            //             targetColumn.cardOrderIds = dndOrderedCards.map(card => card.id)
-            //             return nextColumns
-            //         })
-            //     }
+                if (!activeColumn || !overColumn) return
+
+                if (oldColumnWhenDraggingCard.id !== overColumn.id) {
+                    moveCardBetweenDifferentColumns(
+                        overColumn,
+                        overCardId,
+                        active,
+                        over,
+                        activeColumn,
+                        activeDraggingCardId,
+                        activeDraggingCardData,
+                        'handleDragEnd'
+                    )
+                } else {
+                    const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex(c => c.id === activeDragItemId)
+                    const newCardIndex = overColumn?.cards?.findIndex(c => c.id === overCardId)
+                    const dndOrderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex)
+                    const dndOrderedCardIds = dndOrderedCards.map(card => card.id)
+
+                    setOrderedColumns(prevColumns => {
+                        const nextColumns = cloneDeep(prevColumns)
+                        const targetColumn = nextColumns.find(column => column.id === overColumn.id)
+
+                        targetColumn.cards = dndOrderedCards
+                        targetColumn.cardOrderIds = dndOrderedCards.map(card => card.id)
+
+                        return nextColumns
+                    })
+
+                    moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard.id)
+                }
         }
 
         if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
@@ -198,16 +230,15 @@ const BoardContentPage = () => {
                 const newColumnIndex = orderedColumns.findIndex(c => c.id === over.id)
 
                 const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-                moveColumns(dndOrderedColumns)
-
                 setOrderedColumns(dndOrderedColumns)
+                moveColumns(dndOrderedColumns)
             }
         }
 
         setActiveDragItemId(null)
         setActiveDragItemType(null)
         setActiveDragItemData(null)
-        setOldColumn(null)
+        setOldColumnWhenDraggingCard(null)
     }
 
     const customDropAnimation = {

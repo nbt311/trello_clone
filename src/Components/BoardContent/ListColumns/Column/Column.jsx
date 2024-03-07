@@ -31,7 +31,7 @@ const Column = ({column, setColumn}) => {
         height: '100%'
     };
 
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, 'id')
+    const orderedCards = column.cards
 
 
     return (
