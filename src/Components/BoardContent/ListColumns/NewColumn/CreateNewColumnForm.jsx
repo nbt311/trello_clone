@@ -17,7 +17,7 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
 
     const toast = useToast()
 
-    const createNewColumnAndLogResponse = async () => {
+    const createNewColumn = async () => {
         try {
             const response = await ColumnService.createNewColumn(user.email, workspace.id, formik.values.title, board.id);
 
@@ -28,8 +28,11 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
                 duration: 3000,
             });
             BoardService.getListColumn(board.id).then(response => {
+                console.log("Columns: ", columns)
+                console.log("Set Columns: ", response.data)
                 setColumns(response.data)
             })
+            console.log("Create column: ", response.data)
             return response.data;
         } catch (error) {
             console.error('Error creating column', error);
@@ -39,7 +42,9 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
 
     const handleSubmit = async () => {
         try {
-            const newColumnList = await createNewColumnAndLogResponse();
+            const newColumnList = await createNewColumn();
+            console.log("Board ", board)
+            console.log("Update local and json: ", newColumnList)
             updateBoard(newColumnList)
             localStorage.setItem('board', JSON.stringify(newColumnList))
         } catch (error) {

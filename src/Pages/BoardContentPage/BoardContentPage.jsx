@@ -24,7 +24,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 }
 
 const BoardContentPage = () => {
-    const { board, updateBoard } = useContext(BoardContext);
+    const {board, updateBoard} = useContext(BoardContext);
 
     useEffect(() => {
         const storedBoard = localStorage.getItem('board');
@@ -59,7 +59,7 @@ const BoardContentPage = () => {
     const moveColumns = (dndOrderedColumns) => {
         // Gọi API cập nhật dữ liệu column vào back end
         const dndOrderedColumnsIds = dndOrderedColumns.map(c => c.id)
-        console.log("Column Ids" ,dndOrderedColumnsIds)
+        console.log("Column Ids", dndOrderedColumnsIds)
 
         const newBoard = {...board}
         newBoard.columns = dndOrderedColumns
@@ -67,14 +67,14 @@ const BoardContentPage = () => {
         updateBoard(newBoard)
         localStorage.setItem('board', JSON.stringify(newBoard));
 
-        BoardService.updateBoardDetail(newBoard.id, { columnOrderIds: dndOrderedColumnsIds })
+        BoardService.updateBoardDetail(newBoard.id, {columnOrderIds: dndOrderedColumnsIds})
     }
 
 
-    // const findColumnByCardId = (cardId) => {
-    //     return orderedColumns.find(column => column?.cards?.map(card => card.id)?.includes(cardId))
-    // }
-    //
+    const findColumnByCardId = (cardId) => {
+        return orderedColumns.find(column => column?.cards?.map(card => card.id)?.includes(cardId))
+    }
+
     // const moveCardBetweenDifferentColumns = (
     //     overColumn,
     //     overCardId,
@@ -123,75 +123,76 @@ const BoardContentPage = () => {
         setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
         setActiveDragItemData(event?.active?.data?.current)
 
-    //     if (event?.active?.data?.current?.columnId) {
-    //         setOldColumn(findColumnByCardId(event?.active?.id))
-    //     }
-    // }
-    //
-    // const handleDragOver = (event) => {
-    //     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
-    //
-    //     const {active, over} = event
-    //     if (!active || !over) return
-    //
-    //     const {id: activeDraggingCardId, data: {current: activeDraggingCardData}} = active
-    //     const {id: overCardId} = over
-    //
-    //     const activeColumn = findColumnByCardId(activeDraggingCardId)
-    //     const overColumn = findColumnByCardId(overCardId)
-    //
-    //     if (!activeColumn || !overColumn) return
-    //
-    //     if (activeColumn.id !== overColumn.id) {
-    //        moveCardBetweenDifferentColumns(
-    //             overColumn,
-    //                 overCardId,
-    //                 active,
-    //                 over,
-    //                 activeColumn,
-    //                 activeDraggingCardId,
-    //                 activeDraggingCardData
-    //         )
-    //     }
+        //     if (event?.active?.data?.current?.columnId) {
+        //         setOldColumn(findColumnByCardId(event?.active?.id))
+        //     }
+        // }
+    }
+
+    const handleDragOver = (event) => {
+        if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
+        console.log('handleDragOver: ', event)
+
+        const {active, over} = event
+        if (!active || !over) return
+
+            const {id: activeDraggingCardId, data: {current: activeDraggingCardData}} = active
+            const {id: overCardId} = over
+
+            const activeColumn = findColumnByCardId(activeDraggingCardId)
+            const overColumn = findColumnByCardId(overCardId)
+        //
+        //     if (!activeColumn || !overColumn) return
+        //
+        //     if (activeColumn.id !== overColumn.id) {
+        //        moveCardBetweenDifferentColumns(
+        //             overColumn,
+        //                 overCardId,
+        //                 active,
+        //                 over,
+        //                 activeColumn,
+        //                 activeDraggingCardId,
+        //                 activeDraggingCardData
+        //         )
     }
 
     const handleDragEnd = (event) => {
         const {active, over} = event
         if (!active || !over) return
 
-        // if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
-        //     const {id: activeDraggingCardId, data: {current: activeDraggingCardData}} = active
-        //     const {id: overCardId} = over
-        //
-        //     const activeColumn = findColumnByCardId(activeDraggingCardId)
-        //     const overColumn = findColumnByCardId(overCardId)
-        //
-        //     if (!activeColumn || !overColumn) return
-        //
-        //     if (oldColumn.id !== overColumn.id) {
-        //         moveCardBetweenDifferentColumns(
-        //             overColumn,
-        //             overCardId,
-        //             active,
-        //             over,
-        //             activeColumn,
-        //             activeDraggingCardId,
-        //             activeDraggingCardData
-        //         )
-        //     } else {
-        //         const oldCardIndex = oldColumn?.cards?.findIndex(c => c.id === activeDragItemId)
-        //         const newCardIndex = overColumn?.cards?.findIndex(c => c.id === overCardId)
-        //         const dndOrderedCards = arrayMove(oldColumn?.cards, oldCardIndex, newCardIndex)
-        //         setOrderedColumns(prevColumns => {
-        //             const nextColumns = cloneDeep(prevColumns)
-        //             const targetColumn = nextColumns.find(column => column.id === overColumn.id)
-        //
-        //             targetColumn.cards = dndOrderedCards
-        //             targetColumn.cardOrderIds = dndOrderedCards.map(card => card.id)
-        //             return nextColumns
-        //         })
-        //     }
-        // }
+        if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
+            //     const {id: activeDraggingCardId, data: {current: activeDraggingCardData}} = active
+            //     const {id: overCardId} = over
+            //
+            //     const activeColumn = findColumnByCardId(activeDraggingCardId)
+            //     const overColumn = findColumnByCardId(overCardId)
+            //
+            //     if (!activeColumn || !overColumn) return
+            //
+            //     if (oldColumn.id !== overColumn.id) {
+            //         moveCardBetweenDifferentColumns(
+            //             overColumn,
+            //             overCardId,
+            //             active,
+            //             over,
+            //             activeColumn,
+            //             activeDraggingCardId,
+            //             activeDraggingCardData
+            //         )
+            //     } else {
+            //         const oldCardIndex = oldColumn?.cards?.findIndex(c => c.id === activeDragItemId)
+            //         const newCardIndex = overColumn?.cards?.findIndex(c => c.id === overCardId)
+            //         const dndOrderedCards = arrayMove(oldColumn?.cards, oldCardIndex, newCardIndex)
+            //         setOrderedColumns(prevColumns => {
+            //             const nextColumns = cloneDeep(prevColumns)
+            //             const targetColumn = nextColumns.find(column => column.id === overColumn.id)
+            //
+            //             targetColumn.cards = dndOrderedCards
+            //             targetColumn.cardOrderIds = dndOrderedCards.map(card => card.id)
+            //             return nextColumns
+            //         })
+            //     }
+        }
 
         if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
             if (active.id !== over.id) {
@@ -233,7 +234,7 @@ const BoardContentPage = () => {
                 <DndContext sensors={sensors}
                             collisionDetection={closestCorners}
                             onDragStart={handleDragStart}
-                            // onDragOver={handleDragOver}
+                            onDragOver={handleDragOver}
                             onDragEnd={handleDragEnd}
                 >
                     <div className='flex h-full p-3 space-x-4 overflow-x-scroll'>
