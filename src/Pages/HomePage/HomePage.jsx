@@ -16,21 +16,24 @@ const HomePage = () => {
     const [workspaceDescription, setWorkspaceDescription] = useState("");
     const [workspaceList, setWorkspaceList] = useState([]);
     const {user, updateUser} = useContext(UserContext);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         const newUser = JSON.parse(localStorage.getItem('userLogin'));
-
         UserService.getUserById(newUser.id).then((data) => {
             updateUser(data)
         })
-
         UserService.getWorkspaceByUser(newUser.id).then((data) => {
             setWorkspaceList(data)
+            setLoading(false);
         })
 
 
 
     }, []);
-
+    if (loading) {
+        return null;
+    }
+    console.log('wtf',workspaceList)
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>

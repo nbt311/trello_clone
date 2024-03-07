@@ -1,11 +1,16 @@
-import { createContext, useState } from 'react';
+import {createContext, useEffect, useState} from 'react';
 
 const WorkspaceContext = createContext();
 
 export const WorkspaceProvider = ({ children }) => {
     const [workspace, setWorkspace] = useState(() => {
-        return JSON.parse(localStorage.getItem('workspacelist'))
+        const storedWorkspace = JSON.parse(localStorage.getItem('workspace'));
+        return storedWorkspace || null;
     });
+
+    useEffect(() => {
+        localStorage.setItem('workspace', JSON.stringify(workspace));
+    }, []);
 
     const updateWorkspace = (newWorkspace) => {
         setWorkspace(newWorkspace);
