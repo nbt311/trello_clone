@@ -14,5 +14,11 @@ class BoardService {
             return response.data
         })
     }
+
+    movingCardToDifferentColumnAPI(boardId, updateData) {
+        return axios.put(`${API_URL}${boardId}/supports/moving-card` , updateData).then(response => {
+            return response.data
+        })
+    }
 }
 export default new BoardService();
