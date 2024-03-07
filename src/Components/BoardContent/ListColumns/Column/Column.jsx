@@ -47,16 +47,13 @@ const Column = ({column}) => {
                     paddingRight: '2px'
                 }}>
                     <ListCards cards = {orderedCards}/>
-                    {isCreateCard ? <CreateNewCardForm/> : ''}
+
                 </div>
 
                 <div onClick={handleCreateCard}>
                     {isCreateCard ? (
-                        <div className='flex items-center space-x-2 font-medium text-black p-1 -ml-1'>
-                            <button type="submit"
-                                    className='bg-blue-500 hover:bg-blue-600 py-1 px-3 text-white font-semibold rounded-md'>Add card
-                            </button>
-                            <IoMdClose className='text-3xl p-1 hover:bg-gray-300 rounded-md' onClick={handleCreateCard}/>
+                        <div >
+                            <CreateNewCardForm handleCreateCard={handleCreateCard}/>
                         </div>
                     ) : (
                         <div className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'>

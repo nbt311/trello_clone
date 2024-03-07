@@ -3,7 +3,9 @@ import { createContext, useState } from 'react';
 const WorkspaceContext = createContext();
 
 export const WorkspaceProvider = ({ children }) => {
-    const [workspace, setWorkspace] = useState(null);
+    const [workspace, setWorkspace] = useState(() => {
+        return JSON.parse(localStorage.getItem('workspacelist'))
+    });
 
     const updateWorkspace = (newWorkspace) => {
         setWorkspace(newWorkspace);

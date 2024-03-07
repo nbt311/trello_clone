@@ -24,6 +24,8 @@ const HomeHeader = ({onOpen, onClose, workspace}) => {
     const [user, setUser] = useState({});
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+    console.log("abc",workspace)
+
     useEffect(() => {
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);
