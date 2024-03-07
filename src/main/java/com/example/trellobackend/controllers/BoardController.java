@@ -1,6 +1,7 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Visibility;
@@ -65,5 +66,25 @@ public class BoardController {
     @GetMapping("/visibility")
     public List<Visibility> getAllVisibilities(){
         return  visibilityRepository.findAll();
+    }
+
+    @GetMapping("/{boardId}/members")
+    public ResponseEntity<List<UserDTO>> getBoardMembers(@PathVariable Long boardId){
+        try {
+            List<UserDTO> boardMembers = boardService.getBoardMembers(boardId);
+            return new ResponseEntity<>(boardMembers, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{boardId}/addUser/{userEmail}")
+    public ResponseEntity<String> addUserToBoardByEmail(@PathVariable Long boardId, @PathVariable String userEmail){
+        try {
+            boardService.addUserToBoardByEmail(boardId, userEmail);
+            return new ResponseEntity<>("User added successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -2,16 +2,13 @@ package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.enums.EBoardMemberRole;
+import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
-import com.example.trellobackend.enums.WorkSpaceType;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.BoardMembers;
 import com.example.trellobackend.models.board.Visibility;
-import com.example.trellobackend.models.workspace.Members;
-import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
@@ -19,6 +16,7 @@ import com.example.trellobackend.services.IBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +33,8 @@ public class BoardService implements IBoardService {
     private BoardMembersRepository boardMembersRepository;
     @Autowired
     private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public Iterable<Board> findAll() {
@@ -57,47 +57,47 @@ public class BoardService implements IBoardService {
     }
 
 
-    @Override
-    public Board createBoard(BoardRequest boardRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
-        if (userOptional.isPresent()) {
-            User creator = userOptional.get();
-            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
-            if (workspaceOptional.isPresent()){
-                Workspace workspace = workspaceOptional.get();
-                Board board = new Board();
-                board.setTitle(boardRequest.getTitle());
-                board.setWorkspace(workspace);
-                Set<String> strVisibilities = boardRequest.getVisibility();
-                Set<Visibility> visibilities = new HashSet<>();
-                strVisibilities.forEach(visibility -> {
-                    switch (visibility) {
-                        case "private":
-                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(privateVisibility);
-
-                            break;
-                        case "public":
-                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(publicVisibility);
-
-                            break;
-                        default:
-                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
-                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-                            visibilities.add(workspaceVisibility);
-                    }
-                });
-                board.setVisibilities(visibilities);
-                boardRepository.save(board);
-                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
-                return board;
-            }
-        }
-        throw new UsernameNotFoundException("User not found");
-    }
+//    @Override
+//    public Board createBoard(BoardRequest boardRequest) {
+//        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
+//        if (userOptional.isPresent()) {
+//            User creator = userOptional.get();
+//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
+//            if (workspaceOptional.isPresent()){
+//                Workspace workspace = workspaceOptional.get();
+//                Board board = new Board();
+//                board.setTitle(boardRequest.getTitle());
+//                board.setWorkspace(workspace);
+//                Set<String> strVisibilities = boardRequest.getVisibility();
+//                Set<Visibility> visibilities = new HashSet<>();
+//                strVisibilities.forEach(visibility -> {
+//                    switch (visibility) {
+//                        case "private":
+//                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(privateVisibility);
+//
+//                            break;
+//                        case "public":
+//                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(publicVisibility);
+//
+//                            break;
+//                        default:
+//                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
+//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
+//                            visibilities.add(workspaceVisibility);
+//                    }
+//                });
+//                board.setVisibilities(visibilities);
+//                boardRepository.save(board);
+//                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
+//                return board;
+//            }
+//        }
+//        throw new UsernameNotFoundException("User not found");
+//    }
 
     @Override
     public BoardResponseDTO getBoardById(Long boardId) {
@@ -125,8 +125,6 @@ public class BoardService implements IBoardService {
         }
         throw new NoSuchElementException("Board not found");
     }
-
-
 
     @Override
     public BoardResponseDTO createNewBoard(BoardRequest boardRequest) {
@@ -196,5 +194,27 @@ public class BoardService implements IBoardService {
         boardMembers.setUser(user);
         boardMembers.setRole(userRole);
         boardMembersRepository.save(boardMembers);
+    }
+
+    public List<UserDTO> getBoardMembers(Long boardId){
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if(boardOptional.isPresent()){
+            Board board = boardOptional.get();
+            Set<User> boardMembers = board.getBoardMembers();
+
+            List<UserDTO> boardMembersDTO = boardMembers.stream()
+                    .map(user -> modelMapper.map(user, UserDTO.class))
+                    .collect(Collectors.toList());
+            return boardMembersDTO;
+        }
+        throw new RuntimeException("Board not found");
+    }
+
+    public void addUserToBoardByEmail(Long boardId, String userEmail){
+        Board board = boardRepository. findById(boardId).orElseThrow(() -> new RuntimeException("Board not found"));
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        board.getBoardMembers().add(user);
+        boardRepository.save(board);
     }
 }

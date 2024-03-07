@@ -9,7 +9,7 @@ import com.example.trellobackend.payload.request.BoardRequest;
 import java.util.List;
 
 public interface IBoardService extends IGeneralService<Board> {
-    Board createBoard(BoardRequest boardRequest);
+//    Board createBoard(BoardRequest boardRequest);
     BoardResponseDTO getBoardById(Long boardId);
     BoardResponseDTO createNewBoard(BoardRequest boardRequest);
     List<ColumnsDTO> getAllColumnsDTOByBoardId(Long boardId);

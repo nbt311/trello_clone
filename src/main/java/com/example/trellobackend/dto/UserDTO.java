@@ -16,13 +16,17 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
+    private String avatarUrl;
     private List<WorkspaceDTO> ownedWorkspaces;
     private List<WorkspaceDTO> memberWorkspaces;
+    private List<BoardResponseDTO> ownedBoards;
+    private List<BoardResponseDTO> memberBoards;
 
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
+        this.avatarUrl = user.getAvatarUrl();
         // Map other fields as needed
 
         this.ownedWorkspaces = user.getOwnedWorkspaces().stream()
@@ -31,6 +35,30 @@ public class UserDTO {
 
         this.memberWorkspaces = user.getMemberWorkspaces().stream()
                 .map(WorkspaceDTO::new)
+                .collect(Collectors.toList());
+
+        this.ownedBoards = user.getOwnerBoards().stream()
+                .map(board -> new BoardResponseDTO(
+                                board,
+                                board.getVisibilities(),
+                                board.getColumnOrderIds(),
+                                board.getColumns().stream()
+                                        .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                                        .collect(Collectors.toList())
+                        )
+                )
+                .collect(Collectors.toList());
+
+        this.memberBoards = user.getMemberBoards().stream()
+                .map(board -> new BoardResponseDTO(
+                                board,
+                                board.getVisibilities(),
+                                board.getColumnOrderIds(),
+                                board.getColumns().stream()
+                                        .map(column -> new ColumnsDTO(column.getId(), column.getTitle()))
+                                        .collect(Collectors.toList())
+                        )
+                )
                 .collect(Collectors.toList());
     }
 }

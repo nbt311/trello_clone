@@ -49,11 +49,10 @@ public class ColumnsService implements IColumsService {
     }
 
     @Override
-    public Columns createColumn(ColumnRequest columnRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
-        if (userOptional.isPresent()) {
+    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
+        if (userOptional.isPresent()){
             Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
-            if (workspaceOptional.isPresent()) {
+            if (workspaceOptional.isPresent()){
                 Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
                 if (boardOptional.isPresent()) {
                     Board board = boardOptional.get();
@@ -61,56 +60,41 @@ public class ColumnsService implements IColumsService {
                     newColumns.setTitle(columnRequest.getTitle());
                     newColumns.setBoard(board);
                     columnsRepository.save(newColumns);
-                    return newColumns;
+
+                    // Tạo đối tượng BoardResponseDTO và set thông tin cần thiết
+                    BoardResponseDTO responseDTO = new BoardResponseDTO();
+                    responseDTO.setId(board.getId());
+                    responseDTO.setTitle(board.getTitle());
+
+                    // Chuyển đổi danh sách Columns thành danh sách ColumnsDTO và cập nhật columnIds
+                    List<ColumnsDTO> columnsDTOList = board.getColumns()
+                            .stream()
+                            .map(columns -> {
+                                ColumnsDTO columnsDTO = new ColumnsDTO();
+                                columnsDTO.setId(columns.getId());
+                                columnsDTO.setTitle(columns.getTitle());
+                                return columnsDTO;
+                            })
+                            .collect(Collectors.toList());
+
+                    responseDTO.setColumns(columnsDTOList);
+
+                    // Cập nhật columnIds
+                    List<Long> columnIds = board.getColumnOrderIds();
+                    columnIds.add(newColumns.getId());
+                    board.setColumnOrderIds(columnIds);
+                    boardRepository.save(board);
+                    responseDTO.setColumnIds(columnIds);
+
+                    return responseDTO;
                 } else {
                     throw new RuntimeException("Error: Board not found.");
                 }
-            } else {
+            }else {
                 throw new RuntimeException("Error: Workspace not found.");
             }
-        } else {
+        }else {
             throw new RuntimeException("Error: User not found.");
-        }
-    }
-
-    @Override
-    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) {
-        Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
-        if (boardOptional.isPresent()) {
-            Board board = boardOptional.get();
-            Columns newColumns = new Columns();
-            newColumns.setTitle(columnRequest.getTitle());
-            newColumns.setBoard(board);
-            columnsRepository.save(newColumns);
-
-            // Tạo đối tượng BoardResponseDTO và set thông tin cần thiết
-            BoardResponseDTO responseDTO = new BoardResponseDTO();
-            responseDTO.setId(board.getId());
-            responseDTO.setTitle(board.getTitle());
-
-            // Chuyển đổi danh sách Columns thành danh sách ColumnsDTO và cập nhật columnIds
-            List<ColumnsDTO> columnsDTOList = board.getColumns()
-                    .stream()
-                    .map(columns -> {
-                        ColumnsDTO columnsDTO = new ColumnsDTO();
-                        columnsDTO.setId(columns.getId());
-                        columnsDTO.setTitle(columns.getTitle());
-                        return columnsDTO;
-                    })
-                    .collect(Collectors.toList());
-
-            responseDTO.setColumns(columnsDTOList);
-
-            // Cập nhật columnIds
-            List<Long> columnIds = board.getColumnOrderIds();
-            columnIds.add(newColumns.getId());
-            board.setColumnOrderIds(columnIds);
-            boardRepository.save(board);
-            responseDTO.setColumnIds(columnIds);
-
-            return responseDTO;
-        } else {
-            throw new RuntimeException("Error: Board not found.");
         }
     }
 
