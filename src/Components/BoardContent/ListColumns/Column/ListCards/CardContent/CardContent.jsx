@@ -7,7 +7,7 @@ import {CSS} from "@dnd-kit/utilities";
 const CardContent = ({card}) => {
     const {
         attributes, listeners, setNodeRef, transform, transition, isDragging,
-    } = useSortable({id: card._id, data: {...card}});
+    } = useSortable({id: card.id, data: {...card}});
 
     const dndKitCardStyle = {
         transform: CSS.Translate.toString(transform),
@@ -17,7 +17,7 @@ const CardContent = ({card}) => {
     };
     return (
         <Card ref={setNodeRef} style={dndKitCardStyle} {...attributes} {...listeners}
-            key={card._id}
+            key={card.id}
             className='rounded-md my-3 p-2'>
             <div className='flex flex-row justify-between'>
                 <p className='text-sm font-medium max-w-[88%]'>{card.title}</p>

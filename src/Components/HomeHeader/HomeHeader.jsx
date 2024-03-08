@@ -40,7 +40,7 @@ const HomeHeader = ({onOpen, onClose}) => {
     }, []);
 
     useEffect(() => {
-        const users = JSON.parse(localStorage.getItem('userLogin'));
+        const users = JSON.parse(localStorage.getItem('user'));
         setUserLogin(users);
     }, []);
 

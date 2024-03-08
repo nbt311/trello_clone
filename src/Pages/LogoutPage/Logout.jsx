@@ -9,7 +9,7 @@ const Logout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('userLogin'));
+        const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
     }, []);
     const handleLogout = async () => {

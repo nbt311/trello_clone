@@ -14,8 +14,9 @@ class ColumnService {
         })
     }
 
-    getListColumn() {
-        return axios.get(API_URL + "all")
+
+    getListCard(columnId) {
+        return axios.get(`${API_URL}${columnId}/cards`)
     }
 
 }
