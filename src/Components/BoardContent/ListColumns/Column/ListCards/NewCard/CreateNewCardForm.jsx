@@ -1,14 +1,14 @@
 import React, {useContext, useState} from 'react';
 import {RxPencil1} from "react-icons/rx";
 import {Card, Input, useToast} from "@chakra-ui/react";
-import {IoMdClose} from "react-icons/io";
+import {IoMdAdd, IoMdClose} from "react-icons/io";
 import ColumnService from "../../../../../../Service/ColumnService";
 import BoardService from "../../../../../../Service/BoardService";
 import CardService from "../../../../../../Service/CardService";
 import BoardContext from "../../../../../../Context/BoardContext";
 import column from "../../Column";
 
-const CreateNewCardForm = ({handleCreateCard, column}) => {
+const CreateNewCardForm = ({handleCreateCard, column, isCreateCard}) => {
     const [cardTitle, setCardTitle] = useState('');
     const {board, updateBoard} = useContext(BoardContext);
 
@@ -33,7 +33,7 @@ const CreateNewCardForm = ({handleCreateCard, column}) => {
     const handleSubmit = async () => {
         try {
             if (!cardTitle.trim()) {
-                localStorage.setItem('column', JSON.stringify(column));
+                toast.closeAll();
                 toast({
                     title: 'Create Card Fail',
                     description: 'Card title cannot be empty.',

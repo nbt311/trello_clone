@@ -28,8 +28,6 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
                 duration: 3000,
             });
             BoardService.getListColumn(board.id).then(response => {
-                console.log("Columns: ", columns)
-                console.log("Set Columns: ", response.data)
                 setColumns(response.data)
             })
             console.log("Create column: ", response.data)
@@ -42,9 +40,17 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
 
     const handleSubmit = async () => {
         try {
+            if (!formik.values.title.trim()) {
+                toast.closeAll();
+                toast({
+                    title: 'Create List Fail',
+                    description: 'List title cannot be empty.',
+                    status: 'error',
+                    duration: 2000,
+                });
+                return;
+            }
             const newColumnList = await createNewColumn();
-            console.log("Board ", board)
-            console.log("Update local and json: ", newColumnList)
             updateBoard(newColumnList)
             localStorage.setItem('board', JSON.stringify(newColumnList))
         } catch (error) {

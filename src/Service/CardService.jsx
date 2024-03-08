@@ -13,5 +13,17 @@ class CardService {
         })
     }
 
+    changeCardTitle(cardId,title) {
+        const data = JSON.stringify({ title: title }); // Chuyển đổi dữ liệu thành chuỗi JSON
+
+        return axios.put(`${API_URL}${cardId}`, data, {
+            headers: {
+                'Content-Type': 'application/json' // Đảm bảo bạn thiết lập header để cho backend biết rằng dữ liệu gửi đi là JSON
+            }
+        }).then(response => {
+            return response.data;
+        });
+    }
+
 }
 export default new CardService();
