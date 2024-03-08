@@ -24,5 +24,11 @@ class ColumnService {
         return axios.get(`${API_URL}${columnId}/cards`)
     }
 
+    movingCardToDifferentColumnAPI(updateData) {
+        return axios.put(`${API_URL}supports/moving-card` , updateData).then(response => {
+            return response.data
+        })
+    }
+
 }
 export default new ColumnService();

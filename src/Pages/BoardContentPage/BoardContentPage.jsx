@@ -93,7 +93,7 @@ const BoardContentPage = () => {
         ColumnService.updateColumnDetail(columnId, {cardOrderIds: dndOrderedCardIds})
     }
 
-    const moveCardToDifferentColumn = (boardId, currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+    const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
         const dndOrderedColumnsIds = dndOrderedColumns.map(c => c.id)
         const newBoard = {...board}
 
@@ -109,13 +109,13 @@ const BoardContentPage = () => {
         console.log("Next ", dndOrderedColumns.find(c => c.id === nextColumnId)?.cards)
         console.log("Next ", dndOrderedColumns.find(c => c.id === nextColumnId)?.cardOrderIds)
 
-        // BoardService.movingCardToDifferentColumnAPI(boardId, {
-        //     currentCardId,
-        //     prevColumnId,
-        //     prevCardOrderIds: dndOrderedColumns.find(c => c.id === prevColumnId)?.cardOrderIds,
-        //     nextColumnId,
-        //     nextCardOrderIds: dndOrderedColumns.find(c => c.id === nextColumnId)?.cardOrderIds
-        // })
+        ColumnService.movingCardToDifferentColumnAPI({
+            currentCardId,
+            prevColumnId,
+            prevCardOrderIds: dndOrderedColumns.find(c => c.id === prevColumnId)?.cardOrderIds,
+            nextColumnId,
+            nextCardOrderIds: dndOrderedColumns.find(c => c.id === nextColumnId)?.cardOrderIds
+        })
     }
 
     const findColumnByCardId = (cardId) => {
@@ -165,7 +165,6 @@ const BoardContentPage = () => {
 
             if (triggerFrom === 'handleDragEnd') {
                 moveCardToDifferentColumn(
-                    board.id,
                     activeDraggingCardId,
                     oldColumnWhenDraggingCard.id,
                     nextOverColumn.id,
