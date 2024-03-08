@@ -1,6 +1,8 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
@@ -34,20 +36,21 @@ public class BoardController {
     @Autowired
     private UserRepository userRepository;
 
-    //    @PostMapping("/create")
-//    public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest){
-//        try {
-//            Board board = boardService.createBoard(boardRequest);
-//            return new ResponseEntity<>(board, HttpStatus.CREATED);
-//        } catch (UsernameNotFoundException e) {
-//            // Xử lý khi không tìm thấy người dùng
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
-//        }
-//    }
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponseDTO> getBoardById(@PathVariable Long boardId) {
         try {
             BoardResponseDTO responseDTO = boardService.getBoardById(boardId);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<BoardResponseDTO> updateBoardById(@PathVariable Long boardId,
+                                                            @RequestBody UpdateBoardDTO updateData) {
+        try {
+            BoardResponseDTO responseDTO = boardService.updateBoardColumnOrderIds(boardId, updateData);
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,6 +68,17 @@ public class BoardController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{boardId}/columns")
+    public ResponseEntity<List<ColumnsDTO>> getAllColumnsByBoardId(@PathVariable Long boardId) {
+        try {
+            List<ColumnsDTO> columnsDTOList = boardService.getAllColumnsDTOByBoardId(boardId);
+            return ResponseEntity.ok(columnsDTOList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/visibility")
     public List<Visibility> getAllVisibilities(){
         return  visibilityRepository.findAll();

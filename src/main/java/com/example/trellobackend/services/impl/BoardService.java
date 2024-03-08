@@ -1,8 +1,10 @@
 package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.Role;
@@ -10,6 +12,8 @@ import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.BoardMembers;
 import com.example.trellobackend.models.board.Visibility;
+import com.example.trellobackend.models.workspace.Members;
+import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
@@ -59,75 +63,17 @@ public class BoardService implements IBoardService {
 
     }
 
-
-//    @Override
-//    public Board createBoard(BoardRequest boardRequest) {
-//        Optional<User> userOptional = userRepository.findByEmail(boardRequest.getEmail());
-//        if (userOptional.isPresent()) {
-//            User creator = userOptional.get();
-//            Optional<Workspace> workspaceOptional = workspaceRepository.findById(boardRequest.getWorkspaceId());
-//            if (workspaceOptional.isPresent()){
-//                Workspace workspace = workspaceOptional.get();
-//                Board board = new Board();
-//                board.setTitle(boardRequest.getTitle());
-//                board.setWorkspace(workspace);
-//                Set<String> strVisibilities = boardRequest.getVisibility();
-//                Set<Visibility> visibilities = new HashSet<>();
-//                strVisibilities.forEach(visibility -> {
-//                    switch (visibility) {
-//                        case "private":
-//                            Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(privateVisibility);
-//
-//                            break;
-//                        case "public":
-//                            Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(publicVisibility);
-//
-//                            break;
-//                        default:
-//                            Visibility workspaceVisibility = visibilityRepository.findByName(EBoardVisibility.WORKSPACE)
-//                                    .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
-//                            visibilities.add(workspaceVisibility);
-//                    }
-//                });
-//                board.setVisibilities(visibilities);
-//                boardRepository.save(board);
-//                addMemberToBoard(board,creator,UserRole.ROLE_ADMIN);
-//                return board;
-//            }
-//        }
-//        throw new UsernameNotFoundException("User not found");
-//    }
-
     @Override
     public BoardResponseDTO getBoardById(Long boardId) {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isPresent()) {
             Board board = boardOptional.get();
-
-            // Fetch Columns associated with the Board
-            List<ColumnsDTO> columnsDTOList = board.getColumns()
-                    .stream()
-                    .map(column -> {
-                        ColumnsDTO columnsDTO = new ColumnsDTO();
-                        columnsDTO.setId(column.getId());
-                        columnsDTO.setTitle(column.getTitle());
-                        // Map other properties as needed
-                        return columnsDTO;
-                    })
-                    .collect(Collectors.toList());
-
-            BoardResponseDTO responseDTO = BoardResponseDTO.fromEntity(board);
-            responseDTO.setColumns(columnsDTOList);
-            responseDTO.setColumnIds(board.getColumnOrderIds());
-
-            return responseDTO;
+            return BoardResponseDTO.fromEntity(board);
         }
         throw new NoSuchElementException("Board not found");
     }
+
+
 
     @Override
     public BoardResponseDTO createNewBoard(BoardRequest boardRequest) {
@@ -169,12 +115,61 @@ public class BoardService implements IBoardService {
                 responseDTO.setId(board.getId());
                 responseDTO.setTitle(board.getTitle());
                 responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
-                responseDTO.setColumnIds(Collections.emptyList()); // Initialize the columnIds list
+                responseDTO.setColumnOrderIds(Collections.emptyList()); // Initialize the columnIds list
 
                 return responseDTO;
             }
         }
         throw new UsernameNotFoundException("User not found");
+    }
+
+    @Override
+    public List<ColumnsDTO> getAllColumnsDTOByBoardId(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board != null) {
+            // Chuyển đổi danh sách cột sang danh sách DTO và trả về
+            return board.getColumns().stream()
+                    .map(columns -> {
+                List<Long> cardOrderIds = columns.getCardOrderIds();
+                List<CardDTO> cards = columns.getCards()
+                        .stream().map(card ->
+                                new CardDTO(card.getId(),card.getTitle()))
+                        .collect(Collectors.toList());
+                return new ColumnsDTO(columns, cardOrderIds, cards);
+            })
+                    .collect(Collectors.toList());
+        } else {
+            // Nếu không tìm thấy bảng, có thể xử lý theo ý của bạn, ví dụ: ném một ngoại lệ.
+            throw new RuntimeException("Không tìm thấy bảng với ID: " + boardId);
+        }
+    }
+
+    @Override
+    public BoardResponseDTO updateBoardColumnOrderIds(Long boardId, UpdateBoardDTO updateData) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            board.setColumnOrderIds(updateData.getColumnOrderIds());
+            boardRepository.save(board);
+
+            Set<Visibility> visibility = board.getVisibilities();
+            List<ColumnsDTO> columns = board.getColumns()
+                    .stream()
+                    .map(column -> {
+                        ColumnsDTO columnsDTO = new ColumnsDTO();
+                        columnsDTO.setId(column.getId());
+                        columnsDTO.setTitle(column.getTitle());
+                        // Map other properties as needed
+                        return columnsDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            return new BoardResponseDTO(board, visibility, updateData.getColumnOrderIds(), columns);
+        } else {
+            // Xử lý trường hợp không tìm thấy Board
+            throw new RuntimeException("Board not found with id: " + boardId);
+        }
     }
 
     public void addMemberToBoard(Board board, User user, UserRole userRole) {

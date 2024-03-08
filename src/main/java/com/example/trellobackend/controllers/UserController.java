@@ -36,8 +36,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private WorkspaceRepository workspaceRepository;
-    @Autowired
     private UserService userService;
 
     @PostMapping("/{userId}/avatar")
@@ -75,18 +73,6 @@ public class UserController {
         return iUserService.getSuggestedUsers(query);
     }
 
-//    @GetMapping("/{userId}/workspaces")
-//    public ResponseEntity<?> findWorkspaceByUser(@PathVariable Long userId) {
-//        try {
-//            Iterable<Workspace> workspacesList = workspaceRepository.getWorkspaceByUserId(userId);
-//            if (workspacesList == null) {
-//                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-//            }
-//            return new ResponseEntity<>(workspacesList, HttpStatus.OK);
-//        } catch (Exception e) {
-//            String errorMessage = "There has been problems with the server" + ":" + e.getMessage();
-//            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
 
         @GetMapping("/{userId}/workspaces")
         public ResponseEntity<UserDTO> getUserWorkspaces(@PathVariable Long userId) {
