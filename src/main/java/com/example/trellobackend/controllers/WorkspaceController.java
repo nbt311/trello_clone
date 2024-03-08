@@ -49,8 +49,6 @@ public class WorkspaceController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private WorkspaceMemberRepository workspaceMemberRepository;
-    @Autowired
     private  BoardRepository boardRepository;
 
     @GetMapping("/all")
@@ -82,19 +80,6 @@ public class WorkspaceController {
     public List<Type> getAllWorkspaceTypes() {
         return workspaceTypeRepository.findAll();
     }
-//    @GetMapping("/{workspaceId}/members" )
-//    public ResponseEntity<?> findMembersByWorkspace (@PathVariable Long workspaceId){
-//        try{
-//            Iterable<Members> membersList = workspaceMemberRepository.findMembersByWorkspaceId(workspaceId);
-//            if(membersList == null){
-//                return new ResponseEntity<>("Workspace not found", HttpStatus.NOT_FOUND);
-//            }
-//            return new ResponseEntity<>(membersList, HttpStatus.OK);
-//        } catch (Exception e) {
-//            String errorMessage = "There has been problems with the server" + ":" + e.getMessage();
-//            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @GetMapping("/{workspaceId}/members")
     public ResponseEntity<List<UserDTO>> getWorkspaceMembers(@PathVariable Long workspaceId) {
