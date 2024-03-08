@@ -1,10 +1,9 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.board.Card;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.ColumnRequest;
@@ -30,6 +29,8 @@ public class ColumnsService implements IColumsService {
     private UserRepository userRepository;
     @Autowired
     private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private CardRepository cardRepository;
 
     @Override
     public Iterable<Columns> findAll() {
@@ -79,6 +80,33 @@ public class ColumnsService implements IColumsService {
     }
 
     @Override
+    public ColumnsDTO updateColumnCardOrderIds(Long columnId, UpdateColumnDTO updateData) {
+        Optional<Columns> columnsOptional = columnsRepository.findById(columnId);
+
+        if (columnsOptional.isPresent()) {
+            Columns columns = columnsOptional.get();
+            columns.setCardOrderIds(updateData.getCardOrderIds());
+            columnsRepository.save(columns);
+
+            List<CardDTO> cards = columns.getCards()
+                    .stream()
+                    .map(card -> {
+                        CardDTO cardDTO = new CardDTO();
+                        cardDTO.setId(card.getId());
+                        cardDTO.setTitle(card.getTitle());
+                        // Map other properties as needed
+                        return cardDTO;
+                    })
+                    .collect(Collectors.toList());
+
+            return new ColumnsDTO(columns, updateData.getCardOrderIds(), cards);
+        } else {
+            // Xử lý trường hợp không tìm thấy Board
+            throw new RuntimeException("Board not found with id: " + columnId);
+        }
+    }
+
+    @Override
     public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
         if (userOptional.isPresent()){
             Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
@@ -122,6 +150,49 @@ public class ColumnsService implements IColumsService {
             }
         }else {
             throw new RuntimeException("Error: User not found.");
+        }
+    }
+
+    @Override
+    public void handleDragAndDrop(DragAndDropDTO dragAndDropDTO) {
+        Long currentCardId = dragAndDropDTO.getCurrentCardId();
+        Long prevColumnId = dragAndDropDTO.getPrevColumnId();
+        List<Long> prevCardOrderIds = dragAndDropDTO.getPrevCardOrderIds();
+        Long nextColumnId = dragAndDropDTO.getNextColumnId();
+        List<Long> nextCardOrderIds = dragAndDropDTO.getNextCardOrderIds();
+
+        // Xử lý logic thay đổi vị trí Card
+        moveCardBetweenColumns(currentCardId, prevColumnId, nextColumnId);
+
+        // Cập nhật danh sách CardOrderIds cho Column cũ và Column mới
+        updateColumnsCardOrderIds(prevColumnId, prevCardOrderIds);
+        updateColumnsCardOrderIds(nextColumnId, nextCardOrderIds);
+    }
+
+    private void updateColumnsCardOrderIds(Long columnId, List<Long> cardOrderIds) {
+        Columns column = columnsRepository.findById(columnId).orElse(null);
+        if (column != null) {
+            column.setCardOrderIds(cardOrderIds);
+            columnsRepository.save(column);
+        }
+    }
+
+    private void moveCardBetweenColumns(Long currentCardId, Long prevColumnId, Long nextColumnId) {
+        Card card = cardRepository.findById(currentCardId).orElse(null);
+        if (card != null) {
+            Columns prevColumn = columnsRepository.findById(prevColumnId).orElse(null);
+            if (prevColumn != null) {
+                prevColumn.getCards().remove(card);
+                card.setColumn(null);  // Set lại cột cho Card
+                columnsRepository.save(prevColumn);
+            }
+
+            Columns nextColumn = columnsRepository.findById(nextColumnId).orElse(null);
+            if (nextColumn != null) {
+                nextColumn.getCards().add(card);
+                card.setColumn(nextColumn);  // Set lại cột cho Card
+                columnsRepository.save(nextColumn);
+            }
         }
     }
 }
