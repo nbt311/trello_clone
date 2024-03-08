@@ -93,4 +93,10 @@ public class ColumsController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/supports/moving-card")
+    public ResponseEntity<String> moveCard(@RequestBody DragAndDropDTO dragAndDropDTO) {
+        columnsService.handleDragAndDrop(dragAndDropDTO);
+        return ResponseEntity.ok("Card moved successfully");
+    }
 }
