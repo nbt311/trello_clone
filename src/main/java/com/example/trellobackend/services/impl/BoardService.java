@@ -1,19 +1,16 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.UpdateBoardDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.board.BoardMembers;
-import com.example.trellobackend.models.board.Visibility;
+import com.example.trellobackend.models.board.*;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.IBoardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -33,6 +30,8 @@ public class BoardService implements IBoardService {
     private BoardMembersRepository boardMembersRepository;
     @Autowired
     private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private ColumnsRepository columnsRepository;
 
     @Override
     public Iterable<Board> findAll() {
@@ -124,7 +123,11 @@ public class BoardService implements IBoardService {
                 List<Long> cardOrderIds = columns.getCardOrderIds();
                 List<CardDTO> cards = columns.getCards()
                         .stream().map(card ->
-                                new CardDTO(card.getId(),card.getTitle()))
+                                new CardDTO(card.getId(),
+                                        card.getBoard().getId(),
+                                        card.getColumn().getId(),
+                                        card.getTitle()
+                                        ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
             })
@@ -163,6 +166,79 @@ public class BoardService implements IBoardService {
         }
     }
 
+//    @Override
+//    public BoardResponseDTO updateCardOrderIds(Long boardId, DragAndDropDTO updateData) {
+//        Long currentCardId = updateData.getCurrentCardId();
+//        Long prevColumnId = updateData.getPrevColumnId();
+//        List<Long> prevCardOrderIds = updateData.getPrevCardOrderIds();
+//        Long nextColumnId = updateData.getNextColumnId();
+//        List<Long> nextCardOrderIds = updateData.getNextCardOrderIds();
+//        // Lấy bảng từ cơ sở dữ liệu
+//        Board board = boardRepository.findById(boardId)
+//                .orElseThrow(() -> new RuntimeException("Board not found with id: " + boardId));
+//
+//        Columns prevColumn = board.getColumns().stream()
+//                .filter(column -> column.getId().equals(prevColumnId))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Previous column not found with id: " + prevColumnId));
+//        // Thực hiện chuyển card
+////        moveCard(board, currentCardId, prevColumnId, prevCardOrderIds, nextColumnId, nextCardOrderIds);
+//
+//        // Lưu các thay đổi vào cơ sở dữ liệu
+//        boardRepository.save(board);
+//
+//        // Trả về DTO chứa thông tin đã được cập nhật
+////        return createBoardResponseDTO(board, currentCardId);
+// return  ;
+//    }
+
+//    private BoardResponseDTO createBoardResponseDTO(Board board, Long currentCardId) {
+//        List<ColumnsDTO> columnsDTOList = board.getColumns()
+//                .stream()
+//                .map(ColumnsDTO::fromEntity)
+//                .collect(Collectors.toList());
+//
+//        // Tìm card đã được chuyển
+//        Card movedCard = board.getColumns().stream()
+//                .flatMap(column -> column.getCards().stream())
+//                .filter(card -> card.getId().equals(currentCardId))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Moved card not found with id: " + currentCardId));
+//
+//        return new BoardResponseDTO(board, board.getVisibilities(), board.getColumnOrderIds(), columnsDTOList);
+//    }
+    private static final Logger logger = LoggerFactory.getLogger(BoardService.class);
+//    private void moveCard(Board board, Long currentCardId, Long prevColumnId, List<Long> prevCardOrderIds, Long nextColumnId, List<Long> nextCardOrderIds) {
+//        // Tìm cột cũ và mới
+//        logger.debug("prevColumnId: {}, nextColumnId: {}", prevColumnId, nextColumnId);
+//        Columns prevColumn = board.getColumns().stream()
+//                .filter(column -> column.getId().equals(prevColumnId))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Previous column not found with id: " + prevColumnId));
+//
+//        Columns nextColumn = board.getColumns().stream()
+//                .filter(column -> column.getId().equals(nextColumnId))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Next column not found with id: " + nextColumnId));
+//
+//        // Lọc card từ cột cũ
+//        List<Card> cardsInPrevColumn = prevColumn.getCards().stream()
+//                .filter(card -> !card.getId().equals(currentCardId))
+//                .collect(Collectors.toList());
+//
+//        // Thêm card vào cột mới
+//        Card movedCard = prevColumn.getCards().stream()
+//                .filter(card -> card.getId().equals(currentCardId))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Card not found with id: " + currentCardId));
+//
+//        nextColumn.getCards().add(movedCard);
+//
+//        // Cập nhật danh sách card trong cột cũ
+//        prevColumn.setCards(cardsInPrevColumn);
+//        prevColumn.setCardOrderIds(prevCardOrderIds);
+//
+//        // Cập nhật thứ tự card trong cột mới
+//        nextColumn.setCardOrderIds(nextCardOrderIds);
+//        System.out.println(prevColumn);
+//        System.out.println(nextColumn);
+//    }
+
     public void addMemberToBoard(Board board, User user, UserRole userRole) {
         BoardMembers boardMembers = new BoardMembers();
         boardMembers.setBoard(board);
@@ -170,4 +246,5 @@ public class BoardService implements IBoardService {
         boardMembers.setRole(userRole);
         boardMembersRepository.save(boardMembers);
     }
+
 }

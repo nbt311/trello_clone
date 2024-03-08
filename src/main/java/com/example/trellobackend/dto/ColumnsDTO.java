@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 public class ColumnsDTO {
     private Long id;
+    private Long boardId;
     private String title;
     private List<Long> cardOrderIds;
     private List<CardDTO> cards;
@@ -28,6 +29,7 @@ public class ColumnsDTO {
     }
     public ColumnsDTO(Columns columns, List<Long> cardOrderIds, List<CardDTO> cards) {
         this.id = columns.getId();
+        this.boardId = columns.getBoard().getId();
         this.title = columns.getTitle();
         this.cardOrderIds = cardOrderIds;
         this.cards = cards;
@@ -35,6 +37,7 @@ public class ColumnsDTO {
     public static ColumnsDTO fromEntity(Columns columns) {
         ColumnsDTO responseDTO = new ColumnsDTO();
         responseDTO.setId(columns.getId());
+        responseDTO.setBoardId(columns.getBoard().getId());
         responseDTO.setTitle(columns.getTitle());
 
         List<CardDTO> cardDTOList = Optional.ofNullable(columns.getCards())
@@ -43,6 +46,8 @@ public class ColumnsDTO {
                 .map(card -> {
                     CardDTO cardDTO = new CardDTO();
                     cardDTO.setId(card.getId());
+                    cardDTO.setBoardId(card.getBoard().getId());
+                    cardDTO.setColumnId(card.getColumn().getId());
                     cardDTO.setTitle(card.getTitle());
                     // Map other properties as needed
                     return cardDTO;

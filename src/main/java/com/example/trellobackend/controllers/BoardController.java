@@ -2,6 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.DragAndDropDTO;
 import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Visibility;
@@ -78,4 +79,14 @@ public class BoardController {
     public List<Visibility> getAllVisibilities(){
         return  visibilityRepository.findAll();
     }
+
+//    @PutMapping("{boardId}/supports/moving-card")
+//    public ResponseEntity<?> movingCard(@PathVariable Long boardId, @RequestBody DragAndDropDTO updateData){
+//        try {
+//            BoardResponseDTO responseDTO = boardService.updateCardOrderIds(boardId, updateData);
+//            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Error moving card: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

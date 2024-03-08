@@ -82,15 +82,15 @@ public class WorkspaceController {
         return workspaceTypeRepository.findAll();
     }
 
-    @GetMapping("/{workspaceId}/members")
-    public ResponseEntity<List<UserDTO>> getWorkspaceMembers(@PathVariable Long workspaceId) {
-        try {
-            List<UserDTO> members = workspaceService.getWorkspaceMembers(workspaceId);
-            return new ResponseEntity<>(members, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/{workspaceId}/members")
+//    public ResponseEntity<List<UserDTO>> getWorkspaceMembers(@PathVariable Long workspaceId) {
+//        try {
+//            List<UserDTO> members = workspaceService.getWorkspaceMembers(workspaceId);
+//            return new ResponseEntity<>(members, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     @GetMapping("/{workspaceId}/boards")
     public ResponseEntity<?> findBoardsByWorkspace(@PathVariable Long workspaceId){
         try{
@@ -127,7 +127,7 @@ public class WorkspaceController {
                 if (userOptional.isPresent()) {
                     // Thêm user vào workspace với quyền mặc định (ví dụ: ROLE_MEMBER)
                     User userToAdd = userOptional.get();
-                    workspaceService.addMemberToWorkspace(workspace, userToAdd, UserRole.ROLE_USER);
+//                    workspaceService.addMemberToWorkspace(workspace, userToAdd,UserRole.ROLE_USER);
 
                     // Gửi email mời tham gia nhóm
                     String inviteLink = workspaceService.inviteUserToWorkspace(userEmail, workspace);

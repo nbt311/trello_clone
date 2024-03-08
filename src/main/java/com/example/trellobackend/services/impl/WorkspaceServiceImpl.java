@@ -2,6 +2,7 @@ package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.dto.WorkspaceDTO;
+import com.example.trellobackend.enums.MemberRole;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.enums.WorkSpacePermission;
 import com.example.trellobackend.enums.WorkSpaceType;
@@ -128,9 +129,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             String inviteLink = frontendURL + "/w/" + workspace.getName() + inviteCode;
             workspace.setInviteCode(inviteCode);
             workspace.setInviteLink(inviteLink);
+//            addMemberToWorkspace(workspace, creator, UserRole.ROLE_ADMIN);
             workspaceRepository.save(workspace);
-            addMemberToWorkspace(workspace, creator, UserRole.ROLE_ADMIN);
-
             creator.getOwnedWorkspaces().add(workspace);
             return workspace;
         }
@@ -156,32 +156,32 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
-    public void addMemberToWorkspace(Workspace workspace, User user, UserRole userRole) {
+    public void addMemberToWorkspace(Workspace workspace, User user, UserDTO userRole) {
         Members member = new Members();
         member.setWorkspace(workspace);
         member.setUser(user);
-        member.setRole(userRole);
+//        member.setRole(userRole);
         workspaceMemberRepository.save(member);
     }
 
-    public List<UserDTO> getWorkspaceMembers(Long workspaceId) {
-        Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
-
-        if (workspaceOptional.isPresent()) {
-            Workspace workspace = workspaceOptional.get();
-            Set<User> members = workspace.getMembers();
-
-            // Chuyển đổi từ User Entity sang UserDTO
-            List<UserDTO> membersDTO = members.stream()
-                    .map(user -> modelMapper.map(user, UserDTO.class))
-                    .collect(Collectors.toList());
-
-            return membersDTO;
-        }
-
-        // Nếu không tìm thấy Workspace, có thể xử lý theo ý muốn của bạn
-        throw new RuntimeException("Workspace not found");
-    }
+//    public List<UserDTO> getWorkspaceMembers(Long workspaceId) {
+//        Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
+//
+//        if (workspaceOptional.isPresent()) {
+//            Workspace workspace = workspaceOptional.get();
+//            Set<User> members = workspace.getMembers();
+//
+//            // Chuyển đổi từ User Entity sang UserDTO
+//            List<UserDTO> membersDTO = members.stream()
+//                    .map(user -> modelMapper.map(user, UserDTO.class))
+//                    .collect(Collectors.toList());
+//
+//            return membersDTO;
+//        }
+//
+//        // Nếu không tìm thấy Workspace, có thể xử lý theo ý muốn của bạn
+//        throw new RuntimeException("Workspace not found");
+//    }
 
 
 }

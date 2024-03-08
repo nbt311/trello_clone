@@ -1,9 +1,6 @@
 package com.example.trellobackend.controllers;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.WorkspaceDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -83,5 +80,22 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PutMapping("/{columnId}")
+    public ResponseEntity<ColumnsDTO> updateBoardById(@PathVariable Long columnId,
+                                                            @RequestBody UpdateColumnDTO updateData) {
+        try {
+            ColumnsDTO responseDTO = columnsService.updateColumnCardOrderIds(columnId,updateData);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/supports/moving-card")
+    public ResponseEntity<String> moveCard(@RequestBody DragAndDropDTO dragAndDropDTO) {
+        columnsService.handleDragAndDrop(dragAndDropDTO);
+        return ResponseEntity.ok("Card moved successfully");
     }
 }
