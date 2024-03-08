@@ -133,7 +133,7 @@ const BoardContentPage = () => {
 
     const handleDragOver = (event) => {
         if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
-        console.log('handleDragOver: ', event)
+        // console.log('handleDragOver: ', event)
 
         const {active, over} = event
         if (!active || !over) return

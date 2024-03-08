@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Avatar,
     AvatarGroup,
@@ -18,6 +18,7 @@ import {MdOutlinePublic} from "react-icons/md";
 import {AiOutlineUserAdd} from "react-icons/ai";
 import axios from "axios";
 import {useParams} from "react-router-dom";
+import BoardContext from "../../Context/BoardContext";
 
 const BoardBar = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -28,6 +29,17 @@ const BoardBar = () => {
     const [user, setUser] = useState({});
     const toast = useToast();
     const { id } = useParams();
+
+    const {board, updateBoard} = useContext(BoardContext);
+
+    useEffect(() => {
+        const storedBoard = localStorage.getItem('board');
+
+        if (storedBoard) {
+            updateBoard(JSON.parse(storedBoard));
+        }
+    }, []);
+
     const handleClick = () => {
         setIsClicked(!isClicked);
     };
@@ -114,6 +126,7 @@ const BoardBar = () => {
                 padding: 2,
                 borderRadius: 'md',
                 backgroundColor: 'gray.100'}}>
+                <p className='font-bold'>{board.title}</p>
                 <div className='hover:bg-gray-200 ' onClick={handleClick} style={{ padding: '10px', borderRadius: '5px' }}>
                     {isClicked ? <FaStar /> : <CiStar />}
                 </div>

@@ -31,7 +31,7 @@ const HomePage = () => {
     if (loading) {
         return null;
     }
-    console.log('wtf',workspaceList)
+
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
