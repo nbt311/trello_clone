@@ -71,7 +71,6 @@ const BoardContentPage = () => {
         const newBoard = {...board}
 
         newBoard.columns = dndOrderedColumns
-        console.log('OrderedCol: ', dndOrderedColumnsIds)
         newBoard.columnOrderIds = dndOrderedColumnsIds
 
         updateBoard(newBoard)
@@ -90,9 +89,34 @@ const BoardContentPage = () => {
 
         updateBoard(newBoard)
         localStorage.setItem('board', JSON.stringify(newBoard));
+
         ColumnService.updateColumnDetail(columnId, {cardOrderIds: dndOrderedCardIds})
     }
 
+    const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+        const dndOrderedColumnsIds = dndOrderedColumns.map(c => c.id)
+        const newBoard = {...board}
+
+        newBoard.columns = dndOrderedColumns
+        newBoard.columnOrderIds = dndOrderedColumnsIds
+
+        updateBoard(newBoard)
+        localStorage.setItem('board', JSON.stringify(newBoard));
+
+        console.log("Current card ", currentCardId)
+        console.log("Prev ", dndOrderedColumns.find(c => c.id === prevColumnId)?.cards)
+        console.log("Prev ", dndOrderedColumns.find(c => c.id === prevColumnId)?.cardOrderIds)
+        console.log("Next ", dndOrderedColumns.find(c => c.id === nextColumnId)?.cards)
+        console.log("Next ", dndOrderedColumns.find(c => c.id === nextColumnId)?.cardOrderIds)
+
+        ColumnService.movingCardToDifferentColumnAPI({
+            currentCardId,
+            prevColumnId,
+            prevCardOrderIds: dndOrderedColumns.find(c => c.id === prevColumnId)?.cardOrderIds,
+            nextColumnId,
+            nextCardOrderIds: dndOrderedColumns.find(c => c.id === nextColumnId)?.cardOrderIds
+        })
+    }
 
     const findColumnByCardId = (cardId) => {
         return orderedColumns.find(column => column?.cards?.map(card => card.id)?.includes(cardId))
@@ -121,7 +145,7 @@ const BoardContentPage = () => {
 
             const nextColumns = cloneDeep(prevColumns)
             const nextActiveColumns = nextColumns.find(column => column.id === activeColumn.id)
-            const nextOverColumns = nextColumns.find(column => column.id === overColumn.id)
+            const nextOverColumn = nextColumns.find(column => column.id === overColumn.id)
 
             if (nextActiveColumns) {
                 nextActiveColumns.cards = nextActiveColumns.cards.filter(card => card.id !== activeDraggingCardId)
@@ -130,14 +154,23 @@ const BoardContentPage = () => {
 
             const rebuild_activeDraggingCardData = {
                 ...activeDraggingCardData,
-                columnId: nextOverColumns.id
+                columnId: nextOverColumn.id
             }
 
-            if (nextOverColumns) {
-                nextOverColumns.cards = nextOverColumns.cards.filter(card => card.id !== activeDraggingCardId)
-                nextOverColumns.cards = nextOverColumns.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
-                nextOverColumns.cardOrderIds = nextOverColumns.cards.map(card => card.id)
+            if (nextOverColumn) {
+                nextOverColumn.cards = nextOverColumn.cards.filter(card => card.id !== activeDraggingCardId)
+                nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
+                nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card.id)
             }
+
+            if (triggerFrom === 'handleDragEnd') {
+                moveCardToDifferentColumn(
+                    activeDraggingCardId,
+                    oldColumnWhenDraggingCard.id,
+                    nextOverColumn.id,
+                    nextColumns)
+            }
+
             return nextColumns;
         })
     }
