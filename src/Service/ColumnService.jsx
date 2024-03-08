@@ -14,8 +14,14 @@ class ColumnService {
         })
     }
 
-    getListColumn() {
-        return axios.get(API_URL + "all")
+    updateColumnDetail(columnId, updateData) {
+        return axios.put(`${API_URL}${columnId}`, updateData).then(response => {
+            return response.data
+        })
+    }
+
+    getListCard(columnId) {
+        return axios.get(`${API_URL}${columnId}/cards`)
     }
 
 }

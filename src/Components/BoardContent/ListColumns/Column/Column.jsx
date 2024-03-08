@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Heading, Text} from "@chakra-ui/react";
 import {BsThreeDots} from "react-icons/bs";
 import ListCards from "./ListCards/ListCards";
@@ -8,8 +8,9 @@ import {CSS} from '@dnd-kit/utilities';
 import {mapOrder} from "../../../../Utils/Sort";
 import CreateNewCardForm from "./ListCards/NewCard/CreateNewCardForm";
 
-const Column = ({column}) => {
+const Column = ({column, setColumn}) => {
     const [isCreateCard, setIsCreateCard] = useState(false)
+
 
     const handleCreateCard = () => {
         setIsCreateCard(!isCreateCard)
@@ -30,7 +31,8 @@ const Column = ({column}) => {
         height: '100%'
     };
 
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, 'id')
+    const orderedCards = column.cards
+
 
     return (
         <div ref={setNodeRef} style={dndKitColumnStyle}{...attributes}>
@@ -46,21 +48,20 @@ const Column = ({column}) => {
                     scrollbarColor: '#888 #f1f1f1',
                     paddingRight: '2px'
                 }}>
-                    <ListCards cards = {orderedCards}/>
-
+                    <ListCards cards={orderedCards}/>
+                    {isCreateCard ? <CreateNewCardForm handleCreateCard={handleCreateCard} isCreateCard={isCreateCard}
+                                                        column={column}
+                                                        cards={orderedCards}/> : null}
                 </div>
 
                 <div onClick={handleCreateCard}>
-                    {isCreateCard ? (
-                        <div >
-                            <CreateNewCardForm handleCreateCard={handleCreateCard}/>
-                        </div>
-                    ) : (
-                        <div className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'>
+                    {!isCreateCard &&
+                        <div
+                            className='flex items-center mt-4 font-medium text-gray-500 space-x-2 hover:text-black hover:bg-gray-200 w-full rounded-md p-1 -ml-1 cursor-pointer'
+                            onClick={handleCreateCard}>
                             <IoMdAdd className='text-lg'/>
                             <p>Add a card</p>
-                        </div>
-                    )}
+                        </div>}
                 </div>
             </Box>
         </div>

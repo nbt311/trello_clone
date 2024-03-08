@@ -9,7 +9,7 @@ const ListCards = ({cards}) => {
         <SortableContext items={cards?.map(c => c.id)} strategy={verticalListSortingStrategy}>
         <div>
             {cards?.map((card) => (
-                <CardContent card={card}/>
+                <CardContent key={card.id} card={card}/>
             ))}
         </div>
         </SortableContext>

@@ -17,7 +17,7 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
 
     const toast = useToast()
 
-    const createNewColumnAndLogResponse = async () => {
+    const createNewColumn = async () => {
         try {
             const response = await ColumnService.createNewColumn(user.email, workspace.id, formik.values.title, board.id);
 
@@ -30,6 +30,7 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
             BoardService.getListColumn(board.id).then(response => {
                 setColumns(response.data)
             })
+            console.log("Create column: ", response.data)
             return response.data;
         } catch (error) {
             console.error('Error creating column', error);
@@ -39,7 +40,17 @@ const CreateNewColumnForm = ({onSubmit, toggle, columns, setColumns}) => {
 
     const handleSubmit = async () => {
         try {
-            const newColumnList = await createNewColumnAndLogResponse();
+            if (!formik.values.title.trim()) {
+                toast.closeAll();
+                toast({
+                    title: 'Create List Fail',
+                    description: 'List title cannot be empty.',
+                    status: 'error',
+                    duration: 2000,
+                });
+                return;
+            }
+            const newColumnList = await createNewColumn();
             updateBoard(newColumnList)
             localStorage.setItem('board', JSON.stringify(newColumnList))
         } catch (error) {
