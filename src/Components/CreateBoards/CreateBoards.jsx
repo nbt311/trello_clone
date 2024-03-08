@@ -22,7 +22,7 @@ const CreateBoards = ({user, workspace}) => {
             email: user.email,
             title: boardTitle,
             workspaceId: selectedWorkspaceId,
-            visibility: ['public']
+            visibility: [selectedVisibility]
         }).then(res => {
             toast({
                 title: 'Create Board Successful',
@@ -47,13 +47,14 @@ const CreateBoards = ({user, workspace}) => {
         axios.get("http://localhost:8080/api/boards/visibility")
             .then(response => {
                setBoardVisibility(response.data);
+                console.log("yahdasd",response.data);
             })
             .catch(error => {
                 console.error("Error fetching board visibility:", error);
             });
     }, []);
 
-
+    console.log(selectedVisibility);
     return (
         // <Menu>
         //     <MenuList minWidth='340px'>
@@ -96,7 +97,7 @@ const CreateBoards = ({user, workspace}) => {
                     onChange={(e) => setSelectedVisibility(e.target.value)}
                 >
                     {boardVisibility.map((type) => (
-                        <option key={type.id} value={type.id}>{type.name}</option>
+                        <option key={type.id} value={type.name}>{type.name}</option>
                     ) )}
 
                 </Select>
