@@ -23,12 +23,12 @@ public class CardController {
     }
 
     @PutMapping("/{cardId}")
-    public ResponseEntity<?> changeCardId(@PathVariable Long cardId, @RequestBody String title ){
+    public ResponseEntity<?> changeCardId(@PathVariable Long cardId, @RequestBody CardDTO title ){
         try{
             cardService.changeCardTitle(cardId, title);
             return new ResponseEntity<>("success",HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("error card not found",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

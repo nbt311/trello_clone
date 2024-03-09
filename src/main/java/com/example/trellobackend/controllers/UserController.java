@@ -7,6 +7,7 @@ import com.example.trellobackend.payload.request.AvatarRequest;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.services.IUserService;
 import com.example.trellobackend.services.WorkspaceService;
+import com.example.trellobackend.services.impl.BoardService;
 import com.example.trellobackend.services.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

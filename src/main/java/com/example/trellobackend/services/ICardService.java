@@ -8,5 +8,5 @@ import com.example.trellobackend.payload.request.CardRequest;
 
 public interface ICardService extends IGeneralService<Card>{
     BoardResponseDTO createNewCard(CardRequest cardRequest);
-    void changeCardTitle(Long cardId, String title);
+    void changeCardTitle(Long cardId, CardDTO title);
 }

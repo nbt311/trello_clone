@@ -3,17 +3,12 @@ package com.example.trellobackend.controllers;
 import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Columns;
-import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.ColumnRequest;
-import com.example.trellobackend.payload.response.MessageResponse;
-import com.example.trellobackend.repositories.BoardRepository;
 import com.example.trellobackend.repositories.ColumnsRepository;
-import com.example.trellobackend.services.impl.BoardService;
 import com.example.trellobackend.services.impl.ColumnsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -79,7 +74,7 @@ public class ColumsController {
     public ResponseEntity<String> deleteColumn(@PathVariable Long columnId) {
         try {
             columnsService.remove(columnId);
-            return ResponseEntity.ok("Delete Column Succesfully!");
+            return ResponseEntity.ok("Delete Column Successfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
         }
@@ -99,5 +94,15 @@ public class ColumsController {
     public ResponseEntity<String> moveCard(@RequestBody DragAndDropDTO dragAndDropDTO) {
         columnsService.handleDragAndDrop(dragAndDropDTO);
         return ResponseEntity.ok("Card moved successfully");
+    }
+
+    @PutMapping("/{columnId}/title")
+    public ResponseEntity<?> editColumnName(@PathVariable Long columnId, @RequestBody ColumnsDTO title){
+        try {
+            columnsService.updateColumnsById(columnId,title );
+            return new ResponseEntity<>("Updated!!!!",HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>("Error. Column not found.",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

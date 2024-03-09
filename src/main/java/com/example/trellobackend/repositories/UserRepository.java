@@ -1,5 +1,6 @@
 package com.example.trellobackend.repositories;
 
+import com.example.trellobackend.models.Role;
 import com.example.trellobackend.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByEmail(String email);
     @Query("SELECT u FROM User u WHERE u.username LIKE %:query% OR u.email LIKE %:query%")
     List<User> findUsersByPartialMatch(@Param("query") String query);
+
+    List<User> findByRoles(Role role);
 }

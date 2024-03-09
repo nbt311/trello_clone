@@ -1,15 +1,17 @@
 package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UpdateBoardDTO;
+import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Visibility;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.BoardRepository;
+import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.repositories.VisibilityRepository;
 import com.example.trellobackend.services.impl.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class BoardController {
     private BoardRepository boardRepository;
     @Autowired
     private VisibilityRepository visibilityRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponseDTO> getBoardById(@PathVariable Long boardId) {
@@ -98,5 +102,12 @@ public class BoardController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @DeleteMapping("/{boardId}/members/{userId}")
+    public ResponseEntity<?> deleteMembersFromBoard(@PathVariable Long boardId, @PathVariable Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        boardService.deleteMemberFromBoard(boardId, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

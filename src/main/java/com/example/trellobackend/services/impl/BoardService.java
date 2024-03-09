@@ -7,6 +7,7 @@ import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
+import com.example.trellobackend.models.Role;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.BoardMembers;
@@ -195,5 +196,29 @@ public class BoardService implements IBoardService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         board.getBoardMembers().add(user);
         boardRepository.save(board);
+    }
+
+//    public List<UserDTO> getBoardMembersByUserRole(Long boardId, UserRole roleName){
+//        Optional<Board> boardOptional = boardRepository.findById(boardId);
+//        if (boardOptional.isPresent()){
+//            Board board = boardOptional.get();
+//            Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
+//            List<User> userListByRole = userRepository.findByRoles(role);
+//            List<UserDTO> userDTOList = new ArrayList<>();
+//
+//        }
+//    }
+
+    public void deleteMemberFromBoard(Long boardId, User user){
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isPresent()){
+            Board board = boardOptional.get();
+            if (board.getBoardMembers().contains(user)){
+                board.getBoardMembers().remove(user);
+                boardRepository.save(board);
+            }
+        } else {
+            throw  new RuntimeException("Board not found");
+        }
     }
 }

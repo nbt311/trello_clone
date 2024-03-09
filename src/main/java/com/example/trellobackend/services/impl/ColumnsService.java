@@ -44,7 +44,7 @@ public class ColumnsService implements IColumsService {
 
     @Override
     public void save(Columns columns) {
-
+        columnsRepository.save(columns);
     }
 
     @Override
@@ -193,6 +193,18 @@ public class ColumnsService implements IColumsService {
                 card.setColumn(nextColumn);  // Set lại cột cho Card
                 columnsRepository.save(nextColumn);
             }
+        }
+    }
+
+    @Override
+    public void updateColumnsById(Long columnId,ColumnsDTO  newTitle) {
+        Optional<Columns> columnsOptional = columnsRepository.findById(columnId);
+        if(columnsOptional.isPresent()){
+            Columns columns = columnsOptional.get();
+            columns.setTitle(newTitle.getTitle());
+            columnsRepository.save(columns);
+        } else {
+            throw new RuntimeException("Column not found");
         }
     }
 }

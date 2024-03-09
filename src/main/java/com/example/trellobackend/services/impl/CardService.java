@@ -91,13 +91,14 @@ public class CardService implements ICardService {
     }
 
     @Override
-    public void changeCardTitle(Long cardId, String title) {
+    public void changeCardTitle(Long cardId,CardDTO title) {
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if (cardOptional.isPresent()) {
             Card card = cardOptional.get();
-            card.setTitle(title);
+            card.setTitle(title.getTitle());
             cardRepository.save(card);
+        } else {
+            throw new RuntimeException("Error: Card not found.");
         }
-        throw new RuntimeException("Error: Card not found.");
     }
 }

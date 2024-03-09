@@ -13,4 +13,5 @@ public interface IColumsService extends IGeneralService<Columns> {
     List<CardDTO> getAllCardDTOByBoardId(Long columnId);
     ColumnsDTO updateColumnCardOrderIds(Long columnId, UpdateColumnDTO updateData);
     void handleDragAndDrop(DragAndDropDTO dragAndDropDTO);
+    void updateColumnsById(Long columnId, ColumnsDTO title);
 }
