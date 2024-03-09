@@ -97,8 +97,11 @@ public class CardService implements ICardService {
             Card card = cardOptional.get();
             card.setTitle(title.getTitle());
             cardRepository.save(card);
-        } else {
+        }else {
             throw new RuntimeException("Error: Card not found.");
         }
+
     }
+
+
 }
