@@ -3,6 +3,8 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Card;
 import com.example.trellobackend.models.board.Columns;
@@ -10,12 +12,14 @@ import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;
 import com.example.trellobackend.repositories.CardRepository;
 import com.example.trellobackend.repositories.ColumnsRepository;
+import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.services.ICardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +30,8 @@ public class CardService implements ICardService {
     private ColumnsRepository columnsRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Iterable<Card> findAll() {
@@ -100,7 +106,44 @@ public class CardService implements ICardService {
         }else {
             throw new RuntimeException("Error: Card not found.");
         }
+    }
 
+    @Override
+    public void addMembersToCard(Long cardId, UserDTO data) {
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if (cardOptional.isPresent()) {
+            Card card = cardOptional.get();
+            Optional<User> userOptional = userRepository.findByUsername(data.getUsername());
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                card.getUsers().add(user);
+                cardRepository.save(card);
+            } else {
+                throw new RuntimeException("Error: User not found.");
+            }
+        } else {
+            throw new RuntimeException("Error: Card not found.");
+        }
+    }
+
+    @Override
+    public List<UserDTO> getUserByCard(Long cardId) {
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if (cardOptional.isPresent()) {
+            Card card = cardOptional.get();
+            Set<User> users = card.getUsers();
+            List<UserDTO> responseDTO = users.stream().map(user -> {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(user.getId());
+                userDTO.setUsername(user.getUsername());
+                userDTO.setEmail(user.getEmail());
+                userDTO.setAvatarUrl(user.getAvatarUrl());
+            return userDTO;
+            }).collect(Collectors.toList());
+            return responseDTO;
+        } else {
+            throw new RuntimeException("Error: Card not found.");
+        }
     }
 
 

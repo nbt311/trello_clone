@@ -1,5 +1,6 @@
 package com.example.trellobackend.models.board;
 
+import com.example.trellobackend.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,12 @@ public class Card {
                joinColumns = @JoinColumn(name = "card_id"),
                inverseJoinColumns = @JoinColumn(name = "label_id"))
     private Set<Label> labels = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "card_members",
+            joinColumns = @JoinColumn(name = "card_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 
 //    private String description;
 //    private String cover;

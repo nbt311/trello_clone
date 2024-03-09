@@ -3,12 +3,15 @@ package com.example.trellobackend.controllers;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.services.impl.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -31,4 +34,25 @@ public class CardController {
             return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/{cardId}/members")
+    public ResponseEntity<?> addMemberToCard(@PathVariable Long cardId, @RequestBody UserDTO userName){
+        try{
+            cardService.addMembersToCard(cardId, userName);
+            return new ResponseEntity<>("success",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{cardId}/members")
+    public ResponseEntity<?> getMembersByCard(@PathVariable Long cardId){
+        try{
+            List<UserDTO> users = cardService.getUserByCard(cardId);
+            return new ResponseEntity<>(users,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
