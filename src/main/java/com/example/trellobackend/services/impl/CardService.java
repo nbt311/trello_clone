@@ -3,9 +3,11 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.LabelDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.Card;
 import com.example.trellobackend.models.board.Columns;
+import com.example.trellobackend.models.board.Label;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;
 import com.example.trellobackend.repositories.CardRepository;
@@ -87,6 +89,32 @@ public class CardService implements ICardService {
             }
         } else {
             throw new RuntimeException("Error: Board not found.");
+        }
+    }
+
+    @Override
+    public List<LabelDTO> getAllLabelByCardId(Long cardId){
+        Card card = cardRepository.findById(cardId).orElse(null);
+        if(card != null){
+            return card.getLabels().stream()
+                    .map(LabelDTO::new
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("Card not found");
+        }
+    }
+
+    public void deleteLabelFromCard(Long cardId, Label label){
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if(cardOptional.isPresent()){
+            Card card = cardOptional.get();
+            if(card.getLabels().contains(label)){
+                card.getLabels().remove(label);
+                cardRepository.save(card);
+            }
+        } else {
+            throw new RuntimeException("Card not found");
         }
     }
 }
