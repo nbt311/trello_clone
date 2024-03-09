@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +28,13 @@ public class Card {
     private Columns column;
 
     private String title;
+
+    @ManyToMany
+    @JoinTable(name = "card_labels",
+               joinColumns = @JoinColumn(name = "card_id"),
+               inverseJoinColumns = @JoinColumn(name = "label_id"))
+    private Set<Label> labels = new HashSet<>();
+
 //    private String description;
 //    private String cover;
 }
