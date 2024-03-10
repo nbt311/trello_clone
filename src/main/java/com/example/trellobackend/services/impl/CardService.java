@@ -12,6 +12,7 @@ import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;
 import com.example.trellobackend.repositories.CardRepository;
 import com.example.trellobackend.repositories.ColumnsRepository;
+import com.example.trellobackend.repositories.LabelRepository;
 import com.example.trellobackend.services.ICardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class CardService implements ICardService {
     private ColumnsRepository columnsRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Override
     public Iterable<Card> findAll() {
@@ -115,6 +118,17 @@ public class CardService implements ICardService {
             }
         } else {
             throw new RuntimeException("Card not found");
+        }
+    }
+
+    public Card addLabelToCard(Long cardId, Long labelId){
+        Card card = cardRepository.findById(cardId).orElse(null);
+        Label label = labelRepository.findById(labelId).orElse(null);
+        if (card != null && label != null){
+            card.getLabels().add(label);
+            return cardRepository.save(card);
+        } else {
+            return null;
         }
     }
 }
