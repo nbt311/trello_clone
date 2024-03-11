@@ -1,6 +1,7 @@
 package com.example.trellobackend.models.board;
 
 import com.example.trellobackend.enums.EBoardMemberRole;
+import com.example.trellobackend.enums.MemberRole;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -25,8 +26,6 @@ public class BoardMembers {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private MemberRole role;
 
-//    @Enumerated(EnumType.STRING)
-//    private EBoardMemberRole role;
 }

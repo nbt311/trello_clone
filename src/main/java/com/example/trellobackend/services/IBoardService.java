@@ -2,6 +2,7 @@ package com.example.trellobackend.services;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.DragAndDropDTO;
 import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.workspace.Workspace;
@@ -15,4 +16,6 @@ public interface IBoardService extends IGeneralService<Board> {
     List<ColumnsDTO> getAllColumnsDTOByBoardId(Long boardId);
 
     BoardResponseDTO updateBoardColumnOrderIds(Long boardId, UpdateBoardDTO updateData);
+
+//    BoardResponseDTO updateCardOrderIds(Long boardId, DragAndDropDTO updateData);
 }

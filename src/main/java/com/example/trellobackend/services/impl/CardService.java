@@ -158,5 +158,11 @@ public class CardService implements ICardService {
         }
     }
 
+    @Override
+    public List<String> getAttachmentLinks(Long cardId) {
+        Card card = cardRepository.findById(cardId).orElse(null);
+        return (card != null) ? card.getAttachmentsLink() : null;
+    }
+
 
 }

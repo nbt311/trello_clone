@@ -29,6 +29,7 @@ public class ColumnsDTO {
     }
     public ColumnsDTO(Columns columns, List<Long> cardOrderIds, List<CardDTO> cards) {
         this.id = columns.getId();
+        this.boardId = columns.getBoard().getId();
         this.title = columns.getTitle();
         this.cardOrderIds = cardOrderIds;
         this.cards = cards;

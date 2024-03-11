@@ -12,9 +12,7 @@ import com.example.trellobackend.services.IColumsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -109,7 +107,7 @@ public class ColumnsService implements IColumsService {
     public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
         if (userOptional.isPresent()){
             Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
-            if (workspaceOptional.isPresent()){
+            if (workspaceOptional.isPresent()) {
                 Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
                 if (boardOptional.isPresent()) {
                     Board board = boardOptional.get();
@@ -144,10 +142,10 @@ public class ColumnsService implements IColumsService {
                 } else {
                     throw new RuntimeException("Error: Board not found.");
                 }
-            }else {
+            } else {
                 throw new RuntimeException("Error: Workspace not found.");
             }
-        }else {
+        } else {
             throw new RuntimeException("Error: User not found.");
         }
     }

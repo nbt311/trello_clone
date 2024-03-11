@@ -18,7 +18,6 @@ public class CardDTO {
     private Long columnId;
     private String title;
     private List<String> attachments;
-
     public CardDTO(Card card){
         this.id = card.getId();
         this.boardId = card.getBoard().getId();

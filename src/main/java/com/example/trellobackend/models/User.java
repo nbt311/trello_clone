@@ -1,8 +1,10 @@
 package com.example.trellobackend.models;
 
+import com.example.trellobackend.enums.MemberRole;
+import com.example.trellobackend.models.board.BoardMembers;
+import com.example.trellobackend.models.workspace.WorkspaceMembers;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.board.BoardMembers;
 import com.example.trellobackend.models.workspace.Workspace;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -20,7 +22,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@Data
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
@@ -49,22 +50,15 @@ public class User {
     private String localTime;
     private String avatarUrl;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Workspace> ownedWorkspaces = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "members")
-    private Set<Workspace> memberWorkspaces = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<BoardMembers> BoardMembers = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    @Enumerated(EnumType.STRING)
-    private UserRole memberRole;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<WorkspaceMembers> workspaceMembers = new HashSet<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<BoardMembers> BoardMembers = new HashSet<>();
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

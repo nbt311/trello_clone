@@ -14,4 +14,6 @@ public interface ICardService extends IGeneralService<Card>{
     void addMembersToCard(Long cardId, UserDTO data);
     List<UserDTO> getUserByCard(Long cardId);
     void changeCardAttachment(Long cardId, CardDTO data);
+
+    List<String> getAttachmentLinks(Long cardId);
 }

@@ -35,6 +35,7 @@ public class CardController {
         }
     }
 
+
     @PostMapping("/{cardId}/members")
     public ResponseEntity<?> addMemberToCard(@PathVariable Long cardId, @RequestBody UserDTO userName){
         try{
@@ -63,6 +64,11 @@ public class CardController {
         }catch (Exception e){
             return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("{cardId}/attachment")
+    public List<String> getAttachLinks(@PathVariable Long cardId) {
+        return cardService.getAttachmentLinks(cardId);
     }
 
 }

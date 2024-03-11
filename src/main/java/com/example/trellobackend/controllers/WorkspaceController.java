@@ -1,10 +1,10 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.dto.MembersDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.dto.WorkspaceDTO;
+import com.example.trellobackend.enums.MemberRole;
 import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.workspace.Members;
-import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.User;
 
 import com.example.trellobackend.models.workspace.Workspace;
@@ -13,7 +13,6 @@ import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.payload.response.MessageResponse;
 import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.repositories.BoardRepository;
-import com.example.trellobackend.repositories.WorkspaceMemberRepository;
 import com.example.trellobackend.repositories.WorkspaceRepository;
 import com.example.trellobackend.repositories.WorkspaceTypeRepository;
 
@@ -21,7 +20,6 @@ import com.example.trellobackend.services.impl.EmailService;
 
 import com.example.trellobackend.services.impl.WorkspaceServiceImpl;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,16 +58,17 @@ public class WorkspaceController {
 
     @GetMapping("/{workspaceId}")
     public ResponseEntity<WorkspaceDTO> getWorkspace(@PathVariable Long workspaceId) {
-        Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
-        WorkspaceDTO workspaceDTO = new WorkspaceDTO(workspace);
-        return ResponseEntity.ok(workspaceDTO);
+//        Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
+//        WorkspaceDTO workspaceDTO = new WorkspaceDTO(workspace);
+//        return ResponseEntity.ok(workspaceDTO);
+        return null;
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
         try {
             String frontendURL = workspaceRequest.getFrontendURL();
-            Workspace workspace = workspaceService.createWorkspace(workspaceRequest, frontendURL);
+            WorkspaceDTO workspace = workspaceService.createWorkspace(workspaceRequest, frontendURL);
             return new ResponseEntity<>(workspace, HttpStatus.CREATED);
         } catch (UsernameNotFoundException e) {
             // Xử lý khi không tìm thấy người dùng
@@ -82,12 +81,12 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{workspaceId}/members")
-    public ResponseEntity<List<UserDTO>> getWorkspaceMembers(@PathVariable Long workspaceId) {
+    public ResponseEntity<?> getWorkspaceMembers(@PathVariable Long workspaceId) {
         try {
-            List<UserDTO> members = workspaceService.getWorkspaceMembers(workspaceId);
+            List<MembersDTO> members = workspaceService.getWorkspaceMembers(workspaceId);
             return new ResponseEntity<>(members, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error: Workspace not found with id:" + workspaceId,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/{workspaceId}/boards")
@@ -104,15 +103,15 @@ public class WorkspaceController {
         }
     }
 
-    @GetMapping("/{workspaceId}/invite/{email}")
-    public ResponseEntity<?> inviteUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String email) {
-        Workspace workspace = workspaceRepository.findById(workspaceId)
-                .orElseThrow(() -> new EntityNotFoundException("Workspace not found"));
-        String invitation = workspaceService.inviteUserToWorkspace(email, workspace);
-        emailService.sendInvitationEmail(email, invitation);
-
-        return new ResponseEntity<>(invitation, HttpStatus.CREATED);
-    }
+//    @GetMapping("/{workspaceId}/invite/{email}")
+//    public ResponseEntity<?> inviteUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String email) {
+//        Workspace workspace = workspaceRepository.findById(workspaceId)
+//                .orElseThrow(() -> new EntityNotFoundException("Workspace not found"));
+//        String invitation = workspaceService.inviteUserToWorkspace(email, workspace);
+//        emailService.sendInvitationEmail(email, invitation);
+//
+//        return new ResponseEntity<>(invitation, HttpStatus.CREATED);
+//    }
 
     @PostMapping("/{workspaceId}/addUser/{userEmail}")
     public ResponseEntity<?> addUserToWorkspace(@PathVariable Long workspaceId, @PathVariable String userEmail) {
@@ -121,14 +120,13 @@ public class WorkspaceController {
             if (authentication != null && authentication.isAuthenticated()) {
                 Workspace workspace = workspaceService.getWorkspaceById(workspaceId);
 
-                // Kiểm tra xem người dùng với email đã tồn tại hay không
                 Optional<User> userOptional = userRepository.findByEmail(userEmail);
                 if (userOptional.isPresent()) {
-                    // Thêm user vào workspace với quyền mặc định (ví dụ: ROLE_MEMBER)
                     User userToAdd = userOptional.get();
-                    workspaceService.addMemberToWorkspace(workspace, userToAdd, UserRole.ROLE_USER);
 
-                    // Gửi email mời tham gia nhóm
+                    workspaceRepository.save(workspace);
+                    workspaceService.addMemberToWorkspace(MemberRole.MEMBER, userToAdd,workspace);
+
                     String inviteLink = workspaceService.inviteUserToWorkspace(userEmail, workspace);
                     emailService.sendInvitationEmail(userEmail, inviteLink);
 
@@ -150,5 +148,11 @@ public class WorkspaceController {
     public ResponseEntity<?> getWorkspaceById(@PathVariable Long id){
         Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
+    }
+
+    @GetMapping("{userId}/all")
+    public ResponseEntity<?> getAllWorkspacesByUserId(@PathVariable Long userId) {
+        List<WorkspaceDTO> workspaceDTOList = workspaceService.getAllWorkspaceByUser(userId);
+        return new ResponseEntity<>(workspaceDTOList, HttpStatus.OK);
     }
 }

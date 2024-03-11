@@ -2,6 +2,7 @@ package com.example.trellobackend.models.board;
 
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.workspace.Workspace;
+import com.example.trellobackend.models.workspace.WorkspaceMembers;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -46,4 +47,5 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Columns> columns;
+
 }
