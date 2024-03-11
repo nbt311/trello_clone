@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Avatar,
+    Avatar, AvatarGroup,
     Button, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
     Modal,
     ModalBody,
@@ -8,7 +8,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay, Textarea, useDisclosure
+    ModalOverlay, Textarea, Tooltip, useDisclosure
 } from "@chakra-ui/react";
 import { PiChalkboardSimple } from "react-icons/pi";
 import { HiMenuAlt2 } from "react-icons/hi";
@@ -18,7 +18,7 @@ import { TiTag } from "react-icons/ti";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import CardService from "../Service/CardService";
-const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card}) => {
+const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card,showMembers}) => {
     const [inputValue, setInputValue] = useState('');
     const [originalValue, setOriginalValue] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -110,15 +110,15 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card}) => {
                     <ModalBody>
                         <div className="flex justify-between">
                             <div className="w-[70%]">
-                                <div className='flex flex-col border border-black'>
+                                <div className='flex flex-col '>
                                     <p className='text-sm'>members</p>
-                                    <Avatar
-                                        boxSize='2rem'
-                                        borderRadius='full'
-                                        src={user.avatarUrl}
-                                        alt={user.username}
-                                        mr='12px'
-                                    />
+                                    <AvatarGroup className='mt-3' size='xs' max={2}>
+                                        {showMembers.map((member) => (
+                                            <Tooltip key={member.id} label={member.username}>
+                                                <Avatar key={member.id} name={member.name} src={member.avatarUrl} boxSize='40px'/>
+                                            </Tooltip>
+                                        ))}
+                                    </AvatarGroup>
                                 </div>
 
                                 <div className="flex mt-5">

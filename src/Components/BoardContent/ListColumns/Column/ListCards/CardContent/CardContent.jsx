@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {RxPencil1} from "react-icons/rx";
-import {Avatar, AvatarGroup, Button, Card, Input, useDisclosure} from "@chakra-ui/react";
+import {Avatar, AvatarGroup, Button, Card, Input, Tooltip, useDisclosure} from "@chakra-ui/react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import CardService from "../../../../../../Service/CardService";
@@ -71,7 +71,7 @@ const CardContent = ({card}) => {
 
     return (
         <div>
-        <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility} card={card}/>
+        <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility} card={card} showMembers={members}/>
         <Card ref={setNodeRef} style={dndKitCardStyle} {...attributes} {...listeners}
             key={card.id}
             className='rounded-md my-3 p-2'>
@@ -117,7 +117,9 @@ const CardContent = ({card}) => {
                         />
                         <AvatarGroup className='mt-3' size='xs' max={2}>
                             {members.map((member) => (
-                                <Avatar key={member.id} name={member.name} src={member.avatarUrl} />
+                                <Tooltip key={member.id} label={member.username}>
+                                <Avatar key={member.id} name={member.name} src={member.avatarUrl} boxSize='20px'/>
+                                </Tooltip>
                                 ))}
                         </AvatarGroup>
                     </div>
