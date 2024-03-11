@@ -31,7 +31,7 @@ public class CardController {
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{cardId}/labels")
+    @GetMapping("/{cardId}/allLabels")
     public ResponseEntity<?> getAllLabelsByCardId(@PathVariable Long cardId){
         try {
             List<LabelDTO> labelDTOList = cardService.getAllLabelByCardId(cardId);
@@ -41,20 +41,13 @@ public class CardController {
         }
     }
 
-    @DeleteMapping("/{cardId}/labels/{labelId}")
-    public ResponseEntity<?> deleteLabelFromCard(@PathVariable Long cardId, @PathVariable Long labelId){
-        Label label = labelRepository.findById(cardId).orElseThrow(() -> new RuntimeException("Not found"));
-        cardService.deleteLabelFromCard(cardId, label);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/{cardId}/labels/{labelId}")
-    public ResponseEntity<?> addNewLabelToCard (@PathVariable Long cardId, @PathVariable Long labelId){
-        Card card = cardService.addLabelToCard(cardId, labelId);
-        if (card != null){
+    @PostMapping("/{cardId}/newLabels/{labelId}")
+    public ResponseEntity<?> addLabelToCard(@PathVariable Long cardId, @PathVariable Long labelId){
+        try {
+            cardService.addLabelToCard(cardId, labelId);
             return new ResponseEntity<>("Label added", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Card not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

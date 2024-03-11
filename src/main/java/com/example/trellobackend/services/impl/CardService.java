@@ -108,27 +108,16 @@ public class CardService implements ICardService {
         }
     }
 
-    public void deleteLabelFromCard(Long cardId, Label label){
+    public void addLabelToCard(Long cardId, Long labelId){
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if(cardOptional.isPresent()){
             Card card = cardOptional.get();
-            if(card.getLabels().contains(label)){
-                card.getLabels().remove(label);
+            Optional<Label> labelOptional = labelRepository.findById(labelId);
+            if(labelOptional.isPresent()){
+                Label label = labelOptional.get();
+                card.getLabels().add(label);
                 cardRepository.save(card);
             }
-        } else {
-            throw new RuntimeException("Card not found");
-        }
-    }
-
-    public Card addLabelToCard(Long cardId, Long labelId){
-        Card card = cardRepository.findById(cardId).orElse(null);
-        Label label = labelRepository.findById(labelId).orElse(null);
-        if (card != null && label != null){
-            card.getLabels().add(label);
-            return cardRepository.save(card);
-        } else {
-            return null;
         }
     }
 }

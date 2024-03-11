@@ -12,12 +12,9 @@ import lombok.Setter;
 @Setter
 public class LabelDTO {
     private Long id;
-    private String name;
     private String color;
 
     public LabelDTO (Label label){
-        this.id = label.getId();
-        this.name = label.getName();
         this.color = label.getColor();
     }
 }
