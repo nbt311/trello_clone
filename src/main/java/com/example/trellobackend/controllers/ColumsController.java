@@ -27,24 +27,35 @@ public class ColumsController {
     private ColumnsService columnsService;
     @Autowired
     private ColumnsRepository columnsRepository;
-@GetMapping("/{id}")
-public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
-    try {
-        Optional<Columns> columnsOptional = columnsRepository.findById(id);
-        if (columnsOptional.isPresent()){
-            Columns columns = columnsOptional.get();
-            ColumnsDTO columnsDTO = new ColumnsDTO();
-            columnsDTO.setId(columns.getId());
-            columnsDTO.setTitle(columns.getTitle());
-            return new ResponseEntity<>(columnsDTO, HttpStatus.OK);
-        }else {
-            throw new RuntimeException( "Column not found");
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ColumnsDTO> getColumnById(@PathVariable Long id) {
+        try {
+            Optional<Columns> columnsOptional = columnsRepository.findById(id);
+            if (columnsOptional.isPresent()) {
+                Columns columns = columnsOptional.get();
+                ColumnsDTO columnsDTO = new ColumnsDTO();
+                columnsDTO.setId(columns.getId());
+                columnsDTO.setTitle(columns.getTitle());
+                return new ResponseEntity<>(columnsDTO, HttpStatus.OK);
+            } else {
+                throw new RuntimeException("Column not found");
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    } catch (Exception e) {
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-}
+    @PutMapping("/{columnId}")
+    public ResponseEntity<ColumnsDTO> updateBoardById(@PathVariable Long columnId,
+                                                      @RequestBody UpdateColumnDTO updateData) {
+        try {
+            ColumnsDTO responseDTO = columnsService.updateColumnCardOrderIds(columnId,updateData);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createColumn(@RequestBody ColumnRequest columnRequest) {
@@ -63,6 +74,7 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     @DeleteMapping("/{columnId}/delete")
     public ResponseEntity<String> deleteColumn(@PathVariable Long columnId) {
         try {
@@ -72,6 +84,7 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
             return ResponseEntity.status(404).body("Not found Column with ID: " + columnId);
         }
     }
+
     @GetMapping("{columnId}/cards")
     public ResponseEntity<List<CardDTO>> getAllColumnsByBoardId(@PathVariable Long columnId) {
         try {
@@ -79,17 +92,6 @@ public ResponseEntity<ColumnsDTO>  getColumnById(@PathVariable Long id) {
             return ResponseEntity.ok(cardDTOList);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{columnId}")
-    public ResponseEntity<ColumnsDTO> updateBoardById(@PathVariable Long columnId,
-                                                            @RequestBody UpdateColumnDTO updateData) {
-        try {
-            ColumnsDTO responseDTO = columnsService.updateColumnCardOrderIds(columnId,updateData);
-            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

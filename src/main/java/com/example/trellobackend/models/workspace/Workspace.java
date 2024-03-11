@@ -24,17 +24,13 @@ public class Workspace {
     private Long id;
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
-    @ManyToMany
-    @JoinTable(
-            name = "workspace_members",
-            joinColumns = @JoinColumn(name = "workspace_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> members = new HashSet<>();
+//    @ManyToOne
+//    @JoinColumn(name = "owner_id")
+//    private User owner;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
+//    private User member;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "workspace_types",
@@ -56,4 +52,7 @@ public class Workspace {
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workspace", fetch = FetchType.LAZY)
+    private Set<WorkspaceMembers> workspaceMembers = new HashSet<>();
 }

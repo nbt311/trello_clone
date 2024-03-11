@@ -1,26 +1,23 @@
 package com.example.trellobackend.services.impl;
 
+import com.example.trellobackend.dto.MembersDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.dto.WorkspaceDTO;
 import com.example.trellobackend.enums.MemberRole;
-import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.enums.WorkSpacePermission;
 import com.example.trellobackend.enums.WorkSpaceType;
 import com.example.trellobackend.models.*;
 import com.example.trellobackend.models.workspace.Permission;
 import com.example.trellobackend.models.workspace.Type;
 import com.example.trellobackend.models.workspace.Workspace;
-import com.example.trellobackend.models.workspace.Members;
+import com.example.trellobackend.models.workspace.WorkspaceMembers;
 import com.example.trellobackend.payload.request.WorkspaceRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.WorkspaceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,15 +31,13 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Autowired
     private WorkspacePermissionRepository workspacePermissionRepository;
     @Autowired
-    private WorkspaceMemberRepository workspaceMemberRepository;
+    private WorkspaceMembersRepository workspaceMembersRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private EmailService emailService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ModelMapper modelMapper;
     @Override
     public Iterable<Workspace> findAll() {
         return workspaceRepository.findAll();
@@ -62,20 +57,17 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
 
     public List<WorkspaceDTO> getAllWorkspaces() {
-        return workspaceRepository.findAll().stream()
-                .map(WorkspaceDTO::new)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
-    public Workspace createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL) {
+    public WorkspaceDTO createWorkspace(WorkspaceRequest workspaceRequest, String frontendURL) {
         Optional<User> userOptional = userRepository.findByEmail(workspaceRequest.getEmail());
         if (userOptional.isPresent()) {
             User creator = userOptional.get();
             Workspace workspace = new Workspace();
             workspace.setName(workspaceRequest.getName());
             workspace.setDescription(workspaceRequest.getDescription());
-            workspace.setOwner(creator);
 
             Set<String> strPermissions = workspaceRequest.getPermission();
             Set<Permission> permissions = new HashSet<>();
@@ -98,19 +90,19 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             } else {
                 strTypes.forEach(type -> {
                     switch (type) {
-                        case "operation":
+                        case "OPERATION":
                             Type operationType = workspaceTypeRepository.findByName(WorkSpaceType.OPERATION)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             types.add(operationType);
 
                             break;
-                        case "marketing":
+                        case "MARKETING":
                             Type marketingType = workspaceTypeRepository.findByName(WorkSpaceType.MARKETING)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             types.add(marketingType);
 
                             break;
-                        case "other":
+                        case "OTHER":
                             Type otherType = workspaceTypeRepository.findByName(WorkSpaceType.OTHER)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             types.add(otherType);
@@ -129,10 +121,17 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             String inviteLink = frontendURL + "/w/" + workspace.getName() + inviteCode;
             workspace.setInviteCode(inviteCode);
             workspace.setInviteLink(inviteLink);
-//            addMemberToWorkspace(workspace, creator, UserRole.ROLE_ADMIN);
             workspaceRepository.save(workspace);
-            creator.getOwnedWorkspaces().add(workspace);
-            return workspace;
+            addMemberToWorkspace(MemberRole.ADMIN, creator, workspace);
+            WorkspaceDTO responseDTO = new WorkspaceDTO();
+            responseDTO.setId(workspace.getId());
+            responseDTO.setName(workspace.getName());
+            responseDTO.setMembers(workspace.getWorkspaceMembers().stream()
+                    .map(MembersDTO::new)
+                    .collect(Collectors.toList()));
+            responseDTO.setBoards(Collections.emptyList());
+
+            return responseDTO;
         }
         throw new UsernameNotFoundException("User not found");
     }
@@ -150,38 +149,52 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         return workspaceRepository.findById(workspaceId);
     }
 
+    @Override
+    public List<WorkspaceDTO> getAllWorkspaceByUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            return null;
+        }else {
+            throw  new RuntimeException("User not found");
+        }
+
+    }
+
 
     private String generateInviteCode() {
         // Logic để tạo mã đặc biệt, có thể sử dụng UUID, mã ngẫu nhiên, hoặc bất kỳ phương pháp nào khác.
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
-    public void addMemberToWorkspace(Workspace workspace, User user, UserDTO userRole) {
-        Members member = new Members();
-        member.setWorkspace(workspace);
-        member.setUser(user);
-//        member.setRole(userRole);
-        workspaceMemberRepository.save(member);
+    public void addMemberToWorkspace(MemberRole memberRole, User user,Workspace workspace ) {
+        WorkspaceMembers members = new WorkspaceMembers();
+        members.setWorkspace(workspace);
+        members.setUser(user);
+        members.setRole(memberRole);
+        workspace.getWorkspaceMembers().add(members);
+        workspaceMembersRepository.save(members);
     }
 
-//    public List<UserDTO> getWorkspaceMembers(Long workspaceId) {
-//        Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
-//
-//        if (workspaceOptional.isPresent()) {
-//            Workspace workspace = workspaceOptional.get();
-//            Set<User> members = workspace.getMembers();
-//
-//            // Chuyển đổi từ User Entity sang UserDTO
-//            List<UserDTO> membersDTO = members.stream()
-//                    .map(user -> modelMapper.map(user, UserDTO.class))
-//                    .collect(Collectors.toList());
-//
-//            return membersDTO;
-//        }
-//
-//        // Nếu không tìm thấy Workspace, có thể xử lý theo ý muốn của bạn
-//        throw new RuntimeException("Workspace not found");
-//    }
+    public List<MembersDTO> getWorkspaceMembers(Long workspaceId) {
+        Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
+
+        if (workspaceOptional.isPresent()) {
+            Workspace workspace = workspaceOptional.get();
+
+            List<WorkspaceMembers> workspaceMembersList = new ArrayList<>(workspace.getWorkspaceMembers());
+
+            List<MembersDTO> membersDTOs = workspaceMembersList.stream()
+                    .map(workspaceMembers -> new MembersDTO(workspaceMembers.getUser(), workspaceMembers.getRole()))
+                    .collect(Collectors.toList());
+
+            return membersDTOs;
+        }
+
+        // Nếu không tìm thấy Workspace, có thể xử lý theo ý muốn của bạn
+        throw new RuntimeException("Workspace not found");
+    }
 
 
 }

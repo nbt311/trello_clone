@@ -105,9 +105,8 @@ public class ColumnsService implements IColumsService {
     }
 
     @Override
-    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
-        if (userOptional.isPresent()) {
+    public BoardResponseDTO createNewColumn(ColumnRequest columnRequest) { Optional<User> userOptional = userRepository.findByEmail(columnRequest.getEmail());
+        if (userOptional.isPresent()){
             Optional<Workspace> workspaceOptional = workspaceRepository.findById(columnRequest.getWorkspaceId());
             if (workspaceOptional.isPresent()) {
                 Optional<Board> boardOptional = boardRepository.findById(columnRequest.getBoardId());
@@ -154,7 +153,6 @@ public class ColumnsService implements IColumsService {
 
     @Override
     public void handleDragAndDrop(DragAndDropDTO dragAndDropDTO) {
-        // Lấy thông tin từ DTO
         Long currentCardId = dragAndDropDTO.getCurrentCardId();
         Long prevColumnId = dragAndDropDTO.getPrevColumnId();
         List<Long> prevCardOrderIds = dragAndDropDTO.getPrevCardOrderIds();
@@ -180,7 +178,6 @@ public class ColumnsService implements IColumsService {
     private void moveCardBetweenColumns(Long currentCardId, Long prevColumnId, Long nextColumnId) {
         Card card = cardRepository.findById(currentCardId).orElse(null);
         if (card != null) {
-            // Xóa Card từ cột cũ
             Columns prevColumn = columnsRepository.findById(prevColumnId).orElse(null);
             if (prevColumn != null) {
                 prevColumn.getCards().remove(card);
@@ -188,7 +185,6 @@ public class ColumnsService implements IColumsService {
                 columnsRepository.save(prevColumn);
             }
 
-            // Thêm Card vào cột mới
             Columns nextColumn = columnsRepository.findById(nextColumnId).orElse(null);
             if (nextColumn != null) {
                 nextColumn.getCards().add(card);
@@ -197,5 +193,4 @@ public class ColumnsService implements IColumsService {
             }
         }
     }
-
 }

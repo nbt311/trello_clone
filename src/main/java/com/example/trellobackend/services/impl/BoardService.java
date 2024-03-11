@@ -9,8 +9,6 @@ import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.IBoardService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -80,12 +78,12 @@ public class BoardService implements IBoardService {
                 Set<Visibility> visibilities = new HashSet<>();
                 strVisibilities.forEach(visibility -> {
                     switch (visibility) {
-                        case "private":
+                        case "PRIVATE":
                             Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(privateVisibility);
                             break;
-                        case "public":
+                        case "PUBLIC":
                             Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(publicVisibility);
@@ -104,6 +102,7 @@ public class BoardService implements IBoardService {
                 BoardResponseDTO responseDTO = new BoardResponseDTO();
                 responseDTO.setId(board.getId());
                 responseDTO.setTitle(board.getTitle());
+                responseDTO.setVisibility(board.getVisibilities());
                 responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
                 responseDTO.setColumnOrderIds(Collections.emptyList()); // Initialize the columnIds list
 
@@ -166,79 +165,6 @@ public class BoardService implements IBoardService {
         }
     }
 
-//    @Override
-//    public BoardResponseDTO updateCardOrderIds(Long boardId, DragAndDropDTO updateData) {
-//        Long currentCardId = updateData.getCurrentCardId();
-//        Long prevColumnId = updateData.getPrevColumnId();
-//        List<Long> prevCardOrderIds = updateData.getPrevCardOrderIds();
-//        Long nextColumnId = updateData.getNextColumnId();
-//        List<Long> nextCardOrderIds = updateData.getNextCardOrderIds();
-//        // Lấy bảng từ cơ sở dữ liệu
-//        Board board = boardRepository.findById(boardId)
-//                .orElseThrow(() -> new RuntimeException("Board not found with id: " + boardId));
-//
-//        Columns prevColumn = board.getColumns().stream()
-//                .filter(column -> column.getId().equals(prevColumnId))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Previous column not found with id: " + prevColumnId));
-//        // Thực hiện chuyển card
-////        moveCard(board, currentCardId, prevColumnId, prevCardOrderIds, nextColumnId, nextCardOrderIds);
-//
-//        // Lưu các thay đổi vào cơ sở dữ liệu
-//        boardRepository.save(board);
-//
-//        // Trả về DTO chứa thông tin đã được cập nhật
-////        return createBoardResponseDTO(board, currentCardId);
-// return  ;
-//    }
-
-//    private BoardResponseDTO createBoardResponseDTO(Board board, Long currentCardId) {
-//        List<ColumnsDTO> columnsDTOList = board.getColumns()
-//                .stream()
-//                .map(ColumnsDTO::fromEntity)
-//                .collect(Collectors.toList());
-//
-//        // Tìm card đã được chuyển
-//        Card movedCard = board.getColumns().stream()
-//                .flatMap(column -> column.getCards().stream())
-//                .filter(card -> card.getId().equals(currentCardId))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Moved card not found with id: " + currentCardId));
-//
-//        return new BoardResponseDTO(board, board.getVisibilities(), board.getColumnOrderIds(), columnsDTOList);
-//    }
-    private static final Logger logger = LoggerFactory.getLogger(BoardService.class);
-//    private void moveCard(Board board, Long currentCardId, Long prevColumnId, List<Long> prevCardOrderIds, Long nextColumnId, List<Long> nextCardOrderIds) {
-//        // Tìm cột cũ và mới
-//        logger.debug("prevColumnId: {}, nextColumnId: {}", prevColumnId, nextColumnId);
-//        Columns prevColumn = board.getColumns().stream()
-//                .filter(column -> column.getId().equals(prevColumnId))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Previous column not found with id: " + prevColumnId));
-//
-//        Columns nextColumn = board.getColumns().stream()
-//                .filter(column -> column.getId().equals(nextColumnId))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Next column not found with id: " + nextColumnId));
-//
-//        // Lọc card từ cột cũ
-//        List<Card> cardsInPrevColumn = prevColumn.getCards().stream()
-//                .filter(card -> !card.getId().equals(currentCardId))
-//                .collect(Collectors.toList());
-//
-//        // Thêm card vào cột mới
-//        Card movedCard = prevColumn.getCards().stream()
-//                .filter(card -> card.getId().equals(currentCardId))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Card not found with id: " + currentCardId));
-//
-//        nextColumn.getCards().add(movedCard);
-//
-//        // Cập nhật danh sách card trong cột cũ
-//        prevColumn.setCards(cardsInPrevColumn);
-//        prevColumn.setCardOrderIds(prevCardOrderIds);
-//
-//        // Cập nhật thứ tự card trong cột mới
-//        nextColumn.setCardOrderIds(nextCardOrderIds);
-//        System.out.println(prevColumn);
-//        System.out.println(nextColumn);
-//    }
-
     public void addMemberToBoard(Board board, User user, UserRole userRole) {
         BoardMembers boardMembers = new BoardMembers();
         boardMembers.setBoard(board);
@@ -246,5 +172,4 @@ public class BoardService implements IBoardService {
         boardMembers.setRole(userRole);
         boardMembersRepository.save(boardMembers);
     }
-
 }

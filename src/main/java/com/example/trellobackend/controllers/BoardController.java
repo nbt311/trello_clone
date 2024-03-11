@@ -80,13 +80,4 @@ public class BoardController {
         return  visibilityRepository.findAll();
     }
 
-//    @PutMapping("{boardId}/supports/moving-card")
-//    public ResponseEntity<?> movingCard(@PathVariable Long boardId, @RequestBody DragAndDropDTO updateData){
-//        try {
-//            BoardResponseDTO responseDTO = boardService.updateCardOrderIds(boardId, updateData);
-//            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Error moving card: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 }
