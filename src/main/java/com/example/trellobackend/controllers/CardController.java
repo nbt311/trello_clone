@@ -55,4 +55,14 @@ public class CardController {
         }
     }
 
+    @PutMapping("{cardId}/attachment")
+    public ResponseEntity<?> changeCardAttachment(@PathVariable Long cardId, @RequestBody CardDTO data ){
+        try{
+            cardService.changeCardAttachment(cardId, data);
+            return new ResponseEntity<>("success",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("error card not found " + cardId,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

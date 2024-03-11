@@ -41,15 +41,8 @@ public class Board {
             inverseJoinColumns = @JoinColumn(name = "visibility_id"))
     private Set<Visibility> visibilities = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "board_owner_id")
-    private User boardOwner;
-
-    @ManyToMany
-    @JoinTable(name = "members_board",
-               joinColumns = @JoinColumn(name = "board_id"),
-               inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> boardMembers = new HashSet<>();
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private Set<BoardMembers> BoardMembers = new HashSet<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Columns> columns;

@@ -86,12 +86,12 @@ public class BoardService implements IBoardService {
                 Set<Visibility> visibilities = new HashSet<>();
                 strVisibilities.forEach(visibility -> {
                     switch (visibility) {
-                        case "private":
+                        case "PRIVATE":
                             Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(privateVisibility);
                             break;
-                        case "public":
+                        case "PUBLIC":
                             Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(publicVisibility);
@@ -129,7 +129,7 @@ public class BoardService implements IBoardService {
                 List<Long> cardOrderIds = columns.getCardOrderIds();
                 List<CardDTO> cards = columns.getCards()
                         .stream().map(card ->
-                                new CardDTO(card.getId(), card.getBoard().getId(), card.getColumn().getId(), card.getTitle()))
+                                new CardDTO(card.getId(), card.getBoard().getId(), card.getColumn().getId(), card.getTitle(), card.getAttachmentsLink()))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
             })
@@ -180,12 +180,8 @@ public class BoardService implements IBoardService {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if(boardOptional.isPresent()){
             Board board = boardOptional.get();
-            Set<User> boardMembers = board.getBoardMembers();
 
-            List<UserDTO> boardMembersDTO = boardMembers.stream()
-                    .map(user -> modelMapper.map(user, UserDTO.class))
-                    .collect(Collectors.toList());
-            return boardMembersDTO;
+            return null;
         }
         throw new RuntimeException("Board not found");
     }
@@ -194,7 +190,6 @@ public class BoardService implements IBoardService {
         Board board = boardRepository. findById(boardId).orElseThrow(() -> new RuntimeException("Board not found"));
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        board.getBoardMembers().add(user);
         boardRepository.save(board);
     }
 

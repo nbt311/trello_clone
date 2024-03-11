@@ -2,10 +2,8 @@ package com.example.trellobackend.services;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UserDTO;
-import com.example.trellobackend.models.board.Card;
-import com.example.trellobackend.models.board.Label;
+import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.payload.request.CardRequest;
 
 import java.util.List;
@@ -15,4 +13,5 @@ public interface ICardService extends IGeneralService<Card>{
     void changeCardTitle(Long cardId, CardDTO title);
     void addMembersToCard(Long cardId, UserDTO data);
     List<UserDTO> getUserByCard(Long cardId);
+    void changeCardAttachment(Long cardId, CardDTO data);
 }

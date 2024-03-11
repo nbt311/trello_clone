@@ -3,7 +3,7 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.board.Card;
+import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.ColumnRequest;
@@ -12,7 +12,6 @@ import com.example.trellobackend.services.IColumsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

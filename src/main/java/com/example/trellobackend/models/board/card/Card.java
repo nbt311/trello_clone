@@ -1,6 +1,8 @@
-package com.example.trellobackend.models.board;
+package com.example.trellobackend.models.board.card;
 
 import com.example.trellobackend.models.User;
+import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.board.Columns;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +44,9 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
+
+    @ElementCollection
+    private List<String> attachmentsLink;
 
 //    private String description;
 //    private String cover;
