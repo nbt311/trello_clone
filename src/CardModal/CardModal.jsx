@@ -92,7 +92,30 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card,showMembers}) =>
         toggleVisibility(color);
     };
 
-    const [selectedMember, setSelectedMember] = useState(null);
+    const [isEditingg, setIsEditingg] = useState(false);
+    const [editedTitle, setEditedTitle] = useState(card.title);
+    const handleEdit = () => {
+        setIsEditingg(true);
+    };
+
+    const handleSave = () => {
+        setIsEditingg(false);
+        CardService.changeCardTitle(card.id,editedTitle)
+    };
+
+    const handleCancel = () => {
+        setEditedTitle(card.title);
+        setIsEditingg(false);
+    };
+
+    const handleBlur = () => {
+        if (isEditingg === false) {
+            handleCancel()
+        }else {
+            handleSave();
+        }
+    };
+
     const handleMemberClick = (data) => {
         CardService.addMemberToCard(card.id,data)
         console.log(card.id)
@@ -103,8 +126,21 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card,showMembers}) =>
                 <ModalOverlay/>
                 <ModalContent>
                     <ModalHeader>
-                        <PiChalkboardSimple />
-
+                        <div className='flex h-10'>
+                            <PiChalkboardSimple className='mt-1'/>
+                            {isEditingg ? (
+                                <div className='flex flex-row justify-between items-center'>
+                                    <Input
+                                        value={editedTitle}
+                                        onChange={e => setEditedTitle(e.target.value)}
+                                        onBlur={handleBlur}
+                                        autoFocus
+                                    />
+                                </div>
+                            ) : (
+                            <p className='text-lg font-medium ml-2' onClick={handleEdit}>{editedTitle}</p>
+                            )}
+                        </div>
                     </ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>

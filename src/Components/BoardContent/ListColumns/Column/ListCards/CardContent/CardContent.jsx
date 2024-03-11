@@ -8,6 +8,7 @@ import CardModal from "../../../../../../CardModal/CardModal";
 
 const CardContent = ({card}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
+    const [members, setMembers] = useState([]);
     const {
         attributes, listeners, setNodeRef, transform, transition, isDragging,
     } = useSortable({id: card.id, data: {...card}});
@@ -19,9 +20,6 @@ const CardContent = ({card}) => {
         border: isDragging ? '1px solid #2ecc71' : undefined
     };
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(card.title);
-    const [members, setMembers] = useState([]);
     useEffect(() => {
         const fetchMembers = async () => {
             try {
@@ -34,27 +32,6 @@ const CardContent = ({card}) => {
 
         fetchMembers();
     }, [card.id]);
-    const handleEdit = () => {
-        setIsEditing(true);
-    };
-
-    const handleSave = () => {
-        setIsEditing(false);
-        CardService.changeCardTitle(card.id,editedTitle)
-    };
-
-    const handleCancel = () => {
-        setEditedTitle(card.title);
-        setIsEditing(false);
-    };
-
-    const handleBlur = () => {
-        if (isEditing === false) {
-            handleCancel()
-        }else {
-            handleSave();
-        }
-    };
 
     const handleOpenModal = () => {
         onOpen();
@@ -71,33 +48,12 @@ const CardContent = ({card}) => {
 
     return (
         <div>
-        <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility} card={card} showMembers={members}/>
+        <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility}
+                   card={card} showMembers={members}
+                  />
         <Card ref={setNodeRef} style={dndKitCardStyle} {...attributes} {...listeners}
             key={card.id}
             className='rounded-md my-3 p-2'>
-            {isEditing ? (
-                <div className='flex flex-row justify-between items-center'>
-                    <Input
-                        className='outline-none placeholder:text-sm pb-5 break-words'
-                        placeholder='Enter a title for this card...'
-                        variant='unstyled'
-                        value={editedTitle}
-                        onChange={e => setEditedTitle(e.target.value)}
-                        onBlur={handleBlur}
-                        autoFocus
-                    />
-                    <div>
-                        <Button
-                            onClick={handleSave}
-                            colorScheme='blue'
-                            size='sm'
-                            mr={2}
-                        >
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            ) : (
                 <div className='flex flex-row justify-between items-center'>
                     <div className='flex flex-col max-w-[88%]'>
                         <div className="flex">
@@ -108,7 +64,7 @@ const CardContent = ({card}) => {
                             <div className={`w-7 h-2 bg-red-500 ml-2 rounded-full ${selectedColors.includes('red') ? '' : 'hidden'}`}></div>
                             <div className={`w-7 h-2 bg-purple-500 ml-2 rounded-full ${selectedColors.includes('purple') ? '' : 'hidden'}`}></div>
                         </div>
-                        <p className='text-sm font-medium'>{editedTitle}</p>
+                        <p className='text-sm font-medium'>{card.title}</p>
                     </div>
                     <div className='flex flex-col'>
                         <RxPencil1
@@ -124,7 +80,6 @@ const CardContent = ({card}) => {
                         </AvatarGroup>
                     </div>
                 </div>
-            )}
         </Card>
             </div>
     );
