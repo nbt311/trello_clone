@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Avatar,
-    Button, Checkbox, Image, Input, Menu, MenuButton, MenuItem, MenuList,
+    Button, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -17,13 +17,20 @@ import { MdPersonOutline } from "react-icons/md";
 import { TiTag } from "react-icons/ti";
 import axios from "axios";
 import {useParams} from "react-router-dom";
-const CardModal = ({onOpen,onClose,isOpen,toggleVisibility}) => {
+import CardService from "../Service/CardService";
+const CardModal = ({onOpen,onClose,isOpen,toggleVisibility,card}) => {
     const [inputValue, setInputValue] = useState('');
     const [originalValue, setOriginalValue] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [members, setMembers] = useState([]);
     const {id} = useParams();
     const [user, setUser] = useState({});
+    const [greenCheckbox, setGreenCheckbox] = useState(false);
+    const [yellowCheckbox, setYellowCheckbox] = useState(false);
+    const [orangeCheckbox, setOrangeCheckbox] = useState(false);
+    const [redCheckbox, setRedCheckbox] = useState(false);
+    const [purpleCheckbox, setPurpleCheckbox] = useState(false);
+    const [blueCheckbox, setBlueCheckbox] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -59,13 +66,6 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility}) => {
         setInputValue(event.target.value);
     };
 
-    const [greenCheckbox, setGreenCheckbox] = useState(false);
-    const [yellowCheckbox, setYellowCheckbox] = useState(false);
-    const [orangeCheckbox, setOrangeCheckbox] = useState(false);
-    const [redCheckbox, setRedCheckbox] = useState(false);
-    const [purpleCheckbox, setPurpleCheckbox] = useState(false);
-    const [blueCheckbox, setBlueCheckbox] = useState(false);
-
     const handleCheckboxChange = (color) => {
         switch (color) {
             case 'green':
@@ -92,7 +92,11 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility}) => {
         toggleVisibility(color);
     };
 
-
+    const [selectedMember, setSelectedMember] = useState(null);
+    const handleMemberClick = (data) => {
+        CardService.addMemberToCard(card.id,data)
+        console.log(card.id)
+    }
     return (
         <div>
             <Modal size={'3xl'} onClose={onClose} isOpen={isOpen} isCentered>
@@ -178,7 +182,7 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility}) => {
                                            <div className=' w-[90%] '>
                                                <p>Board members</p>
                                            </div>
-                                            <MenuItem minH='40px'>
+                                            <MenuItem minH='40px' onClick={() => handleMemberClick(user.username)}>
                                                 <Avatar
                                                     boxSize='2rem'
                                                     borderRadius='full'
@@ -189,7 +193,7 @@ const CardModal = ({onOpen,onClose,isOpen,toggleVisibility}) => {
                                                 <span>{user.username}</span>
                                             </MenuItem>
                                             {members.map(member => (
-                                            <MenuItem key={member.id} minH='48px'>
+                                            <MenuItem key={member.id} minH='48px' onClick={() => handleMemberClick(member.username)}>
                                                 <Avatar
                                                     boxSize='2rem'
                                                     borderRadius='full'

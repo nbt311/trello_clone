@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {RxPencil1} from "react-icons/rx";
-import {Avatar, AvatarGroup, Button, Card, Input} from "@chakra-ui/react";
+import {Avatar, AvatarGroup, Button, Card, Input, useDisclosure} from "@chakra-ui/react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import CardService from "../../../../../../Service/CardService";
+import CardModal from "../../../../../../CardModal/CardModal";
 
-const CardContent = ({card,onOpen,selectedColors}) => {
+const CardContent = ({card}) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const {
         attributes, listeners, setNodeRef, transform, transition, isDragging,
     } = useSortable({id: card.id, data: {...card}});
@@ -19,7 +21,19 @@ const CardContent = ({card,onOpen,selectedColors}) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(card.title);
+    const [members, setMembers] = useState([]);
+    useEffect(() => {
+        const fetchMembers = async () => {
+            try {
+                const response = await CardService.showMemberToCard(card.id);
+                setMembers(response.data);
+            } catch (error) {
+                console.error('Error fetching members:', error);
+            }
+        };
 
+        fetchMembers();
+    }, [card.id]);
     const handleEdit = () => {
         setIsEditing(true);
     };
@@ -45,8 +59,19 @@ const CardContent = ({card,onOpen,selectedColors}) => {
     const handleOpenModal = () => {
         onOpen();
     }
+    const [selectedColors, setSelectedColors] = useState([]);
+
+    const toggleVisibility = (color) => {
+        if (selectedColors.includes(color)) {
+            setSelectedColors(selectedColors.filter((c) => c !== color));
+        } else {
+            setSelectedColors([...selectedColors, color]);
+        }
+    };
 
     return (
+        <div>
+        <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility} card={card}/>
         <Card ref={setNodeRef} style={dndKitCardStyle} {...attributes} {...listeners}
             key={card.id}
             className='rounded-md my-3 p-2'>
@@ -91,16 +116,15 @@ const CardContent = ({card,onOpen,selectedColors}) => {
                             onClick={handleOpenModal}
                         />
                         <AvatarGroup className='mt-3' size='xs' max={2}>
-                            <Avatar name='Ryan Florence' src='https://bit.ly/ryan-florence' />
-                            <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
-                            <Avatar name='Kent Dodds' src='https://bit.ly/kent-c-dodds' />
-                            <Avatar name='Prosper Otemuyiwa' src='https://bit.ly/prosper-baba' />
-                            <Avatar name='Christian Nwamba' src='https://bit.ly/code-beast' />
+                            {members.map((member) => (
+                                <Avatar key={member.id} name={member.name} src={member.avatarUrl} />
+                                ))}
                         </AvatarGroup>
                     </div>
                 </div>
             )}
         </Card>
+            </div>
     );
 };
 

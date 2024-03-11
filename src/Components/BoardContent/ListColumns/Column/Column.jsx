@@ -9,7 +9,7 @@ import {mapOrder} from "../../../../Utils/Sort";
 import CreateNewCardForm from "./ListCards/NewCard/CreateNewCardForm";
 import ColumnService from "../../../../Service/ColumnService";
 
-const Column = ({column, setColumn,onOpen,selectedColors}) => {
+const Column = ({column, setColumn}) => {
     const [isCreateCard, setIsCreateCard] = useState(false)
 
 
@@ -84,7 +84,7 @@ const Column = ({column, setColumn,onOpen,selectedColors}) => {
                     scrollbarColor: '#888 #f1f1f1',
                     paddingRight: '2px'
                 }}>
-                    <ListCards cards={orderedCards} onOpen={onOpen} selectedColors={selectedColors}/>
+                    <ListCards cards={orderedCards}/>
                     {isCreateCard ? <CreateNewCardForm handleCreateCard={handleCreateCard} isCreateCard={isCreateCard}
                                                         column={column}
                                                         cards={orderedCards}/> : null}

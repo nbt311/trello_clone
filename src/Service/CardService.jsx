@@ -1,6 +1,7 @@
 import axios from "axios";
 import workspace from "../Pages/WorkspacePage/Workspace";
 import workspaceSidebar from "../Components/SideBar/WorkspaceSidebar";
+import {date} from "yup";
 
 const API_URL = "http://localhost:8080/api/cards/";
 
@@ -23,6 +24,16 @@ class CardService {
         }).then(response => {
             return response.data;
         });
+    }
+
+    addMemberToCard(cardId,member){
+        return axios.post(`${API_URL}${cardId}/members `,{
+           username:member
+        })
+    }
+
+    showMemberToCard(cardId){
+        return axios.get(`${API_URL}${cardId}/members`)
     }
 
 }
