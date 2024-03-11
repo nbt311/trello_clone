@@ -6,6 +6,7 @@ import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
+import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.payload.request.CardRequest;
@@ -146,5 +147,25 @@ public class CardService implements ICardService {
         }
     }
 
+    @Override
+    public void changeCardAttachment(Long cardId, List<Attachment> attachments) {
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if (cardOptional.isPresent()) {
+            Card card = cardOptional.get();
+            for (Attachment attachment : attachments) {
+                card.getAttachments().add(attachment);
+            }
 
+            cardRepository.save(card);
+        } else {
+            throw new RuntimeException("Error: Card not found.");
+        }
+    }
+
+    @Override
+    public List<Attachment> getAttachmentsByCardId(Long cardId) {
+        return cardRepository.findById(cardId)
+                .map(Card::getAttachments)
+                .orElseThrow(() -> new RuntimeException("Error: Card not found for ID " + cardId));
+    }
 }

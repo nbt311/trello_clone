@@ -24,13 +24,6 @@ public class Workspace {
     private Long id;
     private String name;
 
-//    @ManyToOne
-//    @JoinColumn(name = "owner_id")
-//    private User owner;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private User member;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "workspace_types",
