@@ -1,5 +1,6 @@
 package com.example.trellobackend.dto;
 
+import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,12 +18,12 @@ public class CardDTO {
     private Long boardId;
     private Long columnId;
     private String title;
-    private List<String> attachments;
+    private List<Attachment> attachments;
     public CardDTO(Card card){
         this.id = card.getId();
         this.boardId = card.getBoard().getId();
         this.columnId = card.getColumn().getId();
         this.title = card.getTitle();
-        this.attachments = card.getAttachmentsLink();
+        this.attachments = card.getAttachments();
     }
 }

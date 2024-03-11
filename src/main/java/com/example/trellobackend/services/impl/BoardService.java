@@ -8,6 +8,7 @@ import com.example.trellobackend.models.Role;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.*;
 import com.example.trellobackend.models.workspace.Workspace;
+import com.example.trellobackend.models.workspace.WorkspaceMembers;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
 import com.example.trellobackend.services.IBoardService;
@@ -103,13 +104,12 @@ public class BoardService implements IBoardService {
                 boardRepository.save(board);
                 addMemberToBoard(board, creator, MemberRole.ADMIN);
 
-                // Create a response DTO
                 BoardResponseDTO responseDTO = new BoardResponseDTO();
                 responseDTO.setId(board.getId());
                 responseDTO.setTitle(board.getTitle());
                 responseDTO.setVisibility(board.getVisibilities());
-                responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
-                responseDTO.setColumnOrderIds(Collections.emptyList()); // Initialize the columnIds list
+                responseDTO.setColumns(Collections.emptyList());
+                responseDTO.setColumnOrderIds(Collections.emptyList());
 
                 return responseDTO;
             }
@@ -131,7 +131,7 @@ public class BoardService implements IBoardService {
                                         card.getBoard().getId(),
                                         card.getColumn().getId(),
                                         card.getTitle(),
-                                        card.getAttachmentsLink()
+                                        card.getAttachments()
                                         ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
@@ -179,12 +179,18 @@ public class BoardService implements IBoardService {
         boardMembersRepository.save(boardMembers);
     }
 
-    public List<UserDTO> getBoardMembers(Long boardId){
+    public List<BoardMemberDTO> getBoardMembers(Long boardId){
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if(boardOptional.isPresent()){
             Board board = boardOptional.get();
-
-            return null;
+            List<BoardMembers> boardMembersList = new ArrayList<>(board.getBoardMembers());
+            Collections.reverse(boardMembersList);
+//            return boardMembersList.stream()
+//                    .map(BoardMemberDTO::new)
+//                    .collect(Collectors.toList());
+            return boardMembersList.stream()
+                    .map(boardMembers -> new BoardMemberDTO(boardMembers.getUser(), boardMembers.getRole()))
+                    .collect(Collectors.toList());
         }
         throw new RuntimeException("Board not found");
     }
@@ -193,8 +199,8 @@ public class BoardService implements IBoardService {
         Board board = boardRepository. findById(boardId).orElseThrow(() -> new RuntimeException("Board not found"));
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         boardRepository.save(board);
+        addMemberToBoard(board,user,MemberRole.MEMBER);
     }
 
 //    public List<UserDTO> getBoardMembersByUserRole(Long boardId, UserRole roleName){
