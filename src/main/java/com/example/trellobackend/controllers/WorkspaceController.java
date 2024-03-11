@@ -149,9 +149,10 @@ public class WorkspaceController {
         Optional<Workspace> workspace =  workspaceRepository.findById(id);
         return new ResponseEntity<>(workspace, HttpStatus.OK);
     }
+
     @GetMapping("{userId}/all")
-public ResponseEntity<?> getAllWorkspacesByUserId(@PathVariable Long userId){
+    public ResponseEntity<?> getAllWorkspacesByUserId(@PathVariable Long userId) {
         List<WorkspaceDTO> workspaceDTOList = workspaceService.getAllWorkspaceByUser(userId);
-        return new ResponseEntity<>(workspaceDTOList,HttpStatus.OK);
+        return new ResponseEntity<>(workspaceDTOList, HttpStatus.OK);
     }
 }

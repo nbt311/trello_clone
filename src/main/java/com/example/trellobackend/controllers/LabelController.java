@@ -1,6 +1,6 @@
 package com.example.trellobackend.controllers;
 
-import com.example.trellobackend.models.board.Label;
+import com.example.trellobackend.models.board.card.Label;
 import com.example.trellobackend.services.impl.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,7 @@
 package com.example.trellobackend.models;
 
 import com.example.trellobackend.enums.MemberRole;
+import com.example.trellobackend.models.board.BoardMembers;
 import com.example.trellobackend.models.workspace.WorkspaceMembers;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.board.Board;
@@ -49,18 +50,6 @@ public class User {
     private String localTime;
     private String avatarUrl;
 
-//    @OneToMany(mappedBy = "owner")
-//    private List<Workspace> ownedWorkspaces = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member")
-//    private List<Workspace> memberWorkspaces = new ArrayList<>();
-
-    @OneToMany(mappedBy = "boardOwner")
-    private List<Board> ownerBoards = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "boardMembers")
-    private Set<Board> memberBoards = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -68,6 +57,8 @@ public class User {
     private Set<Role> roles = new HashSet<>();
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<WorkspaceMembers> workspaceMembers = new HashSet<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<BoardMembers> BoardMembers = new HashSet<>();
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

@@ -2,6 +2,7 @@ package com.example.trellobackend.services.impl;
 
 import com.example.trellobackend.dto.*;
 import com.example.trellobackend.enums.EBoardVisibility;
+import com.example.trellobackend.enums.MemberRole;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.Role;
 import com.example.trellobackend.models.User;
@@ -100,7 +101,7 @@ public class BoardService implements IBoardService {
                 });
                 board.setVisibilities(visibilities);
                 boardRepository.save(board);
-                addMemberToBoard(board, creator, UserRole.ROLE_ADMIN);
+                addMemberToBoard(board, creator, MemberRole.ADMIN);
 
                 // Create a response DTO
                 BoardResponseDTO responseDTO = new BoardResponseDTO();
@@ -129,7 +130,8 @@ public class BoardService implements IBoardService {
                                 new CardDTO(card.getId(),
                                         card.getBoard().getId(),
                                         card.getColumn().getId(),
-                                        card.getTitle()
+                                        card.getTitle(),
+                                        card.getAttachmentsLink()
                                         ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
@@ -169,11 +171,11 @@ public class BoardService implements IBoardService {
         }
     }
 
-    public void addMemberToBoard(Board board, User user, UserRole userRole) {
+    public void addMemberToBoard(Board board, User user, MemberRole memberRole) {
         BoardMembers boardMembers = new BoardMembers();
         boardMembers.setBoard(board);
         boardMembers.setUser(user);
-        boardMembers.setRole(userRole);
+        boardMembers.setRole(memberRole);
         boardMembersRepository.save(boardMembers);
     }
 
@@ -181,12 +183,8 @@ public class BoardService implements IBoardService {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if(boardOptional.isPresent()){
             Board board = boardOptional.get();
-            Set<User> boardMembers = board.getBoardMembers();
 
-            List<UserDTO> boardMembersDTO = boardMembers.stream()
-                    .map(user -> modelMapper.map(user, UserDTO.class))
-                    .collect(Collectors.toList());
-            return boardMembersDTO;
+            return null;
         }
         throw new RuntimeException("Board not found");
     }
@@ -195,7 +193,7 @@ public class BoardService implements IBoardService {
         Board board = boardRepository. findById(boardId).orElseThrow(() -> new RuntimeException("Board not found"));
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        board.getBoardMembers().add(user);
+
         boardRepository.save(board);
     }
 

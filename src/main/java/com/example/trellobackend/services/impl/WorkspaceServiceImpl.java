@@ -152,14 +152,29 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public List<WorkspaceDTO> getAllWorkspaceByUser(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            return null;
-        }else {
-            throw  new RuntimeException("User not found");
-        }
+            List<WorkspaceDTO> ownedWorkspaces = user.getWorkspaceMembers().stream()
+                    .filter(membership -> MemberRole.ADMIN.equals(membership.getRole()))
+                    .map(membership -> new WorkspaceDTO(membership.getWorkspace()))
+                    .collect(Collectors.toList());
 
+            List<WorkspaceDTO> memberWorkspaces = user.getWorkspaceMembers().stream()
+                    .filter(membership -> MemberRole.MEMBER.equals(membership.getRole()))
+                    .map(membership -> new WorkspaceDTO(membership.getWorkspace()))
+                    .collect(Collectors.toList());
+
+            // Các workspace mà người dùng sở hữu và làm thành viên
+            List<WorkspaceDTO> allWorkspaces = new ArrayList<>();
+            allWorkspaces.addAll(ownedWorkspaces);
+            allWorkspaces.addAll(memberWorkspaces);
+
+            return allWorkspaces;
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
 
