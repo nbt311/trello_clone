@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+    Avatar,
     Button, Input,
     Modal,
     ModalBody,
@@ -69,13 +70,19 @@ const InvitePopup = ({ isOpen, onOpen, onClose, showNotification, setShowNotific
                                     onChange={handleInputChange}
                                     placeholder="Email address or name"
                                 />
-                                {suggestedEmails.map((user, index) => (
+                                {workspaceEmail && suggestedEmails.map((user, index) => (
                                     <div
                                         key={index}
-                                        style={{ cursor: 'pointer' }}
+                                        style={{cursor: 'pointer'}}
                                         onClick={() => handleEmailClick(user.email)}
                                     >
-                                        {user.email}
+                                        <div className='flex'>
+                                            <Avatar className='mt-1' size='sm' name={user.username} src={user.avatarUrl}/>
+                                            <div className='ml-2'>
+                                                <p className='text-base font-medium'>{user.username}</p>
+                                                <p className='text-sm'>{user.email}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

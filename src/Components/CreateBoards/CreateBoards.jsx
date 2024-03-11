@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-    Button,
+    Button, Menu, MenuList,
     Select, useToast
 } from "@chakra-ui/react";
 import {IoChevronBack} from "react-icons/io5";
@@ -58,8 +58,7 @@ const CreateBoards = ({user, workspace}) => {
     }, []);
 
     return (
-        // <Menu>
-        //     <MenuList minWidth='340px'>
+
         <div className="flex flex-col items-center justify-center">
             <div className='flex w-full justify-between'>
                 <button className=''><IoChevronBack/></button>
@@ -122,8 +121,7 @@ const CreateBoards = ({user, workspace}) => {
                     className="hover:underline"> Terms of Service</a></p>
             </div>
         </div>
-        //     </MenuList>
-        // </Menu>
+
     )
 };
 

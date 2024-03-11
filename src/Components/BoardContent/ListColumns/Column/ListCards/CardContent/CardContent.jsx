@@ -4,11 +4,12 @@ import {Avatar, AvatarGroup, Button, Card, Input, Tooltip, useDisclosure} from "
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import CardService from "../../../../../../Service/CardService";
-import CardModal from "../../../../../../CardModal/CardModal";
+import CardModal from "../../../../../CardModal/CardModal";
 
 const CardContent = ({card}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [members, setMembers] = useState([]);
+    const [labels, setLabels] = useState([]);
     const {
         attributes, listeners, setNodeRef, transform, transition, isDragging,
     } = useSortable({id: card.id, data: {...card}});
@@ -31,6 +32,16 @@ const CardContent = ({card}) => {
         };
 
         fetchMembers();
+        const fetchLabels = async () => {
+            try {
+                const response = await CardService.showLabelToCard(card.id);
+                setLabels(response.data);
+            } catch (error) {
+                console.error('Error fetching labels:', error);
+            }
+        };
+
+        fetchLabels();
     }, [card.id]);
 
     const handleOpenModal = () => {
@@ -46,6 +57,7 @@ const CardContent = ({card}) => {
         }
     };
 
+    let fetchedColors;
     return (
         <div>
         <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility}
@@ -57,12 +69,9 @@ const CardContent = ({card}) => {
                 <div className='flex flex-row justify-between items-center'>
                     <div className='flex flex-col max-w-[88%]'>
                         <div className="flex">
-                            <div className={`w-7 h-2 bg-blue-500 ml-2 rounded-full ${selectedColors.includes('blue') ? '' : 'hidden'}`}></div>
-                            <div className={`w-7 h-2 bg-green-500 ml-2 rounded-full ${selectedColors.includes('green') ? '' : 'hidden'}`}></div>
-                            <div className={`w-7 h-2 bg-yellow-500 ml-2 rounded-full ${selectedColors.includes('yellow') ? '' : 'hidden'}`}></div>
-                            <div className={`w-7 h-2 bg-orange-500 ml-2 rounded-full ${selectedColors.includes('orange') ? '' : 'hidden'}`}></div>
-                            <div className={`w-7 h-2 bg-red-500 ml-2 rounded-full ${selectedColors.includes('red') ? '' : 'hidden'}`}></div>
-                            <div className={`w-7 h-2 bg-purple-500 ml-2 rounded-full ${selectedColors.includes('purple') ? '' : 'hidden'}`}></div>
+                            {labels.map((label) => (
+                                <div  className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full`}></div>
+                            ))}
                         </div>
                         <p className='text-sm font-medium'>{card.title}</p>
                     </div>

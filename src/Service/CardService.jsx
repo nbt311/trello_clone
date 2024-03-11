@@ -36,5 +36,13 @@ class CardService {
         return axios.get(`${API_URL}${cardId}/members`)
     }
 
+    showLabelToCard(cardId){
+        return axios.get(`${API_URL}${cardId}/allLabels`)
+    }
+
+    addLabelToCard(cardId, labelId){
+        return axios.post(`${API_URL}${cardId}/newLabels/${labelId}`)
+    }
+
 }
 export default new CardService();
