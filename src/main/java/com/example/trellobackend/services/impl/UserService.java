@@ -58,7 +58,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getSuggestedUsers(String query) {
+    public List<UserDTO> getSuggestedUsers(String query) {
         return userRepository.findUsersByPartialMatch(query);
     }
 

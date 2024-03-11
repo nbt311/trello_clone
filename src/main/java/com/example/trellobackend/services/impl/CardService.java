@@ -3,16 +3,19 @@ package com.example.trellobackend.services.impl;
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.LabelDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.models.board.Columns;
+import com.example.trellobackend.models.board.card.Label;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;
 import com.example.trellobackend.repositories.CardRepository;
 import com.example.trellobackend.repositories.ColumnsRepository;
+import com.example.trellobackend.repositories.LabelRepository;
 import com.example.trellobackend.repositories.UserRepository;
 import com.example.trellobackend.services.ICardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class CardService implements ICardService {
     private CardRepository cardRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Override
     public Iterable<Card> findAll() {
@@ -167,5 +172,31 @@ public class CardService implements ICardService {
         return cardRepository.findById(cardId)
                 .map(Card::getAttachments)
                 .orElseThrow(() -> new RuntimeException("Error: Card not found for ID " + cardId));
+    }
+
+    @Override
+    public List<LabelDTO> getAllLabelByCardId(Long cardId){
+        Card card = cardRepository.findById(cardId).orElse(null);
+        if(card != null){
+            return card.getLabels().stream()
+                    .map(LabelDTO::new
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("Card not found");
+        }
+    }
+
+    public void addLabelToCard(Long cardId, Long labelId){
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if(cardOptional.isPresent()){
+            Card card = cardOptional.get();
+            Optional<Label> labelOptional = labelRepository.findById(labelId);
+            if(labelOptional.isPresent()){
+                Label label = labelOptional.get();
+                card.getLabels().add(label);
+                cardRepository.save(card);
+            }
+        }
     }
 }

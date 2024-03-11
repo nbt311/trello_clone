@@ -31,7 +31,7 @@ public class UserDTO {
         this.ownedWorkspaces = ownedWorkspaces;
         this.memberWorkspaces = memberWorkspaces;
     }
-    public UserDTO(Long id, String username, String email, String avatarUrl , String memberRole){
+    public UserDTO(Long id, String username, String email, String avatarUrl){
         this.id = id;
         this.username = username;
         this.email = email;

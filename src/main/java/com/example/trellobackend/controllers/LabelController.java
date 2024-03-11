@@ -37,7 +37,7 @@ public class LabelController {
         return new ResponseEntity<>(labelCreate, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/{labelId}")
     public ResponseEntity<Label> deleteLabel(@PathVariable Long labelId){
         labelService.remove(labelId);
         return new ResponseEntity<>(HttpStatus.OK);
