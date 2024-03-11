@@ -26,6 +26,6 @@ public class Columns {
     @OrderColumn
     @Column(name = "card_order_id")
     private List<Long> cardOrderIds;
-    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Card> cards;
 }

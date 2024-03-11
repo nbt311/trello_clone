@@ -1,5 +1,6 @@
 package com.example.trellobackend.dto;
 
+import com.example.trellobackend.enums.MemberRole;
 import com.example.trellobackend.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,21 +23,15 @@ public class UserDTO {
     private List<BoardResponseDTO> ownedBoards;
     private List<BoardResponseDTO> memberBoards;
 
-    public UserDTO(User user) {
+    public UserDTO(User user,List<WorkspaceDTO> ownedWorkspaces,List<WorkspaceDTO> memberWorkspaces) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.avatarUrl = user.getAvatarUrl();
-        // Map other fields as needed
-
-        this.ownedWorkspaces = user.getOwnedWorkspaces().stream()
-                .map(WorkspaceDTO::new)
-                .collect(Collectors.toList());
-
-        this.memberWorkspaces = user.getMemberWorkspaces().stream()
-                .map(WorkspaceDTO::new)
-                .collect(Collectors.toList());
-
+        if (user.getAvatarUrl() != null) {
+            this.avatarUrl = user.getAvatarUrl();
+        }
+        this.ownedWorkspaces = ownedWorkspaces;
+        this.memberWorkspaces = memberWorkspaces;
         this.ownedBoards = user.getOwnerBoards().stream()
                 .map(board -> new BoardResponseDTO(
                                 board,
@@ -60,5 +55,11 @@ public class UserDTO {
                         )
                 )
                 .collect(Collectors.toList());
+    }
+    public UserDTO(Long id, String username, String email, String avatarUrl , String memberRole){
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.avatarUrl = avatarUrl;
     }
 }

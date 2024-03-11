@@ -2,6 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.ColumnsDTO;
+import com.example.trellobackend.dto.DragAndDropDTO;
 import com.example.trellobackend.dto.UpdateBoardDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;

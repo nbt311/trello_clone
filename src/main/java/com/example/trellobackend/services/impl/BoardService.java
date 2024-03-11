@@ -1,17 +1,11 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.UpdateBoardDTO;
-import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.enums.EBoardVisibility;
 import com.example.trellobackend.enums.UserRole;
 import com.example.trellobackend.models.Role;
 import com.example.trellobackend.models.User;
-import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.board.BoardMembers;
-import com.example.trellobackend.models.board.Visibility;
+import com.example.trellobackend.models.board.*;
 import com.example.trellobackend.models.workspace.Workspace;
 import com.example.trellobackend.payload.request.BoardRequest;
 import com.example.trellobackend.repositories.*;
@@ -36,6 +30,8 @@ public class BoardService implements IBoardService {
     private BoardMembersRepository boardMembersRepository;
     @Autowired
     private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private ColumnsRepository columnsRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -86,12 +82,12 @@ public class BoardService implements IBoardService {
                 Set<Visibility> visibilities = new HashSet<>();
                 strVisibilities.forEach(visibility -> {
                     switch (visibility) {
-                        case "private":
+                        case "PRIVATE":
                             Visibility privateVisibility = visibilityRepository.findByName(EBoardVisibility.PRIVATE)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(privateVisibility);
                             break;
-                        case "public":
+                        case "PUBLIC":
                             Visibility publicVisibility = visibilityRepository.findByName(EBoardVisibility.PUBLIC)
                                     .orElseThrow(() -> new RuntimeException("Error: Visibility is not found."));
                             visibilities.add(publicVisibility);
@@ -110,6 +106,7 @@ public class BoardService implements IBoardService {
                 BoardResponseDTO responseDTO = new BoardResponseDTO();
                 responseDTO.setId(board.getId());
                 responseDTO.setTitle(board.getTitle());
+                responseDTO.setVisibility(board.getVisibilities());
                 responseDTO.setColumns(Collections.emptyList()); // Initialize the list of Columns
                 responseDTO.setColumnOrderIds(Collections.emptyList()); // Initialize the columnIds list
 
@@ -129,7 +126,11 @@ public class BoardService implements IBoardService {
                 List<Long> cardOrderIds = columns.getCardOrderIds();
                 List<CardDTO> cards = columns.getCards()
                         .stream().map(card ->
-                                new CardDTO(card.getId(), card.getBoard().getId(), card.getColumn().getId(), card.getTitle()))
+                                new CardDTO(card.getId(),
+                                        card.getBoard().getId(),
+                                        card.getColumn().getId(),
+                                        card.getTitle()
+                                        ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
             })
