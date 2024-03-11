@@ -19,6 +19,8 @@ import BoardContext from "../../Context/BoardContext";
 import BoardBar from "../../Components/SideBar/BoardBar";
 import BoardService from "../../Service/BoardService";
 import ColumnService from "../../Service/ColumnService";
+import CardModal from "../../CardModal/CardModal";
+import {useDisclosure} from "@chakra-ui/react";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -27,7 +29,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 const BoardContentPage = () => {
     const {board, updateBoard} = useContext(BoardContext);
-
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
     useEffect(() => {
         const storedBoard = localStorage.getItem('board');
@@ -285,6 +287,15 @@ const BoardContentPage = () => {
         }),
     };
 
+    const [selectedColors, setSelectedColors] = useState([]);
+
+    const toggleVisibility = (color) => {
+        if (selectedColors.includes(color)) {
+            setSelectedColors(selectedColors.filter((c) => c !== color));
+        } else {
+            setSelectedColors([...selectedColors, color]);
+        }
+    };
 
     return (
         <div className='h-dvh w-dvw max-w-full overflow-y-hidden'>
@@ -295,7 +306,7 @@ const BoardContentPage = () => {
             <div>
                 <BoardBar/>
             </div>
-
+            <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility}/>
             <div className='h-full' style={divStyle}>
                 <DndContext sensors={sensors}
                             collisionDetection={closestCorners}
@@ -304,16 +315,16 @@ const BoardContentPage = () => {
                             onDragEnd={handleDragEnd}
                 >
                     <div className='flex h-full p-3 space-x-4 overflow-x-scroll'>
-                        <ListColumns columns={orderedColumns} setColumns={setOrderedColumns}/>
+                        <ListColumns columns={orderedColumns} setColumns={setOrderedColumns} onOpen={onOpen} selectedColors={selectedColors}/>
                         <DragOverlay dropAnimation={customDropAnimation}>
                             {!activeDragItemType && null}
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) &&
                                 <Column column={activeDragItemData}/>}
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) &&
-                                <CardContent card={activeDragItemData}/>}
+                                <CardContent  card={activeDragItemData} />}
                         </DragOverlay>
                     </div>
-                </DndContext>
+                </DndContext >
             </div>
         </div>
     );

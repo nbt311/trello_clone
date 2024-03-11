@@ -168,8 +168,8 @@ const BoardBar = () => {
                 borderRadius: 'md',
                 backgroundColor: 'gray.100'}}>
                 <AvatarGroup size='sm' max={5}>
-                    <Tooltip label={user.name}>
-                        <Avatar name={user.name} src={user.avatarUrl} boxSize='34px' />
+                    <Tooltip label={user.username}>
+                        <Avatar name={user.username} src={user.avatarUrl} boxSize='34px' />
                     </Tooltip>
                     {members.map(member => (
                         <Tooltip key={member.id} label={member.username}>

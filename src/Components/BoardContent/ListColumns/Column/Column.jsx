@@ -9,7 +9,7 @@ import {mapOrder} from "../../../../Utils/Sort";
 import CreateNewCardForm from "./ListCards/NewCard/CreateNewCardForm";
 import ColumnService from "../../../../Service/ColumnService";
 
-const Column = ({column, setColumn}) => {
+const Column = ({column, setColumn,onOpen,selectedColors}) => {
     const [isCreateCard, setIsCreateCard] = useState(false)
 
 
@@ -79,13 +79,12 @@ const Column = ({column, setColumn}) => {
                     )}
                     <BsThreeDots className='text-2xl hover:bg-gray-200 p-1 rounded-md cursor-pointer'/>
                 </Heading>
-
                 <div className='max-h-[70vh] overflow-y-scroll' style={{
                     scrollbarWidth: 'thin',
                     scrollbarColor: '#888 #f1f1f1',
                     paddingRight: '2px'
                 }}>
-                    <ListCards cards={orderedCards}/>
+                    <ListCards cards={orderedCards} onOpen={onOpen} selectedColors={selectedColors}/>
                     {isCreateCard ? <CreateNewCardForm handleCreateCard={handleCreateCard} isCreateCard={isCreateCard}
                                                         column={column}
                                                         cards={orderedCards}/> : null}
