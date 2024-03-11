@@ -1,6 +1,6 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.models.board.Label;
+import com.example.trellobackend.models.board.card.Label;
 import com.example.trellobackend.repositories.LabelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

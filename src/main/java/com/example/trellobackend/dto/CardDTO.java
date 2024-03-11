@@ -1,7 +1,6 @@
 package com.example.trellobackend.dto;
 
-import com.example.trellobackend.models.board.Card;
-import com.example.trellobackend.models.board.Columns;
+import com.example.trellobackend.models.board.card.Card;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

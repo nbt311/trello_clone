@@ -1,4 +1,4 @@
-package com.example.trellobackend.models.board;
+package com.example.trellobackend.models.board.card;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

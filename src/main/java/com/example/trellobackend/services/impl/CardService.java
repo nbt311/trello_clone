@@ -6,7 +6,7 @@ import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
-import com.example.trellobackend.models.board.Card;
+import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.models.board.Columns;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;

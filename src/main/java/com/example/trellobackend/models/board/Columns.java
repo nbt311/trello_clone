@@ -1,5 +1,6 @@
 package com.example.trellobackend.models.board;
 
+import com.example.trellobackend.models.board.card.Card;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
