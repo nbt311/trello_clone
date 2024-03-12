@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Avatar, AvatarGroup,
     Button, Card, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
@@ -21,6 +21,7 @@ import CardService from "../../Service/CardService";
 import CommentService from "../../Service/CommentService";
 import Stomp from 'stompjs';
 import SockJs from 'sockjs-client';
+import NotificationContext from "../../Context/NotificationContext";
 
 const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers}) => {
     const [inputValueDescription, setInputValueDescription] = useState('');
@@ -40,8 +41,9 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const [purpleCheckbox, setPurpleCheckbox] = useState(false);
     const [blueCheckbox, setBlueCheckbox] = useState(false);
     const [comments, setComments] = useState([]);
-
     const [stompClient, setStompClient] = useState(null);
+    const {notification,updateNotification} = useContext(NotificationContext);
+    console.log("notie",notification)
 
     useEffect(() => {
         const socket = new SockJs('http://localhost:8080/ws');
@@ -49,10 +51,11 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
 
         client.connect({}, () => {
             client.subscribe('/topic/messages', (message) => {
-
+                const receivedMessage = JSON.parse(message.body);
+                    updateNotification(receivedMessage);
             });
         });
-
+        localStorage.setItem("notification",JSON.stringify(notification));
         setStompClient(client);
 
         return () => {

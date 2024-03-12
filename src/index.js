@@ -7,6 +7,7 @@ import {ChakraProvider} from "@chakra-ui/react";
 import {UserProvider} from "./Context/UserContext";
 import {BoardProvider} from "./Context/BoardContext";
 import {WorkspaceProvider} from "./Context/WorkspaceContext";
+import {NotificationProvider} from "./Context/NotificationContext";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,11 +15,13 @@ root.render(
     <BrowserRouter>
         <ChakraProvider>
             <UserProvider>
-                <WorkspaceProvider>
-                    <BoardProvider>
-                        <App />
-                    </BoardProvider>
-                </WorkspaceProvider>
+                <NotificationProvider>
+                    <WorkspaceProvider>
+                        <BoardProvider>
+                            <App />
+                        </BoardProvider>
+                    </WorkspaceProvider>
+                </NotificationProvider>
             </UserProvider>
         </ChakraProvider>
     </BrowserRouter>

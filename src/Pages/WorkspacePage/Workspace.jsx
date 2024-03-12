@@ -77,7 +77,7 @@ const Workspace = () => {
                     <WorkspaceMembers onOpen={onOpen} onClose={onClose} members={members} setMembers={setMembers}/>
                 </div>
 
-                <InvitePopup isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+                <InvitePopupTwo isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
 
             </div>
         </div>

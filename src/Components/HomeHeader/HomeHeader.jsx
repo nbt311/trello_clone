@@ -5,7 +5,7 @@ import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
     Avatar, Box,
-    Button, ButtonGroup, FocusLock,
+    Button, ButtonGroup, Card, FocusLock,
     FormControl,
     FormLabel, IconButton,
     Input,
@@ -32,6 +32,7 @@ import {GrAdd} from "react-icons/gr";
 import WorkspaceContext from "../../Context/WorkspaceContext";
 import UserContext from "../../Context/UserContext";
 import CreateBoards from "../CreateBoards/CreateBoards";
+import NotificationContext from "../../Context/NotificationContext";
 
 
 const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
@@ -40,10 +41,22 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
     const [isSmallScreen, setIsSmallScreen] = useState(false);
     const navigate = useNavigate();
     const {workspace, updateWorkspace} = useContext(WorkspaceContext);
+    const {notification,updateNotification} = useContext(NotificationContext);
+    const [storeNotification, setStoreNotification] = useState([])
 
-    console.log("abc",workspace)
+    console.log("hhhh",notification)
+    console.log("store",storeNotification)
 
     useEffect(() => {
+        if (notification.username) {
+            setStoreNotification(prevStored => [...prevStored, notification]);
+        }
+
+
+    }, [notification]);
+
+    useEffect(() => {
+
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);
         };
@@ -208,8 +221,40 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
                     </div>
 
                     <div>
-                        <TbBellRinging2 className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
-                                        color='gray'/>
+                        <Menu>
+                            <MenuButton px={2}
+                                        py={2}
+                                        borderRadius='2'
+                                        _hover={{bg: 'gray.200'}}
+                                        rounded='md'
+                            ><TbBellRinging2 className='text-3xl cursor-pointer hover:bg-gray-200 rounded-full p-1'
+                                             color='gray'/>
+                            </MenuButton>
+                            <MenuList minWidth='400px'>
+                                <div className='flex flex-col items-center border border-gray-100'>
+                                    <div className=' ml-3'>
+                                        <p className='text-xl font-bold'>Notifications</p>
+                                    </div>
+
+                                    <hr className='border-1-slate-500 py-1 w-full mt-4'/>
+                                    {storeNotification?.map((data) => (
+                                        <div className='w-[90%]  '>
+                                            <Card background={'blue.100'}>
+                                                <div className='flex'>
+                                                    <Avatar className='mt-2 ml-2' size='sm' name={data.username} src={data.userAvatar}/>
+                                                    <div className='ml-2 mt-3'>
+                                                        <p className='text-base font-medium'>{data.username}</p>
+                                                    </div>
+                                                </div>
+                                                <div className=''>
+                                                    <p>{data.notification}</p>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    ))}
+                                </div>
+                            </MenuList>
+                        </Menu>
                     </div>
 
                     <div>
