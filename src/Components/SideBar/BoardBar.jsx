@@ -3,7 +3,7 @@ import {
     Avatar,
     AvatarGroup,
     Box,
-    Button, Input,
+    Button, Checkbox, Input,
     Menu,
     MenuButton,
     MenuItem,
@@ -19,6 +19,7 @@ import {AiOutlineUserAdd} from "react-icons/ai";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import BoardContext from "../../Context/BoardContext";
+import { IoFilterSharp } from "react-icons/io5";
 
 const BoardBar = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -176,6 +177,57 @@ const BoardBar = () => {
                 borderRadius: 'md',
                 backgroundColor: 'gray.100'
             }}>
+                <Menu>
+                    <MenuButton px={2}
+                                py={2}
+                                borderRadius='2'
+                                _hover={{bg: 'gray.200'}}
+                                rounded='md'
+                    ><p className='flex'><IoFilterSharp className='mt-1 mr-1'/>Filters</p>
+                    </MenuButton>
+                    <MenuList minWidth='400px'>
+                        <div className='flex flex-col items-center justify-center'>
+                            <div className='w-[90%]'>
+                                <p className='flex'>Keyword</p>
+                                <Input placeholder='Enter a keyword...'></Input>
+                            </div>
+
+                            <div className='w-[90%] mt-4'>
+                                <p className='flex'>Members</p>
+                                <Input placeholder='Enter a keyword...'></Input>
+                            </div>
+
+                            <div className='w-[90%] mt-4'>
+                                <p className='flex'>label</p>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('green')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-green-500 ml-2'></div>
+                                </div>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('yellow')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-yellow-500 ml-2'></div>
+                                </div>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('orange')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-orange-500 ml-2'></div>
+                                </div>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('red')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-red-500 ml-2'></div>
+                                </div>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('purple')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-purple-500 ml-2'></div>
+                                </div>
+                                <div className='flex mt-2'>
+                                    <Checkbox onChange={() => ('blue')}></Checkbox>
+                                    <div className='w-[90%] h-6 bg-blue-500 ml-2'></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </MenuList>
+                </Menu>
                 <AvatarGroup size='sm' max={5}>
                     {members.map(member => (
                         <Tooltip key={member.id} label={member.username}>

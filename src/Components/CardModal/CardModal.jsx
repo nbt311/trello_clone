@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Avatar, AvatarGroup,
-    Button, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
+    Button, Card, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -20,9 +20,11 @@ import {useParams} from "react-router-dom";
 import CardService from "../../Service/CardService";
 
 const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers}) => {
-    const [inputValue, setInputValue] = useState('');
+    const [inputValueDescription, setInputValueDescription] = useState('');
+    const [inputValueActivity, setInputValueActivity] = useState('');
     const [originalValue, setOriginalValue] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditingDescription, setIsEditingDescription] = useState(false);
+    const [isEditingActivity, setIsEditingActivity] = useState(false);
     const [members, setMembers] = useState([]);
     const {id} = useParams();
     const [user, setUser] = useState({});
@@ -122,29 +124,45 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
         CardService.addLabelToCard(card.id, labelId)
     };
 
-    const handleEditClick = () => {
-        setOriginalValue(inputValue);
-        setIsEditing(true);
+    const handleEditClickDescription = () => {
+        setOriginalValue(inputValueDescription);
+        setIsEditingDescription(true);
     };
 
-    const handleSaveClick = () => {
-        setOriginalValue(inputValue);
-        setIsEditing(false);
+    const handleSaveClickDescription = () => {
+        setOriginalValue(inputValueDescription);
+        setIsEditingDescription(false);
     };
 
-    const handleCancelClick = () => {
-        setInputValue(originalValue);
-        setIsEditing(false);
+    const handleCancelClickDescription = () => {
+        setInputValueDescription(originalValue);
+        setIsEditingDescription(false);
     };
 
-    const handleChange = (event) => {
-        setInputValue(event.target.value);
+    const handleChangeDescription = (event) => {
+        setInputValueDescription(event.target.value);
     };
 
+    const handleTextareaClick = () => {
+        setIsEditingActivity(true);
+    };
+
+    const handleChangeActivity = (event) => {
+        setInputValueActivity(event.target.value);
+    };
+
+    const handleSaveClickActivity = () => {
+        setIsEditingActivity(false);
+        // setInputValueActivity('');
+    };
+
+    const handleCancelClickActivity = () => {
+        setIsEditingActivity(false);
+        setInputValueActivity('');
+    };
     const handleEdit = () => {
         setIsEditingg(true);
     };
-
     const handleSave = () => {
         setIsEditingg(false);
         CardService.changeCardTitle(card.id, editedTitle)
@@ -210,35 +228,87 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                                     <HiMenuAlt2 className='mt-1'/>
                                     <p className='font-bold ml-1 mb-5'>Description</p>
                                 </div>
-                                {isEditing ? (
+                                {isEditingDescription ? (
                                     <Textarea
+                                        placeholder='Add a more detailed description...'
                                         rows={10}
-                                        value={inputValue}
-                                        onChange={handleChange}
+                                        value={inputValueDescription}
+                                        onChange={handleChangeDescription}
                                     />
                                 ) : (
-                                    <div onClick={handleEditClick}>
-                                        {inputValue ? (
-                                            <p className='ml-5'>{inputValue}</p>
+                                    <div onClick={handleEditClickDescription}>
+                                        {inputValueDescription ? (
+                                            <p className='ml-5'>{inputValueDescription}</p>
                                         ) : (
                                             <Textarea
+                                                placeholder='Add a more detailed description...'
                                                 rows={3}
-                                                value={inputValue}
-                                                onChange={handleChange}
+                                                value={inputValueDescription}
+                                                onChange={handleChangeDescription}
                                             />
                                         )}
                                     </div>
                                 )}
-                                {isEditing && (
+                                {isEditingDescription && (
                                     <div className='mt-2'>
-                                        <Button colorScheme='blue' onClick={handleSaveClick}>Save</Button>
-                                        <Button onClick={handleCancelClick}>Cancel</Button>
+                                        <Button colorScheme='blue' onClick={handleSaveClickDescription}>Save</Button>
+                                        <Button onClick={handleCancelClickDescription}>Cancel</Button>
                                     </div>
                                 )}
                                 <div className="flex mt-10">
                                     <RxActivityLog className='mt-1'/>
                                     <p className='font-bold ml-2'>Activity</p>
                                 </div>
+
+                                <div className='flex mt-5'>
+                                    <div>
+                                        <Avatar key={user.id} name={user.name} src={user.avatarUrl}
+                                                boxSize='40px'/>
+                                    </div>
+                                    <div className='w-full ml-2'>
+                                        <div className='w-full ml-2'>
+                                            {isEditingActivity ? (
+                                                <Textarea
+                                                    rows={2}
+                                                    value={inputValueActivity}
+                                                    onChange={handleChangeActivity}
+                                                    placeholder='Write a comment...'
+                                                />
+                                            ) : (
+                                                <div onClick={handleTextareaClick}>
+                                                    <Textarea
+                                                        rows={1}
+                                                        value={inputValueActivity}
+                                                        onChange={handleChangeActivity}
+                                                        placeholder='Write a comment...'
+                                                    />
+                                                </div>
+                                            )}
+                                            {isEditingActivity && (
+                                                <div className='mt-2'>
+                                                    <Button colorScheme='blue' onClick={handleSaveClickActivity}>Save</Button>
+                                                    <Button onClick={handleCancelClickActivity}>Cancel</Button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                {!isEditingActivity && inputValueActivity && (
+                                    <div className='flex mt-5'>
+                                        <div>
+                                            <Avatar key={user.id} name={user.name} src={user.avatarUrl}
+                                                    boxSize='40px'/>
+                                        </div>
+                                        <div className='w-full ml-2'>
+                                            <p className='font-bold'>{user.username}</p>
+                                            <Card className='h-auto' style={{lineHeight: "40px"}}>
+                                                    <p className='ml-5'>{inputValueActivity}</p>
+                                            </Card>
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
 
 
@@ -279,7 +349,6 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                                                     <span>{member.username}</span>
                                                 </MenuItem>
                                             ))}
-
                                         </div>
 
                                     </MenuList>
