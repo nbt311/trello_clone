@@ -2,9 +2,7 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.LabelDTO;
-import com.example.trellobackend.models.board.Card;
 import com.example.trellobackend.models.board.Label;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.LabelRepository;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -23,6 +20,8 @@ import java.util.Optional;
 public class CardController {
     @Autowired
     private CardService cardService;
+    @Autowired
+    private LabelRepository labelRepository;
     @PostMapping("/create")
     public ResponseEntity<?> createNewCard(@RequestBody CardRequest cardRequest) {
             BoardResponseDTO responseDTO = cardService.createNewCard(cardRequest);
@@ -52,5 +51,16 @@ public class CardController {
     @GetMapping("/suggest/{query}")
     public List<CardDTO> suggestCards(@PathVariable String query){
         return cardService.getSuggestedCards(query);
+    }
+
+    @DeleteMapping("/{cardId}/removeLabels/{labelId}")
+    public ResponseEntity<?> removeLabelFromCard(@PathVariable Long cardId, @PathVariable Long labelId){
+        try {
+            Label label = labelRepository.findById(labelId).orElseThrow(() -> new RuntimeException("Label not found"));
+            cardService.deleteLabelFromCard(cardId, label);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
+        }
     }
 }

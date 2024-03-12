@@ -78,7 +78,6 @@ public class BoardController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @GetMapping("/visibility")
     public List<Visibility> getAllVisibilities(){
         return  visibilityRepository.findAll();
