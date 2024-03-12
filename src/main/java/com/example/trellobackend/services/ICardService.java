@@ -5,10 +5,10 @@ import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
+import com.example.trellobackend.dto.LabelDTO;
 import com.example.trellobackend.payload.request.CardRequest;
-
 import java.util.List;
-import java.util.Set;
+
 
 public interface ICardService extends IGeneralService<Card>{
     BoardResponseDTO createNewCard(CardRequest cardRequest);
@@ -17,4 +17,5 @@ public interface ICardService extends IGeneralService<Card>{
     List<UserDTO> getUserByCard(Long cardId);
     void changeCardAttachment(Long cardId, List<Attachment> attachments);
     List<Attachment> getAttachmentsByCardId(Long cardId);
+     List<LabelDTO> getAllLabelByCardId(Long cardId);
 }
