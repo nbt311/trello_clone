@@ -38,7 +38,7 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.2.1'
 	implementation 'org.modelmapper:modelmapper:2.4.4'
-
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
