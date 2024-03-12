@@ -108,6 +108,11 @@ public class CardService implements ICardService {
         }
     }
 
+    @Override
+    public List<CardDTO> getSuggestedCards(String query){
+        return cardRepository.findCardByPartialMatch(query);
+    }
+
     public void addLabelToCard(Long cardId, Long labelId){
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if(cardOptional.isPresent()){
@@ -120,6 +125,4 @@ public class CardService implements ICardService {
             }
         }
     }
-
-
 }

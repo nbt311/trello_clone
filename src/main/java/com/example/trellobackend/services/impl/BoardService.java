@@ -133,7 +133,7 @@ public class BoardService implements IBoardService {
                 List<Long> cardOrderIds = columns.getCardOrderIds();
                 List<CardDTO> cards = columns.getCards()
                         .stream().map(card ->
-                                new CardDTO(card.getId(),card.getTitle()))
+                                new CardDTO(card.getId(),card.getTitle(), card.getDescription()))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
             })

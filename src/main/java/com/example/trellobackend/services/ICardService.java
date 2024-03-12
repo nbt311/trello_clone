@@ -13,4 +13,5 @@ import java.util.List;
 public interface ICardService extends IGeneralService<Card>{
     BoardResponseDTO createNewCard(CardRequest cardRequest);
      List<LabelDTO> getAllLabelByCardId(Long cardId);
+     List<CardDTO> getSuggestedCards(String query);
 }

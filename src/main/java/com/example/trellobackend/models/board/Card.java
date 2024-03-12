@@ -35,6 +35,6 @@ public class Card {
                inverseJoinColumns = @JoinColumn(name = "label_id"))
     private Set<Label> labels = new HashSet<>();
 
-//    private String description;
+    private String description;
 //    private String cover;
 }

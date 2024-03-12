@@ -23,8 +23,6 @@ import java.util.Optional;
 public class CardController {
     @Autowired
     private CardService cardService;
-    @Autowired
-    private LabelRepository labelRepository;
     @PostMapping("/create")
     public ResponseEntity<?> createNewCard(@RequestBody CardRequest cardRequest) {
             BoardResponseDTO responseDTO = cardService.createNewCard(cardRequest);
@@ -49,5 +47,10 @@ public class CardController {
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/suggest/{query}")
+    public List<CardDTO> suggestCards(@PathVariable String query){
+        return cardService.getSuggestedCards(query);
     }
 }
