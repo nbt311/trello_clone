@@ -15,8 +15,13 @@ class WorkspaceService {
     getBoardByWorkspaceId() {
 
     }
-    getWorkspaceByUser() {
-        return axios.get()
+    getWorkspacesByUser(userId) {
+        return axios.get(`${API_URL}${userId}/all`)
+            .then(response => {
+
+        }).catch(error => {
+            throw  error
+            })
     }
 }
 export default new WorkspaceService();
