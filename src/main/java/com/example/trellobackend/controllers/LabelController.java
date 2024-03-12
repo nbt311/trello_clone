@@ -1,5 +1,6 @@
 package com.example.trellobackend.controllers;
 
+import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.models.board.Label;
 import com.example.trellobackend.services.impl.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -31,6 +33,7 @@ public class LabelController {
             return new ResponseEntity<>("Label not found", HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/create")
     public ResponseEntity<Label> createLabel(@RequestBody Label label){
         Label labelCreate = labelService.save(label);
@@ -41,5 +44,15 @@ public class LabelController {
     public ResponseEntity<Label> deleteLabel(@PathVariable Long labelId){
         labelService.remove(labelId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{labelId}/allCards")
+    public ResponseEntity<List<CardDTO>> getAllCardsByLabel(@PathVariable Long labelId){
+        try {
+            List<CardDTO> cardDTOList = labelService.getAllCardByLabel(labelId);
+            return new ResponseEntity<>(cardDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
