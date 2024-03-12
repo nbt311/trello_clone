@@ -42,7 +42,7 @@ const CardContent = ({card}) => {
         };
 
         fetchLabels();
-    }, [card.id]);
+    }, [card]);
 
     const handleOpenModal = () => {
         onOpen();
@@ -57,7 +57,6 @@ const CardContent = ({card}) => {
         }
     };
 
-    let fetchedColors;
     return (
         <div>
         <CardModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} toggleVisibility={toggleVisibility}
@@ -70,6 +69,7 @@ const CardContent = ({card}) => {
                     <div className='flex flex-col max-w-[88%]'>
                         <div className="flex">
                             {labels.map((label) => (
+                                // <div className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full ${selectedColors.includes(`${label.color}`) ? '' : 'hidden'}`}></div>
                                 <div  className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full`}></div>
                             ))}
                         </div>

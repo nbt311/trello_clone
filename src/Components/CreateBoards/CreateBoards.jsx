@@ -58,7 +58,6 @@ const CreateBoards = ({user, workspace}) => {
     }, []);
 
     return (
-
         <div className="flex flex-col items-center justify-center">
             <div className='flex w-full justify-between'>
                 <button className=''><IoChevronBack/></button>
