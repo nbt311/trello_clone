@@ -37,4 +37,10 @@ public class UserDTO {
         this.email = email;
         this.avatarUrl = avatarUrl;
     }
+    public UserDTO(User user){
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.avatarUrl = user.getAvatarUrl();
+    }
 }

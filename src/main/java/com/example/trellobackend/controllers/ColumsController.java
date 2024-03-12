@@ -63,7 +63,7 @@ public class ColumsController {
             BoardResponseDTO responseDTO = columnsService.createNewColumn(columnRequest);
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         } catch (Exception e) {
-            e.printStackTrace(); // In thông tin lỗi ra console (hoặc sử dụng Logger)
+            e.printStackTrace();
             return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

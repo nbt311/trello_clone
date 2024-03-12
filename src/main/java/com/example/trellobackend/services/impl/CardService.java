@@ -1,15 +1,12 @@
 package com.example.trellobackend.services.impl;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
-import com.example.trellobackend.dto.LabelDTO;
-import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.Board;
 import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.models.board.Columns;
+import com.example.trellobackend.models.board.card.Comment;
 import com.example.trellobackend.models.board.card.Label;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.BoardRepository;
@@ -180,6 +177,22 @@ public class CardService implements ICardService {
         if(card != null){
             return card.getLabels().stream()
                     .map(LabelDTO::new
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("Card not found");
+        }
+    }
+
+    @Override
+    public List<CommentDTO> getCommentsByCardId(Long cardId) {
+        Card card = cardRepository.findById(cardId).orElse(null);
+        if(card != null){
+            return card.getComments().stream()
+                    .map(comment -> new CommentDTO(comment.getId(),
+                            comment.getContent(),
+                            comment.getUser(),
+                            comment.getCreatedAt())
                     )
                     .collect(Collectors.toList());
         } else {
