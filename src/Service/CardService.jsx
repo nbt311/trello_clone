@@ -44,5 +44,9 @@ class CardService {
         return axios.post(`${API_URL}${cardId}/newLabels/${labelId}`)
     }
 
+    showCommentToCard(cardId){
+        return axios.get(`${API_URL}${cardId}/comment`)
+    }
+
 }
 export default new CardService();

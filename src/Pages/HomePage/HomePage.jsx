@@ -28,6 +28,8 @@ const HomePage = () => {
             setLoading(false);
         })
 
+
+
     }, []);
     if (loading) {
         return null;

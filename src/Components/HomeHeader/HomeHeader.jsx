@@ -41,6 +41,8 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
     const navigate = useNavigate();
     const {workspace, updateWorkspace} = useContext(WorkspaceContext);
 
+    console.log("abc",workspace)
+
     useEffect(() => {
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);

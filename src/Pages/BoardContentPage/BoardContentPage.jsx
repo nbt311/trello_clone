@@ -19,6 +19,7 @@ import BoardContext from "../../Context/BoardContext";
 import BoardBar from "../../Components/SideBar/BoardBar";
 import BoardService from "../../Service/BoardService";
 import ColumnService from "../../Service/ColumnService";
+
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'

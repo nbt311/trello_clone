@@ -10,11 +10,13 @@ import {
 import axios from "axios";
 import InviteFriendWorkspace from "./InviteFriendWorkspace";
 import AuthService from "../../Service/auth.service";
+import WorkspaceService from "../../Service/WorkspaceService";
 const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspaceName,workspaceType,setWorkspaceType,workspaceDescription,setWorkspaceDescription}) => {
     const isButtonDisabled = !workspaceName || !workspaceType;
     const secondModalDisclosure = useDisclosure()
     const [workspaceTypes, setWorkspaceTypes] = useState([]);
     const user = AuthService.getCurrentUser();
+
     useEffect(() => {
         axios.get("http://localhost:8080/api/workspaces/type")
             .then(response => {
@@ -25,22 +27,28 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
             });
     }, []);
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         const frontendURL = window.location.origin;
+        let workspaces;  // Đặt ở đây để có thể sử dụng ngoài phạm vi .then
 
-        axios.post("http://localhost:8080/api/workspaces/create", {
-            email: user.email,
-            name: workspaceName,
-            description: workspaceDescription,
-            workspaceType,
-            frontendURL: frontendURL
-        })
-            .then(res => {
-                console.log(res.data);
-            })
-            .catch(error => {
-                console.error("Error creating workspace:", error);
+        try {
+            const response = await axios.post("http://localhost:8080/api/workspaces/create", {
+                email: user.email,
+                name: workspaceName,
+                description: workspaceDescription,
+                workspaceType,
+                frontendURL: frontendURL
             });
+
+            // Gọi API để lấy danh sách workspaces mới
+            workspaces = await WorkspaceService.getWorkspacesByUser(user.id);
+
+            // Lưu danh sách workspaces vào localStorage
+            localStorage.setItem('workspacelist', JSON.stringify(workspaces));
+        } catch (error) {
+            console.error("Error creating or fetching workspace:", error);
+        }
+
         secondModalDisclosure.onOpen();
         onClose(setWorkspaceName(null), setWorkspaceType(null), setWorkspaceDescription(null));
     };
@@ -94,7 +102,7 @@ const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspac
                         </ModalBody>
                     </ModalContent>
                 </Modal>
-                <InviteFriendWorkspace isOpen={secondModalDisclosure.isOpen} onOpen={secondModalDisclosure.onOpen} onClose={secondModalDisclosure.onClose}/>
+                {/*<InviteFriendWorkspace isOpen={secondModalDisclosure.isOpen} onOpen={secondModalDisclosure.onOpen} onClose={secondModalDisclosure.onClose}/>*/}
             </>
         )
 };
