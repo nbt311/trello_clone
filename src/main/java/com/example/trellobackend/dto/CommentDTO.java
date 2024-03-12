@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,6 +22,7 @@ public class CommentDTO {
     private CardDTO cardDTO;
     private UserDTO userDTO;
     private LocalDateTime createdAt;
+    private String elapsedTime;
 
 
     public CommentDTO(Comment comment,CardDTO cardDTO, UserDTO userDTO){
@@ -33,5 +37,26 @@ public class CommentDTO {
         this.content = content;
         this.userDTO = new UserDTO(user);
         this.createdAt = createdAt;
+    }
+
+    public void setElapsedTime(String elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    public String getTimeElapsedFromCreation() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        long minutes = ChronoUnit.MINUTES.between(createdAt, currentTime);
+
+        if (minutes < 1) {
+            return "Vừa xong";
+        } else if (minutes < 60) {
+            return minutes + " phút trước";
+        } else if (createdAt.toLocalDate().equals(currentTime.toLocalDate())) {
+            return createdAt.format(DateTimeFormatter.ofPattern("HH:mm"));
+        } else if (createdAt.toLocalDate().equals(currentTime.toLocalDate().minusDays(1))) {
+            return createdAt.format(DateTimeFormatter.ofPattern("HH:mm"));
+        } else {
+            return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        }
     }
 }

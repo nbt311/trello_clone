@@ -194,6 +194,10 @@ public class CardService implements ICardService {
                             comment.getUser(),
                             comment.getCreatedAt())
                     )
+                    .map(commentDTO -> {
+                        commentDTO.setElapsedTime(commentDTO.getTimeElapsedFromCreation());
+                        return commentDTO;
+                    })
                     .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Card not found");

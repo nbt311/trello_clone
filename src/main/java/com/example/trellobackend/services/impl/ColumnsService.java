@@ -91,6 +91,7 @@ public class ColumnsService implements IColumsService {
                         CardDTO cardDTO = new CardDTO();
                         cardDTO.setId(card.getId());
                         cardDTO.setTitle(card.getTitle());
+                        cardDTO.setAttachments(card.getAttachments());
                         // Map other properties as needed
                         return cardDTO;
                     })

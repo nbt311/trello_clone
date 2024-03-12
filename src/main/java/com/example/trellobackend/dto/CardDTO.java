@@ -1,13 +1,16 @@
 package com.example.trellobackend.dto;
 
+import com.example.trellobackend.models.User;
 import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.models.board.card.Card;
+import com.example.trellobackend.models.board.card.Label;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
