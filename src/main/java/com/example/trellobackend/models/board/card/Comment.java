@@ -31,5 +31,4 @@ public class Comment {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-
 }

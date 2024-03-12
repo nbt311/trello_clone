@@ -24,6 +24,7 @@ public class CommentDTO {
     private LocalDateTime createdAt;
     private String elapsedTime;
 
+
     public CommentDTO(Comment comment,CardDTO cardDTO, UserDTO userDTO){
         this.id = comment.getId();
         this.content = comment.getContent();
@@ -37,9 +38,11 @@ public class CommentDTO {
         this.userDTO = new UserDTO(user);
         this.createdAt = createdAt;
     }
+
     public void setElapsedTime(String elapsedTime) {
         this.elapsedTime = elapsedTime;
     }
+
     public String getTimeElapsedFromCreation() {
         LocalDateTime currentTime = LocalDateTime.now();
         long minutes = ChronoUnit.MINUTES.between(createdAt, currentTime);
