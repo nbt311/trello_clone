@@ -131,7 +131,7 @@ public class BoardService implements IBoardService {
                                         card.getBoard().getId(),
                                         card.getColumn().getId(),
                                         card.getTitle(),
-                                        card.getAttachmentsLink()
+                                        card.getAttachments()
                                         ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
@@ -193,7 +193,6 @@ public class BoardService implements IBoardService {
         Board board = boardRepository. findById(boardId).orElseThrow(() -> new RuntimeException("Board not found"));
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         boardRepository.save(board);
     }
 
