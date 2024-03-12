@@ -3,7 +3,7 @@ import {
     Avatar,
     AvatarGroup,
     Box,
-    Button, Checkbox, Input,
+    Button, Card, Checkbox, Input,
     Menu,
     MenuButton,
     MenuItem,
@@ -261,13 +261,16 @@ const BoardBar = () => {
                                     style={{cursor: 'pointer'}}
                                     onClick={() => handleEmailClick(user.email)}
                                 >
-                                    <div className='flex'>
-                                        <Avatar className='mt-1' size='sm' name={user.username} src={user.avatarUrl}/>
-                                        <div className='ml-2'>
-                                            <p className='text-base font-medium'>{user.username}</p>
-                                            <p className='text-sm'>{user.email}</p>
+                                    <Card>
+                                        <div className='flex'>
+                                            <Avatar className='mt-1' size='sm' name={user.username} src={user.avatarUrl}/>
+                                            <div className='ml-2'>
+                                                <p className='text-base font-medium'>{user.username}</p>
+                                                <p className='text-sm'>{user.email}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </Card>
+
                                 </div>
                             ))}
                             {members.map(member => (
