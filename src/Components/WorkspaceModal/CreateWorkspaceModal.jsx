@@ -12,11 +12,7 @@ import InviteFriendWorkspace from "./InviteFriendWorkspace";
 import AuthService from "../../Service/auth.service";
 import WorkspaceService from "../../Service/WorkspaceService";
 const CreateWorkspaceModal = ({isOpen, onOpen, onClose,workspaceName,setWorkspaceName,workspaceType,setWorkspaceType,workspaceDescription,setWorkspaceDescription}) => {
-    // const [workspaceName, setWorkspaceName] = useState("");
-    // const [workspaceType, setWorkspaceType] = useState("");
-    // const [workspaceDescription, setWorkspaceDescription] = useState("");
     const isButtonDisabled = !workspaceName || !workspaceType;
-
     const secondModalDisclosure = useDisclosure()
     const [workspaceTypes, setWorkspaceTypes] = useState([]);
     const user = AuthService.getCurrentUser();

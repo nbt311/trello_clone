@@ -23,7 +23,7 @@ const Workspace = () => {
     const [user, setUser] = useState({})
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('userLogin'));
+        const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
 
         axios.get(`http://localhost:8080/api/users/${user.id}/workspaces`).then((response) => {

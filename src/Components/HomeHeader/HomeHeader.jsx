@@ -4,13 +4,25 @@ import Dropdown from "./Dropdown";
 import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
-    Avatar, Button,
+    Avatar, Box,
+    Button, ButtonGroup, FocusLock,
+    FormControl,
+    FormLabel, IconButton,
+    Input,
     Menu,
     MenuButton,
     MenuDivider,
     MenuGroup,
     MenuItem,
-    MenuList
+    MenuList,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverFooter,
+    PopoverHeader,
+    PopoverTrigger, Stack, useDisclosure
 } from "@chakra-ui/react";
 import {Link, useNavigate} from "react-router-dom";
 import {RiShareBoxLine} from "react-icons/ri";
@@ -19,8 +31,10 @@ import {BsTrello} from "react-icons/bs";
 import {GrAdd} from "react-icons/gr";
 import WorkspaceContext from "../../Context/WorkspaceContext";
 import UserContext from "../../Context/UserContext";
+import CreateBoards from "../CreateBoards/CreateBoards";
 
-const HomeHeader = ({onOpen, onClose}) => {
+
+const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
     const [userLogin, setUserLogin] = useState({});
     const {user, updateUser} = useContext(UserContext);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -42,7 +56,7 @@ const HomeHeader = ({onOpen, onClose}) => {
     }, []);
 
     useEffect(() => {
-        const users = JSON.parse(localStorage.getItem('userLogin'));
+        const users = JSON.parse(localStorage.getItem('user'));
         setUserLogin(users);
     }, []);
 
@@ -55,6 +69,13 @@ const HomeHeader = ({onOpen, onClose}) => {
         localStorage.setItem('workspace', JSON.stringify(item));
         navigate(`/workspace/${item.id}`);
     };
+
+    const [showForm, setShowForm] = useState(false);
+
+    const toggleForm = () => {
+        setShowForm(!showForm);
+    };
+
 
     return (
         <div className='bg-white border-gray-200  w-full lg:px-6 py-1'>
@@ -78,27 +99,35 @@ const HomeHeader = ({onOpen, onClose}) => {
                                 <Dropdown title='Workspace'/>
                             </MenuButton>
                             <MenuList>
+                                {user.ownedWorkspaces.length > 0 && (
+                                    <>
+                                        <p className="text-sm flex ml-3">Your Workspaces</p>
+                                        {user.ownedWorkspaces.map((item) => (
+                                            <MenuItem key={item.id}>
+                                                <div className='flex cursor-pointer '
+                                                     onClick={() => handleWorkspaceClick(item)}>
+                                                    <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
+                                                    <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
+                                                </div>
+                                            </MenuItem>
+                                        ))}
+                                    </>
+                                )}
+                                {user.memberWorkspaces.length > 0 && (
+                                    <>
+                                        <p className="text-sm flex ml-3">Guest Workspaces</p>
+                                        {user.memberWorkspaces.map((item) => (
+                                            <MenuItem key={item.id}>
+                                                <div className='flex cursor-pointer '
+                                                     onClick={() => handleWorkspaceClick(item)}>
+                                                    <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
+                                                    <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
+                                                </div>
 
-                                <p className="text-sm flex ml-3">Your Workspaces</p>
-
-                                {user.ownedWorkspaces.map((item) => (
-                                    <MenuItem key={item.id}>
-                                            <div className='flex cursor-pointer ' onClick={() => handleWorkspaceClick(item)}>
-                                                <Avatar size='sm' borderRadius='md' name={item.name} src=''/>
-                                                <p className='text-base font-medium ml-2 mt-1'>{item.name}</p>
-                                            </div>
-
-                                    </MenuItem>
-                                ))}
-                                <p className="text-sm flex ml-3">Guest Workspaces</p>
-                                {/*<MenuItem>*/}
-                                {/*    <Link to='/workspace/2'>*/}
-                                {/*        <div className='flex'>*/}
-                                {/*            <Avatar size='sm' borderRadius='md' name={user.username} src=''/>*/}
-                                {/*            <p className='text-base font-medium ml-2 mt-1'>{user.username}</p>*/}
-                                {/*        </div>*/}
-                                {/*    </Link>*/}
-                                {/*</MenuItem>*/}
+                                            </MenuItem>
+                                        ))}
+                                    </>
+                                )}
                             </MenuList>
                         </Menu>
 
@@ -109,7 +138,7 @@ const HomeHeader = ({onOpen, onClose}) => {
                     </div>
 
                     <div>
-                        <Menu>
+                        <Menu closeOnSelect={false}>
                             {isSmallScreen ? (
                                 <MenuButton as={Button} colorScheme='blue'>
                                     <GrAdd/>
@@ -120,18 +149,28 @@ const HomeHeader = ({onOpen, onClose}) => {
                                 </MenuButton>
                             )}
                             <MenuList className='w-full'>
-                                <MenuItem>
+                                <MenuItem onClick={toggleForm}>
                                     <div>
                                         <p className='flex'><BsTrello className='mt-1 mr-1'/>Create board</p>
-                                        <p className='text-sm text-left'>A board is made up of cards ordered on lists.
-                                            Use it <br/> to manage projects, track information, or organize <br/> anything.</p>
+                                        <p className='text-sm text-left'>A board is made up of cards ordered on
+                                            lists. Use it <br/> to manage projects, track information, or organize
+                                            <br/> anything.</p>
                                     </div>
                                 </MenuItem>
+                                {showForm && (
+                                    <div>
+                                        <MenuList minWidth='340px'>
+                                            <CreateBoards user={users} workspace={workspacelist}/>
+                                        </MenuList>
+                                    </div>
+                                )}
+
                                 <MenuItem onClick={handleCreate}>
                                     <div>
                                         <p className='flex'><BiGroup className='mt-1 mr-1'/>Create Workspace</p>
                                         <p className='text-sm text-left'>A Workspace is a group of boards and people.
-                                            Use <br/> it to organize your company, side hustle,family, or <br/> friends.</p>
+                                            Use <br/> it to organize your company, side hustle,family, or <br/> friends.
+                                        </p>
                                     </div>
                                 </MenuItem>
                             </MenuList>

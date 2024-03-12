@@ -16,6 +16,7 @@ import Column from "../../Components/BoardContent/ListColumns/Column/Column";
 import CardContent from "../../Components/BoardContent/ListColumns/Column/ListCards/CardContent/CardContent";
 import {cloneDeep, isEmpty} from "lodash";
 import BoardContext from "../../Context/BoardContext";
+import BoardBar from "../../Components/SideBar/BoardBar";
 import BoardService from "../../Service/BoardService";
 import ColumnService from "../../Service/ColumnService";
 
@@ -26,7 +27,6 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 const BoardContentPage = () => {
     const {board, updateBoard} = useContext(BoardContext);
-
 
     useEffect(() => {
         const storedBoard = localStorage.getItem('board');
@@ -284,14 +284,15 @@ const BoardContentPage = () => {
         }),
     };
 
-
     return (
         <div className='h-dvh w-dvw max-w-full overflow-y-hidden'>
             <div>
                 <HomeHeader/>
             </div>
 
-
+            <div>
+                <BoardBar/>
+            </div>
             <div className='h-full' style={divStyle}>
                 <DndContext sensors={sensors}
                             collisionDetection={closestCorners}
@@ -306,10 +307,10 @@ const BoardContentPage = () => {
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) &&
                                 <Column column={activeDragItemData}/>}
                             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) &&
-                                <CardContent card={activeDragItemData}/>}
+                                <CardContent  card={activeDragItemData} />}
                         </DragOverlay>
                     </div>
-                </DndContext>
+                </DndContext >
             </div>
         </div>
     );

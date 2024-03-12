@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
-    Button,
+    Button, Menu, MenuList,
     Select, useToast
 } from "@chakra-ui/react";
 import {IoChevronBack} from "react-icons/io5";
 import {IoMdClose} from "react-icons/io";
 import {PiHandWaving} from "react-icons/pi";
 import axios from "axios";
-import workspace from "../../Pages/WorkspacePage/Workspace";
+import {useNavigate} from "react-router-dom";
+
 
 const CreateBoards = ({user, workspace}) => {
     const [boardTitle, setBoardTitle] = useState("")
@@ -16,6 +17,7 @@ const CreateBoards = ({user, workspace}) => {
     const toast = useToast();
     const [boardVisibility, setBoardVisibility] = useState([]);
     const [selectedVisibility, setSelectedVisibility] = useState('');
+    const navigate = useNavigate();
 
     const handleCreateBoard = () => {
         axios.post('http://localhost:8080/api/boards/create',{
@@ -31,6 +33,8 @@ const CreateBoards = ({user, workspace}) => {
                 duration: 3000,
                 isClosable: true,
             })
+            localStorage.setItem('board', JSON.stringify(res.data));
+            navigate(`/board/${res.data.id}`);
         })
             .catch(error => {
                 console.error("Error creating workspace:", error);
@@ -47,17 +51,14 @@ const CreateBoards = ({user, workspace}) => {
         axios.get("http://localhost:8080/api/boards/visibility")
             .then(response => {
                setBoardVisibility(response.data);
-                console.log("yahdasd",response.data);
             })
             .catch(error => {
                 console.error("Error fetching board visibility:", error);
             });
     }, []);
 
-    console.log(selectedVisibility);
     return (
-        // <Menu>
-        //     <MenuList minWidth='340px'>
+
         <div className="flex flex-col items-center justify-center">
             <div className='flex w-full justify-between'>
                 <button className=''><IoChevronBack/></button>
@@ -120,8 +121,7 @@ const CreateBoards = ({user, workspace}) => {
                     className="hover:underline"> Terms of Service</a></p>
             </div>
         </div>
-        //     </MenuList>
-        // </Menu>
+
     )
 };
 

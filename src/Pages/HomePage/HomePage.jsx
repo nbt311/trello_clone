@@ -8,6 +8,7 @@ import {Route, Routes} from "react-router-dom";
 import HomeNotification from "../../Components/HomePageBody/HomeNotification";
 import UserContext from "../../Context/UserContext";
 import UserService from "../../Service/UserService";
+import CreateBoards from "../../Components/CreateBoards/CreateBoards";
 
 const HomePage = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
@@ -33,11 +34,11 @@ const HomePage = () => {
     if (loading) {
         return null;
     }
-    console.log('wtf',workspaceList)
+
     return (
         <div>
             <div className='border border-1-slate-500 py-1'>
-                <HomeHeader onOpen={onOpen} onClose={onClose} workspace={workspaceList}/>
+                <HomeHeader onOpen={onOpen} onClose={onClose} isOpen={isOpen} workspacelist={workspaceList} users={user}/>
             </div>
 
             <div className='flex'>
