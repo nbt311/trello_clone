@@ -48,5 +48,9 @@ class CardService {
         return axios.get(`${API_URL}${cardId}/comment`)
     }
 
+    removeLabelToCard(cardId, labelId){
+        return axios.delete(`${API_URL}${cardId}/removeLabels/${labelId}`)
+    }
+
 }
 export default new CardService();

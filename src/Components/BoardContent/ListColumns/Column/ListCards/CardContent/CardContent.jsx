@@ -69,9 +69,10 @@ const CardContent = ({card}) => {
                     <div className='flex flex-col max-w-[88%]'>
                         <div className="flex">
                             {labels.map((label) => (
-                                // <div className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full ${selectedColors.includes(`${label.color}`) ? '' : 'hidden'}`}></div>
+                                // <div className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full ${selectedColors.includes(label.color) ? '' : 'hidden'}`}></div>
                                 <div  className={`w-7 h-2 bg-${label.color}-500 ml-2 rounded-full`}></div>
                             ))}
+
                         </div>
                         <p className='text-sm font-medium'>{card.title}</p>
                     </div>

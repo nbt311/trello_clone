@@ -19,6 +19,7 @@ import BoardContext from "../../Context/BoardContext";
 import BoardBar from "../../Components/SideBar/BoardBar";
 import BoardService from "../../Service/BoardService";
 import ColumnService from "../../Service/ColumnService";
+import column from "../../Components/BoardContent/ListColumns/Column/Column";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -39,6 +40,7 @@ const BoardContentPage = () => {
         board.columns.forEach(column => {
             if (!isEmpty(column.cards)) {
                 column.cards = mapOrder(column.cards, column.cardOrderIds, 'id')
+                console.log('hi',column.cards)
             }
         })
     }, []);
@@ -283,7 +285,7 @@ const BoardContentPage = () => {
             },
         }),
     };
-
+    console.log(board.columns)
     return (
         <div className='h-dvh w-dvw max-w-full overflow-y-hidden'>
             <div>

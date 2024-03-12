@@ -93,7 +93,6 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const showCommented = () => {
         CardService.showCommentToCard(card.id)
             .then(response => {
-                console.log("aaaaaa",response.data);
                 setComments(response.data); // Update the state with the fetched comments
             })
             .catch(error => {
@@ -134,7 +133,9 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
         toggleVisibility(color);
         updateCardLabel(labelId);
     };
-
+    const removeCardLabel = (labelId) => {
+        CardService.removeLabelToCard(card.id,labelId);
+    }
     const updateCardLabel = (labelId) => {
         CardService.addLabelToCard(card.id, labelId)
     };
