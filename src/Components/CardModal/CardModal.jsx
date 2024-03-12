@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Avatar, AvatarGroup,
     Button, Card, Checkbox, Input, Menu, MenuButton, MenuItem, MenuList,
@@ -19,6 +19,13 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import CardService from "../../Service/CardService";
 import CommentService from "../../Service/CommentService";
+import Stomp from 'stompjs';
+import SockJs from 'sockjs-client';
+import NotificationContext from "../../Context/NotificationContext";
+import {FaPaperclip} from "react-icons/fa";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import {imageDb} from "../../FirebaseImageUpload/Config";
+import {GoPaperclip} from "react-icons/go";
 
 const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers}) => {
     const [inputValueDescription, setInputValueDescription] = useState('');
@@ -38,6 +45,28 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const [purpleCheckbox, setPurpleCheckbox] = useState(false);
     const [blueCheckbox, setBlueCheckbox] = useState(false);
     const [comments, setComments] = useState([]);
+    const [stompClient, setStompClient] = useState(null);
+    const {notification,updateNotification} = useContext(NotificationContext);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+
+    useEffect(() => {
+        const socket = new SockJs('http://localhost:8080/ws');
+        const client = Stomp.over(socket);
+
+        client.connect({}, () => {
+            client.subscribe('/topic/messages', (message) => {
+                const receivedMessage = JSON.parse(message.body);
+                    updateNotification(receivedMessage);
+            });
+        });
+        localStorage.setItem("notification",JSON.stringify(notification));
+        setStompClient(client);
+
+        return () => {
+            client.disconnect();
+        };
+    }, []);
+
 
 
     useEffect(() => {
@@ -56,6 +85,78 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
         showLabelToCard(card.id);
         showCommented(card.id);
     }, [id, card.id]);
+
+    useEffect(() => {
+        CardService.getAttachmentUrl(card.id)
+            .then(response => {
+                const existingPaths = response.data;
+                setUploadedFiles(existingPaths);
+            })
+            .catch(error => {
+                console.error('Error fetching existing paths:', error);
+            });
+    }, [card.id]);
+
+    let isUploading = false;
+
+    const uploadFile = async () => {
+        if (isUploading) {
+            console.log('Upload is already in progress.');
+            return;
+        }
+
+        isUploading = true;
+
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files;
+
+        if (files.length > 0) {
+            try {
+
+                const uploadPromises = Array.from(files).map(async (file) => {
+                    const storageRef = ref(imageDb, `uploads/${file.name}`);
+                    await uploadBytes(storageRef, file);
+                });
+
+                await Promise.all(uploadPromises);
+
+                const filesInfoPromises = Array.from(files).map(async (file) => {
+                    const storageRef = ref(imageDb, `uploads/${file.name}`);
+                    const downloadURL = await getDownloadURL(storageRef);
+
+                    return {
+                        downloadURL,
+                        fileName: file.name,
+                        thumbnail: file.type.startsWith('image/')
+                            ? downloadURL
+                            : file.type.startsWith('video/') ?
+                                'https://www.keytechinc.com/wp-content/uploads/2022/01/video-thumbnail.jpg' :
+                                'https://firebasestorage.googleapis.com/v0/b/trelloimageupload.appspot.com/o/uploads%2Fpngwing.com.png?alt=media&token=122f8783-5c85-4cfa-91c8-8e3c0a582cf3',
+                    };
+                });
+
+                const newFilesInfo = await Promise.all(filesInfoPromises);
+
+                CardService.updateAttachmentUrl(card.id, newFilesInfo)
+                    .then(response => {
+                        console.log('Attachment URLs updated successfully:', response.data);
+                        setUploadedFiles((prevFiles) => prevFiles.concat(newFilesInfo));
+                    })
+                    .catch(error => {
+                        console.error('Error updating attachment URLs:', error);
+                    });
+            } catch (error) {
+                console.error('Error uploading or fetching file information:', error);
+            } finally {
+                isUploading = false;
+            }
+        }
+        else {
+            alert('Please select a file.');
+            isUploading = false;
+        }
+    };
+
     const showLabelToCard = (cardId) => {
         CardService.showLabelToCard(cardId)
             .then(response => {
@@ -174,6 +275,15 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
             const userId = user.id;
             // Gọi hàm createNewComment từ CommentService và truyền các tham số cần thiết
             await CommentService.createNewComment(content, cardId, userId);
+            if (content.trim()) {
+                const commentMessage = {
+                    userAvatar: user.avatarUrl,
+                    username: user.username,
+                };
+
+                stompClient.send('/app/chat', {}, JSON.stringify(commentMessage));
+                setInputValueActivity('');
+            }
 
             // Sau khi tạo bình luận thành công, thực hiện các hành động khác
             setIsEditingActivity(false);
@@ -283,6 +393,41 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                                         <Button onClick={handleCancelClickDescription}>Cancel</Button>
                                     </div>
                                 )}
+
+                                {uploadedFiles.length > 0 && (
+                                    <div>
+                                        <div className="flex mt-10">
+                                            <FaPaperclip className='mt-1'/>
+                                            <p className='font-bold ml-2'>Attachments</p>
+                                        </div>
+
+                                        {uploadedFiles.map((file, index) => (
+
+                                            <div key={index}
+                                                 className='cursor-pointer rounded-sm max-w-full hover:bg-gray-200 mt-4'>
+                                                <a href={file.downloadURL}
+                                                   target="_blank"
+                                                   className='hover:bg-black'
+                                                >
+                                                    <div className='flex items-center space-x-4'>
+                                                        <div>
+                                                            <img
+                                                                src={file.thumbnail}
+                                                                alt="Thumbnail"
+                                                                width="100"
+                                                            />
+                                                        </div>
+
+                                                        <div className='text-md text-left font-bold max-w-[70%]'>
+                                                            <p>{file.fileName}</p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
                                 <div className="flex mt-10">
                                     <RxActivityLog className='mt-1'/>
                                     <p className='font-bold ml-2'>Activity</p>
@@ -448,6 +593,48 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                                         </div>
                                     </MenuList>
                                 </Menu>
+
+                                <Menu>
+                                    <MenuButton borderRadius='md'
+                                                bg='gray.200'
+                                                _expanded={{ bg: 'gray.200' }}
+                                                _hover={{ bg: 'gray.300' }}>
+                                        <div className='flex'>
+                                            <GoPaperclip className='ml-1 mt-1 mr-1'/>
+                                            <p className='font-semibold'>Attachment</p>
+                                        </div>
+                                    </MenuButton>
+                                    <MenuList>
+                                        <div className='flex flex-col items-center space-y-3 px-2'>
+                                            <div>
+                                                <p className='font-semibold'>Attach</p>
+                                            </div>
+
+                                            <div className='px-2 text-left font-semibold text-gray-500'>
+                                                <p>Attach a file from your computer</p>
+                                            </div>
+
+                                            <label htmlFor="fileInput" className='w-full'>
+                                                <div>
+                                                    <input className='file-Input w-full' type="file"
+                                                           id='fileInput'
+                                                           onChange={uploadFile}
+                                                           multiple
+                                                           hidden={true}/>
+
+                                                    <p className='flex bg-gray-100
+                                                    justify-center text-sm
+                                                    font-semibold rounded-sm px-3 py-2 cursor-pointer hover:bg-gray-200'>
+                                                        Choose a file
+                                                    </p>
+                                                </div>
+                                            </label>
+
+                                        </div>
+
+                                    </MenuList>
+                                </Menu>
+
 
                             </div>
                         </div>

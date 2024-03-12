@@ -62,14 +62,23 @@ const BoardsPage = ({workspaceList}) => {
             </div>
 
             <div>
-                <div className='flex items-center space-x-3 mt-5 text-left text-xl text-gray-600'>
-                    <BsPeople style={{strokeWidth: '0.8'}}/>
-                    <p>Dự án C08</p>
-                </div>
+                {user?.memberWorkspaces.map((data) =>(
+                    <div>
+                        <div className='flex items-center space-x-3 mt-5 text-left text-xl text-gray-600'>
+                            <BsPeople style={{strokeWidth: '0.8'}}/>
+                            <p>{data.name}</p>
+                        </div>
 
-                <div className='flex w-[20%] space-x-9 mt-4'>
-                    <BoardCard/>
+                        <div className='flex space-x-9 mt-4 w-full'>
+                            {data.boards.map((item) => (
+                                <div className='w-[20%] cursor-pointer' onClick={() => handleDivClick(data, item)}>
+                                    <BoardCard key={item.id} board={item}/>
+                                </div>
+                            ))}
+                        </div>
                 </div>
+                   ))}
+
             </div>
         </div>
     )

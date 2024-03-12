@@ -5,7 +5,7 @@ import {TbBellRinging2} from "react-icons/tb";
 import {FaRegQuestionCircle} from "react-icons/fa";
 import {
     Avatar, Box,
-    Button, ButtonGroup, Card, Checkbox, FocusLock,
+    Button, ButtonGroup, Card, FocusLock,Checkbox,
     FormControl,
     FormLabel, IconButton,
     Input,
@@ -32,6 +32,7 @@ import {GrAdd} from "react-icons/gr";
 import WorkspaceContext from "../../Context/WorkspaceContext";
 import UserContext from "../../Context/UserContext";
 import CreateBoards from "../CreateBoards/CreateBoards";
+import NotificationContext from "../../Context/NotificationContext";
 
 
 const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
@@ -40,8 +41,22 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
     const [isSmallScreen, setIsSmallScreen] = useState(false);
     const navigate = useNavigate();
     const {workspace, updateWorkspace} = useContext(WorkspaceContext);
+    const {notification,updateNotification} = useContext(NotificationContext);
+    const [storeNotification, setStoreNotification] = useState([])
+
+    console.log("hhhh",notification)
+    console.log("store",storeNotification)
 
     useEffect(() => {
+        if (notification.username) {
+            setStoreNotification(prevStored => [...prevStored, notification]);
+        }
+
+
+    }, [notification]);
+
+    useEffect(() => {
+
         const handleResize = () => {
             setIsSmallScreen(window.innerWidth <= 1200);
         };
@@ -222,20 +237,21 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
                                     </div>
 
                                     <hr className='border-1-slate-500 py-1 w-full mt-4'/>
-
-                                    <div className='w-[90%]  '>
-                                        <Card background={'blue.100'}>
-                                            <div className='flex'>
-                                                <Avatar className='mt-2 ml-2' size='sm' name={userLogin.username} src={userLogin.avatarUrl}/>
-                                                <div className='ml-2 mt-3'>
-                                                    <p className='text-base font-medium'>{userLogin.username}</p>
+                                    {storeNotification?.map((data) => (
+                                        <div className='w-[90%]  '>
+                                            <Card background={'blue.100'}>
+                                                <div className='flex'>
+                                                    <Avatar className='mt-2 ml-2' size='sm' name={data.username} src={data.userAvatar}/>
+                                                    <div className='ml-2 mt-3'>
+                                                        <p className='text-base font-medium'>{data.username}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className=''>
-                                                <p>heelo</p>
-                                            </div>
-                                        </Card>
-                                    </div>
+                                                <div className=''>
+                                                    <p>{data.notification}</p>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    ))}
                                 </div>
                             </MenuList>
                         </Menu>

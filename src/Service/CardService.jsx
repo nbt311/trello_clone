@@ -52,5 +52,13 @@ class CardService {
         return axios.delete(`${API_URL}${cardId}/removeLabels/${labelId}`)
     }
 
+    getAttachmentUrl(cardId){
+        return axios.get(`${API_URL}${cardId}/attachment`)
+    }
+
+    updateAttachmentUrl(cardId, data){
+        return axios.post(`${API_URL}${cardId}/attachment`, data)
+    }
+
 }
 export default new CardService();
