@@ -18,6 +18,7 @@ import {TiTag} from "react-icons/ti";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import CardService from "../../Service/CardService";
+import CommentService from "../../Service/CommentService";
 
 const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers}) => {
     const [inputValueDescription, setInputValueDescription] = useState('');
@@ -36,6 +37,8 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const [redCheckbox, setRedCheckbox] = useState(false);
     const [purpleCheckbox, setPurpleCheckbox] = useState(false);
     const [blueCheckbox, setBlueCheckbox] = useState(false);
+    const [comments, setComments] = useState([]);
+
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -51,6 +54,7 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
 
         });
         showLabelToCard(card.id);
+        showCommented(card.id);
     }, [id, card.id]);
     const showLabelToCard = (cardId) => {
         CardService.showLabelToCard(cardId)
@@ -85,6 +89,17 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                 console.error('Error fetching labels:', error);
             });
     };
+
+    const showCommented = () => {
+        CardService.showCommentToCard(card.id)
+            .then(response => {
+                console.log("aaaaaa",response.data);
+                setComments(response.data); // Update the state with the fetched comments
+            })
+            .catch(error => {
+                console.error('Error fetching comments:', error);
+            });
+    }
 
     const handleCheckboxChange = (color) => {
         let labelId;
@@ -151,9 +166,21 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
         setInputValueActivity(event.target.value);
     };
 
-    const handleSaveClickActivity = () => {
-        setIsEditingActivity(false);
-        // setInputValueActivity('');
+    const handleSaveClickActivity = async () => {
+        try {
+            const content = inputValueActivity;
+            const cardId = card.id;
+            const userId = user.id;
+            // Gọi hàm createNewComment từ CommentService và truyền các tham số cần thiết
+            await CommentService.createNewComment(content, cardId, userId);
+
+            // Sau khi tạo bình luận thành công, thực hiện các hành động khác
+            setIsEditingActivity(false);
+            // setInputValueActivity('');
+        } catch (error) {
+            // Xử lý lỗi nếu có
+            console.error("Error creating comment:", error);
+        }
     };
 
     const handleCancelClickActivity = () => {
@@ -294,20 +321,22 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
                                     </div>
 
                                 </div>
-                                {!isEditingActivity && inputValueActivity && (
+                                {/*{!isEditingActivity && inputValueActivity && (*/}
                                     <div className='flex mt-5'>
-                                        <div>
-                                            <Avatar key={user.id} name={user.name} src={user.avatarUrl}
-                                                    boxSize='40px'/>
-                                        </div>
-                                        <div className='w-full ml-2'>
-                                            <p className='font-bold'>{user.username}</p>
-                                            <Card className='h-auto' style={{lineHeight: "40px"}}>
-                                                    <p className='ml-5'>{inputValueActivity}</p>
-                                            </Card>
-                                        </div>
+                                        {comments.map(comment => (
+                                            <div key={comment.id} className="flex mt-2">
+                                                <Avatar key={comment.userId} name={comment.username} src={comment.userAvatar}
+                                                        boxSize="40px" />
+                                                <div className="w-full ml-2">
+                                                    <p className="font-bold">{comment.username}</p>
+                                                    <Card className="h-auto" style={{ lineHeight: "40px" }}>
+                                                        <p className="ml-5">{comment.content}</p>
+                                                    </Card>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                )}
+                                {/*)}*/}
 
                             </div>
 
