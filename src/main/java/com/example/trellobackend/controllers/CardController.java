@@ -1,10 +1,8 @@
 package com.example.trellobackend.controllers;
 
-import com.example.trellobackend.dto.BoardResponseDTO;
-import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.LabelDTO;
-import com.example.trellobackend.dto.UserDTO;
+import com.example.trellobackend.dto.*;
 import com.example.trellobackend.models.board.card.Attachment;
+import com.example.trellobackend.models.board.card.Comment;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.LabelRepository;
 import com.example.trellobackend.services.impl.CardService;
@@ -99,6 +97,16 @@ public class CardController {
             return new ResponseEntity<>("Label added", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("{cardId}/comment")
+    public ResponseEntity<List<CommentDTO>> getCommentsByCardId(@PathVariable Long cardId) {
+        try {
+            List<CommentDTO> comments = cardService.getCommentsByCardId(cardId);
+            return new ResponseEntity<>(comments, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

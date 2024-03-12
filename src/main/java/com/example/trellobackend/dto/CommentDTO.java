@@ -28,4 +28,10 @@ public class CommentDTO {
         this.userDTO = userDTO;
         this.createdAt = comment.getCreatedAt();
     }
+    public CommentDTO(Long id, String content,User user, LocalDateTime createdAt) {
+        this.id = id;
+        this.content = content;
+        this.userDTO = new UserDTO(user);
+        this.createdAt = createdAt;
+    }
 }

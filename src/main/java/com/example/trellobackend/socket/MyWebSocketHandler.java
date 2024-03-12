@@ -12,6 +12,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         // Xử lý thông điệp nhận được từ client
         String payload = message.getPayload();
         // ...
+        session.sendMessage(new TextMessage("Server received your message: " + payload));
     }
 
     @Override
