@@ -234,7 +234,6 @@ const HomeHeader = ({onOpen, onClose, isOpen, workspacelist, users}) => {
                                             <div className=''>
                                                 <p>heelo</p>
                                             </div>
-
                                         </Card>
                                     </div>
                                 </div>
