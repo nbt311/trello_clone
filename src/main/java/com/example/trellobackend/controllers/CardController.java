@@ -2,7 +2,6 @@ package com.example.trellobackend.controllers;
 
 import com.example.trellobackend.dto.BoardResponseDTO;
 import com.example.trellobackend.dto.CardDTO;
-import com.example.trellobackend.dto.ColumnsDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.board.card.Attachment;
 import com.example.trellobackend.payload.request.CardRequest;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -57,7 +57,7 @@ public class CardController {
         }
     }
 
-    @PutMapping("{cardId}/attachment")
+    @PostMapping("{cardId}/attachment")
     public ResponseEntity<?> changeCardAttachment(@PathVariable Long cardId, @RequestBody  List<Attachment> attachments ){
         try{
             cardService.changeCardAttachment(cardId, attachments);

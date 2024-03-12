@@ -168,6 +168,4 @@ public class CardService implements ICardService {
                 .map(Card::getAttachments)
                 .orElseThrow(() -> new RuntimeException("Error: Card not found for ID " + cardId));
     }
-
-
 }

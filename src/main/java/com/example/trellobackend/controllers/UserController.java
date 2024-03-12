@@ -68,7 +68,7 @@ public class UserController {
         }
     }
     @GetMapping("/suggest/{query}")
-    public List<User> suggestUsers(@PathVariable String query) {
+    public List<UserDTO> suggestUsers(@PathVariable String query) {
         // Xử lý logic để trả về danh sách người dùng dựa trên 'query'
         return iUserService.getSuggestedUsers(query);
     }

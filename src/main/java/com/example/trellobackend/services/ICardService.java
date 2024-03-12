@@ -8,6 +8,7 @@ import com.example.trellobackend.models.board.card.Card;
 import com.example.trellobackend.payload.request.CardRequest;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ICardService extends IGeneralService<Card>{
     BoardResponseDTO createNewCard(CardRequest cardRequest);

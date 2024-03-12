@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // (securedEnabled = true,
 // jsr250Enabled = true,
 // prePostEnabled = true) // by default
-public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig  { // extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -73,7 +73,9 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                 .requestMatchers("/api/boards/**").permitAll()
                                 .requestMatchers("/api/columns/**").permitAll()
                                 .requestMatchers("/api/cards/**").permitAll()
+                                .requestMatchers("/api/comments/**").permitAll()
                                 .requestMatchers("/data/**").permitAll()
+//                                .requestMatchers("/app/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
