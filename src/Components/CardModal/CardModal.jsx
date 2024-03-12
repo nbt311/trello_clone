@@ -206,7 +206,7 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
 
             // Sau khi tạo bình luận thành công, thực hiện các hành động khác
             setIsEditingActivity(false);
-            // setInputValueActivity('');
+            setInputValueActivity('');
         } catch (error) {
             // Xử lý lỗi nếu có
             console.error("Error creating comment:", error);
@@ -319,7 +319,7 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
 
                                 <div className='flex mt-5'>
                                     <div>
-                                        <Avatar key={user.id} name={user.name} src={user.avatarUrl}
+                                        <Avatar key={user.id} name={user.username} src={user.avatarUrl}
                                                 boxSize='40px'/>
                                     </div>
                                     <div className='w-full ml-2'>
@@ -352,13 +352,15 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
 
                                 </div>
                                 {/*{!isEditingActivity && inputValueActivity && (*/}
-                                    <div className='flex mt-5'>
+                                    <div className='flex flex-col mt-5'>
                                         {comments.map(comment => (
                                             <div key={comment.id} className="flex mt-2">
-                                                <Avatar key={comment.userId} name={comment.username} src={comment.userAvatar}
-                                                        boxSize="40px" />
+                                                <Avatar key={comment.userDTO.id} name={comment.userDTO.username} src={comment.userDTO.avatarUrl} boxSize="40px"/>
                                                 <div className="w-full ml-2">
-                                                    <p className="font-bold">{comment.username}</p>
+                                                    <div className="flex">
+                                                        <p className="font-bold">{comment.userDTO.username}</p>
+                                                        <p className='ml-2 mt-1 text-xs'>{comment.elapsedTime}</p>
+                                                    </div>
                                                     <Card className="h-auto" style={{ lineHeight: "40px" }}>
                                                         <p className="ml-5">{comment.content}</p>
                                                     </Card>
