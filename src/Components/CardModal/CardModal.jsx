@@ -19,6 +19,8 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import CardService from "../../Service/CardService";
 import CommentService from "../../Service/CommentService";
+import Stomp from 'stompjs';
+import SockJs from 'sockjs-client';
 
 const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers}) => {
     const [inputValueDescription, setInputValueDescription] = useState('');
@@ -38,6 +40,26 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const [purpleCheckbox, setPurpleCheckbox] = useState(false);
     const [blueCheckbox, setBlueCheckbox] = useState(false);
     const [comments, setComments] = useState([]);
+
+    const [stompClient, setStompClient] = useState(null);
+
+    useEffect(() => {
+        const socket = new SockJs('http://localhost:8080/ws');
+        const client = Stomp.over(socket);
+
+        client.connect({}, () => {
+            client.subscribe('/topic/messages', (message) => {
+
+            });
+        });
+
+        setStompClient(client);
+
+        return () => {
+            client.disconnect();
+        };
+    }, []);
+
 
 
     useEffect(() => {
@@ -93,7 +115,6 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const showCommented = () => {
         CardService.showCommentToCard(card.id)
             .then(response => {
-                console.log("aaaaaa",response.data);
                 setComments(response.data); // Update the state with the fetched comments
             })
             .catch(error => {
@@ -173,6 +194,15 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
             const userId = user.id;
             // Gọi hàm createNewComment từ CommentService và truyền các tham số cần thiết
             await CommentService.createNewComment(content, cardId, userId);
+            if (content.trim()) {
+                const commentMessage = {
+                    userAvatar: user.avatarUrl,
+                    username: user.username,
+                };
+
+                stompClient.send('/app/chat', {}, JSON.stringify(commentMessage));
+                setInputValueActivity('');
+            }
 
             // Sau khi tạo bình luận thành công, thực hiện các hành động khác
             setIsEditingActivity(false);
