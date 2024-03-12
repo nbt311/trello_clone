@@ -19,11 +19,20 @@ public class CardDTO {
     private Long columnId;
     private String title;
     private List<Attachment> attachments;
+    private String description;
+
     public CardDTO(Card card){
         this.id = card.getId();
         this.boardId = card.getBoard().getId();
         this.columnId = card.getColumn().getId();
         this.title = card.getTitle();
         this.attachments = card.getAttachments();
+        this.description = card.getDescription();
+    }
+
+    public CardDTO(Long id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
     }
 }

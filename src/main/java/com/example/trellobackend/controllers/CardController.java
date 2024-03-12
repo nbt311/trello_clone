@@ -5,6 +5,7 @@ import com.example.trellobackend.dto.CardDTO;
 import com.example.trellobackend.dto.LabelDTO;
 import com.example.trellobackend.dto.UserDTO;
 import com.example.trellobackend.models.board.card.Attachment;
+import com.example.trellobackend.models.board.card.Label;
 import com.example.trellobackend.payload.request.CardRequest;
 import com.example.trellobackend.repositories.LabelRepository;
 import com.example.trellobackend.services.impl.CardService;
@@ -99,6 +100,22 @@ public class CardController {
             return new ResponseEntity<>("Label added", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/suggest/{query}")
+    public List<CardDTO> suggestCards(@PathVariable String query){
+        return cardService.getSuggestedCards(query);
+    }
+
+    @DeleteMapping("/{cardId}/removeLabels/{labelId}")
+    public ResponseEntity<?> removeLabelFromCard(@PathVariable Long cardId, @PathVariable Long labelId){
+        try {
+            Label label = labelRepository.findById(labelId).orElseThrow(() -> new RuntimeException("Label not found"));
+            cardService.deleteLabelFromCard(cardId, label);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
     }
 }

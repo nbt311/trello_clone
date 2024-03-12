@@ -18,4 +18,5 @@ public interface ICardService extends IGeneralService<Card>{
     void changeCardAttachment(Long cardId, List<Attachment> attachments);
     List<Attachment> getAttachmentsByCardId(Long cardId);
      List<LabelDTO> getAllLabelByCardId(Long cardId);
+     List<CardDTO> getSuggestedCards(String query);
 }
