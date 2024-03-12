@@ -83,7 +83,7 @@ const CardContent = ({card}) => {
                         <AvatarGroup className='mt-3' size='xs' max={2}>
                             {members.map((member) => (
                                 <Tooltip key={member.id} label={member.username}>
-                                <Avatar key={member.id} name={member.name} src={member.avatarUrl} boxSize='20px'/>
+                                <Avatar key={member.id} name={member.username} src={member.avatarUrl} boxSize='20px'/>
                                 </Tooltip>
                                 ))}
                         </AvatarGroup>
