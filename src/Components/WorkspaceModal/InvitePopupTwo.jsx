@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    Avatar,
     Button, Input,
     Modal,
     ModalBody,
@@ -40,6 +41,7 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
         setWorkspaceEmail(query);
     };
 
+
     const handleInvite = () => {
         axios.post(`http://localhost:8080/api/workspaces/${id}/addUser/${workspaceEmail}`)
             .then(response => {
@@ -50,7 +52,9 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
                 console.error("Error creating workspace:", error);
             });
     };
-
+    const handleEmailClick = (email) => {
+        setWorkspaceEmail(email);
+    };
     const handlePopupClose = () => {
         setWorkspaceEmail("");
         onClose();
@@ -79,6 +83,21 @@ const InvitePopupTwo = ({onOpen,onClose,isOpen}) => {
                                        placeholder="Email address or name"/>
                                 <Button onClick={handleInvite} colorScheme='blue'>Send invite</Button>
                             </div>
+                            {workspaceEmail && suggestedEmails.map((user, index) => (
+                                <div
+                                    key={index}
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => handleEmailClick(user.email)}
+                                >
+                                    <div className='flex'>
+                                        <Avatar className='mt-1' size='sm' name={user.username} src={user.avatarUrl}/>
+                                        <div className='ml-2'>
+                                            <p className='text-base font-medium'>{user.username}</p>
+                                            <p className='text-sm'>{user.email}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                             <Textarea placeholder="Join this Trello Workspace to start collaborating with me!"></Textarea>
                             <div className="flex">
                                 <div>

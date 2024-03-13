@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {IoChevronDownSharp} from "react-icons/io5";
 import {Avatar} from "@chakra-ui/react";
-import axios from "axios";
+
 
 const WorkspaceDropdown = ({workspace}) => {
     return (
