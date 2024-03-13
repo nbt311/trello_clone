@@ -101,9 +101,9 @@ public class CardController {
         }
     }
 
-    @GetMapping("/suggest/{query}")
-    public List<CardDTO> suggestCards(@PathVariable String query){
-        return cardService.getSuggestedCards(query);
+    @GetMapping("{boardId}/suggest/{query}")
+    public List<ColumnsDTO> suggestCards(@PathVariable String query,@PathVariable Long boardId){
+        return cardService.getSuggestedCards(query,boardId);
     }
 
     @DeleteMapping("/{cardId}/removeLabels/{labelId}")

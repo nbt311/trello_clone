@@ -18,9 +18,7 @@ import com.example.trellobackend.services.ICardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -205,8 +203,27 @@ public class CardService implements ICardService {
     }
 
     @Override
-    public List<CardDTO> getSuggestedCards(String query){
-        return cardRepository.findCardByPartialMatch(query);
+    public List<ColumnsDTO> getSuggestedCards(String query,Long boardId){
+        List<Columns> allColumns = columnsRepository.findByBoardId(boardId);
+        List<ColumnsDTO> columnsContainingCards = new ArrayList<>();
+
+        List<CardDTO> cards = cardRepository.findCardByPartialMatchAndBoard(query, boardId);
+
+        for (Columns column : allColumns) {
+            List<Card> cardsInColumn = column.getCards();
+            List<CardDTO> matchedCardsInColumn = cardsInColumn.stream()
+                    .filter(card -> cards.stream().anyMatch(c -> c.getId().equals(card.getId())))
+                    .map(CardDTO::new)
+                    .collect(Collectors.toList());
+            if (!matchedCardsInColumn.isEmpty()) {
+
+                ColumnsDTO columnDTO = ColumnsDTO.fromEntity(column);
+                columnDTO.setCards(matchedCardsInColumn);
+                columnsContainingCards.add(columnDTO);
+            }
+        }
+
+        return columnsContainingCards;
     }
 
     public void addLabelToCard(Long cardId, Long labelId){
