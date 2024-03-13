@@ -21,7 +21,7 @@ import {useParams} from "react-router-dom";
 import BoardContext from "../../Context/BoardContext";
 import { IoFilterSharp } from "react-icons/io5";
 
-const BoardBar = () => {
+const BoardBar = ({handleSearchCardByQuery,keywork,setKeyword}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [isClicked, setIsClicked] = useState(false);
     const [userEmail, setUserEmail] = useState("");
@@ -61,6 +61,11 @@ const BoardBar = () => {
 
         });
     }, []);
+
+
+    const testOnchange = () => {
+        console.log("andhđjd")
+    }
 
     const handleInputChange = (e) => {
         const query = e.target.value;
@@ -189,7 +194,7 @@ const BoardBar = () => {
                         <div className='flex flex-col items-center justify-center'>
                             <div className='w-[90%]'>
                                 <p className='flex'>Keyword</p>
-                                <Input placeholder='Enter a keyword...'></Input>
+                                <Input placeholder='Enter a keyword...' onChange={handleSearchCardByQuery}></Input>
                             </div>
 
                             <div className='w-[90%] mt-4'>

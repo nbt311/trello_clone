@@ -20,6 +20,7 @@ import BoardBar from "../../Components/SideBar/BoardBar";
 import BoardService from "../../Service/BoardService";
 import ColumnService from "../../Service/ColumnService";
 import column from "../../Components/BoardContent/ListColumns/Column/Column";
+import CardService from "../../Service/CardService";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -28,6 +29,9 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 const BoardContentPage = () => {
     const {board, updateBoard} = useContext(BoardContext);
+    const [keyword, setKeyword,] = useState()
+
+    console.log("dâda", keyword)
 
     useEffect(() => {
         const storedBoard = localStorage.getItem('board');
@@ -285,7 +289,23 @@ const BoardContentPage = () => {
             },
         }),
     };
-    console.log(board.columns)
+
+    const handleSearchCardByQuery = (e) => {
+
+        CardService.getCardByQuery(board.id,e.target.value).then(res => {
+            const updateData = res.data;
+            const storedOrderColumns = orderedColumns;
+            if (updateData!=null ){
+                setOrderedColumns(res.data)
+            } else {
+                setOrderedColumns(storedOrderColumns)
+            }
+
+        })
+
+    }
+
+
     return (
         <div className='h-dvh w-dvw max-w-full overflow-y-hidden'>
             <div>
@@ -293,7 +313,7 @@ const BoardContentPage = () => {
             </div>
 
             <div>
-                <BoardBar/>
+                <BoardBar handleSearchCardByQuery={handleSearchCardByQuery} keywork={keyword} setKeyword={setKeyword}/>
             </div>
             <div className='h-full' style={divStyle}>
                 <DndContext sensors={sensors}

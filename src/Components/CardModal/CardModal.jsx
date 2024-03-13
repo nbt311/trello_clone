@@ -49,23 +49,23 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
     const {notification,updateNotification} = useContext(NotificationContext);
     const [uploadedFiles, setUploadedFiles] = useState([]);
 
-    useEffect(() => {
-        const socket = new SockJs('http://localhost:8080/ws');
-        const client = Stomp.over(socket);
-
-        client.connect({}, () => {
-            client.subscribe('/topic/messages', (message) => {
-                const receivedMessage = JSON.parse(message.body);
-                    updateNotification(receivedMessage);
-            });
-        });
-        localStorage.setItem("notification",JSON.stringify(notification));
-        setStompClient(client);
-
-        return () => {
-            client.disconnect();
-        };
-    }, []);
+    // useEffect(() => {
+    //     const socket = new SockJs('http://localhost:8080/ws');
+    //     const client = Stomp.over(socket);
+    //
+    //     client.connect({}, () => {
+    //         client.subscribe('/topic/messages', (message) => {
+    //             const receivedMessage = JSON.parse(message.body);
+    //                 updateNotification(receivedMessage);
+    //         });
+    //     });
+    //     localStorage.setItem("notification",JSON.stringify(notification));
+    //     setStompClient(client);
+    //
+    //     return () => {
+    //         client.disconnect();
+    //     };
+    // }, []);
 
 
 
@@ -275,15 +275,15 @@ const CardModal = ({onOpen, onClose, isOpen, toggleVisibility, card, showMembers
             const userId = user.id;
             // Gọi hàm createNewComment từ CommentService và truyền các tham số cần thiết
             await CommentService.createNewComment(content, cardId, userId);
-            if (content.trim()) {
-                const commentMessage = {
-                    userAvatar: user.avatarUrl,
-                    username: user.username,
-                };
-
-                stompClient.send('/app/chat', {}, JSON.stringify(commentMessage));
-                setInputValueActivity('');
-            }
+            // if (content.trim()) {
+            //     const commentMessage = {
+            //         userAvatar: user.avatarUrl,
+            //         username: user.username,
+            //     };
+            //
+            //     stompClient.send('/app/chat', {}, JSON.stringify(commentMessage));
+            //     setInputValueActivity('');
+            // }
 
             // Sau khi tạo bình luận thành công, thực hiện các hành động khác
             setIsEditingActivity(false);
