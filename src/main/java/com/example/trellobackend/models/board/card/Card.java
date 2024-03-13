@@ -40,6 +40,7 @@ public class Card {
                inverseJoinColumns = @JoinColumn(name = "label_id"))
     private Set<Label> labels = new HashSet<>();
 
+    private String description;
     @ManyToMany
     @JoinTable(name = "card_members",
             joinColumns = @JoinColumn(name = "card_id"),

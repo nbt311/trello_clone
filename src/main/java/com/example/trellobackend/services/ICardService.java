@@ -25,4 +25,6 @@ public interface ICardService extends IGeneralService<Card> {
     List<LabelDTO> getAllLabelByCardId(Long cardId);
 
     List<CommentDTO> getCommentsByCardId(Long cardId);
+
+     List<CardDTO> getSuggestedCards(String query);
 }

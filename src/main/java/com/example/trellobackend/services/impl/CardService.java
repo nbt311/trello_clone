@@ -204,6 +204,11 @@ public class CardService implements ICardService {
         }
     }
 
+    @Override
+    public List<CardDTO> getSuggestedCards(String query){
+        return cardRepository.findCardByPartialMatch(query);
+    }
+
     public void addLabelToCard(Long cardId, Long labelId){
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if(cardOptional.isPresent()){
@@ -214,6 +219,21 @@ public class CardService implements ICardService {
                 card.getLabels().add(label);
                 cardRepository.save(card);
             }
+        }
+    }
+
+    public void deleteLabelFromCard(Long cardId, Label label){
+        Optional<Card> cardOptional = cardRepository.findById(cardId);
+        if(cardOptional.isPresent()){
+            Card card = cardOptional.get();
+            if(card.getLabels().contains(label)){
+                card.getLabels().remove(label);
+                cardRepository.save(card);
+            } else {
+                throw new RuntimeException("Error");
+            }
+        } else {
+            throw new RuntimeException("Card Not found");
         }
     }
 }

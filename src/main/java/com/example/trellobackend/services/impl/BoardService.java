@@ -131,7 +131,7 @@ public class BoardService implements IBoardService {
                                         card.getBoard().getId(),
                                         card.getColumn().getId(),
                                         card.getTitle(),
-                                        card.getAttachments()
+                                        card.getAttachments(),card.getDescription()
                                         ))
                         .collect(Collectors.toList());
                 return new ColumnsDTO(columns, cardOrderIds, cards);
