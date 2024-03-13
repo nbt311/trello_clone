@@ -60,5 +60,9 @@ class CardService {
         return axios.post(`${API_URL}${cardId}/attachment`, data)
     }
 
+    getCardByQuery(boardId,query){
+        return axios.get(`${API_URL}${boardId}/suggest/${query}`)
+    }
+
 }
 export default new CardService();
