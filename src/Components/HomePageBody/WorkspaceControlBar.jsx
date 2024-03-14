@@ -20,7 +20,7 @@ const WorkspaceControlBar = ({workspace}) => {
 
                 <div className='flex flex-row text-base space-x-3 cursor-pointer items-center justify-center font-medium bg-gray-100 hover:bg-gray-200 rounded-sm py-1 px-3 w-fit'>
                     <GoPerson style={{strokeWidth: '0.8'}}/>
-                    <p>Members (1)</p>
+                    <p>Members</p>
                 </div>
 
                 <div className='flex flex-row text-base space-x-3 cursor-pointer items-center justify-center font-medium bg-gray-100 hover:bg-gray-200 rounded-sm py-1 px-3 w-fit'>
